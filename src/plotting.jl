@@ -23,7 +23,6 @@ end
 
 # old stuff, possibly needed
 
-
 function labdict(model)
   svl = Symbol(string(model.stratvar) * " Stratum")
   dd = unique(model.matches[!, [svl, :stratlab]])
