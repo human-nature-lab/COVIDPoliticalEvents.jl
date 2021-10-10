@@ -18,7 +18,7 @@ module COVIDPoliticalEvents
     casemodel,
     # data
     treatga!,
-    dataprep!,
+    dataprep,
     # plotting
     mk_covpal,
     # spillover

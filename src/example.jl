@@ -14,7 +14,7 @@ dat = load_object("/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/
 
 cc = deathmodel("test", :primary, :epi);
 
-dataprep!(
+dat = dataprep(
   dat, cc;
   t_start = 0,
   remove_incomplete = false,

@@ -53,7 +53,7 @@ Prepare the data for analysis:
   1. Limit date range to first day of matching period for first treatment, up to last outcome window day for last treatment.
   2. Optionally, remove observations over the outcome window for a treatment event where the corresponding matching period (or portion thereof) is not present in the data. The portion is specified by incomplete_cutoff, the first day before a treatment event that must be included.
 """
-function dataprep!(
+function dataprep(
   dat, cc;
   t_start = nothing, t_end = nothing,
   remove_incomplete = false,
