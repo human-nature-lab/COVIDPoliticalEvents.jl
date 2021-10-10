@@ -2,3 +2,9 @@ name = "COVIDPoliticalEvents"
 uuid = "f1ace4a7-d5c1-4479-961a-2899f1e0e909"
 authors = ["Eric Martin Feltham <eric.feltham@yale.edu>"]
 version = "0.1.0"
+
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+DataFramesMeta = "1313f7d8-7da2-5740-9ea0-a2ca25f37964"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+tscsmethods = "a8a44d30-a0ac-4b84-82a6-101be100d738"

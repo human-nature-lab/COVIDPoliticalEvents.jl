@@ -8,11 +8,15 @@ Random.seed!(2019)
 
 dat = load_object("/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/yale research/COVID19/covid-19-data/data/cvd_dat.jld2");
 
-@subset!(dat, :running .> 0, :date .< Date("2020-10-01"));
-
 # base model
 
 cc = deathmodel("test", :primary, :epi);
+
+dataprep!(
+  dat, cc;
+  remove_incomplete = false,
+  incomplete_cutoff = nothing
+)
 
 @time match!(cc, dat; distances = true);
 
