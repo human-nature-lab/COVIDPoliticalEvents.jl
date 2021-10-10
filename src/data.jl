@@ -45,7 +45,7 @@ end
 """
     dataprep!(
       dat, treatment, t, fmax;
-      date_start = nothing, date_end = nothing;
+      t_start = nothing, t_end = nothing;
       remove_incomplete = false
     )
 
@@ -55,29 +55,33 @@ Prepare the data for analysis:
 """
 function dataprep!(
   dat, cc;
-  date_start = nothing, date_end = nothing,
+  t_start = nothing, t_end = nothing,
   remove_incomplete = false,
   incomplete_cutoff = nothing
 )
 
-  if isnothing(date_start)
+  if isnothing(t_start)
     ttmin = minimum(dat[dat[!, cc.treatment] .== 1, cc.t]);
-  else ttmin = date_start
+    c1 = dat[!, cc.t] .>= ttmin + cc.mmin;
+  else
+    c1 = dat[!, cc.t] .>= t_start
   end
   
-  if isnothing(date_end)
+  if isnothing(t_end)
     ttmax = maximum(dat[dat[!, cc.treatment] .== 1, cc.t]);
-  else ttmax = date_end
+    c2 = dat[!, cc.t] .<= ttmax + cc.fmax;
+  else
+    c2 = dat[!, cc.t] .<= t_end;
   end
 
-  c1 = dat[!, cc.t] .>= ttmin + cc.mmin;
-  c2 = dat[!, cc.t] .<= ttmax + cc.fmax;
 
   dat = dat[c1 .& c2, :];
 
   if remove_incomplete
     deleteincomplete!(dat, cc, incomplete_cutoff)
   end
+
+  sort!(dat, [cc.id, cc.t])
 
   return dat
 end

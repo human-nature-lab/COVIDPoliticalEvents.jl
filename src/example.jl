@@ -3,6 +3,8 @@
 using tscsmethods, COVIDPoliticalEvents
 using Dates, DataFrames, DataFramesMeta
 
+using JLD2:load_object,save_object
+
 using Random
 Random.seed!(2019)
 
@@ -14,9 +16,10 @@ cc = deathmodel("test", :primary, :epi);
 
 dataprep!(
   dat, cc;
+  t_start = 0,
   remove_incomplete = false,
   incomplete_cutoff = nothing
-)
+);
 
 @time match!(cc, dat; distances = true);
 
