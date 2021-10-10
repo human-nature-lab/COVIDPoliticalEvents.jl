@@ -8,7 +8,7 @@ Struct that contains easy references to "nice" variable names; only some of whic
 N = 12
 Pick based on maximum number of covariates used in any analysis to keep the colors consistent throughout the paper.
 """
-@with_kw struct VariableNames
+tscsmethods.@with_kw struct VariableNames
   phi = Symbol("Pct. Hispanic");
   pbl = Symbol("Pct. Afr. American");
   ccr = Symbol("Cum. Case Rate");

@@ -1,9 +1,10 @@
 module COVIDPoliticalEvents
 
-  using tscsmethods, Dates
+  using tscsmethods, Dates, DataFrames, DataFramesMeta
   
-  include("setup.jl")
   include("varnames.jl")
+  include("data.jl")
+  include("setup.jl")
   include("plotting.jl")
   include("spillover.jl")
   include("threshold.jl")
@@ -15,6 +16,9 @@ module COVIDPoliticalEvents
     VariableNames,
     deathmodel,
     casemodel,
+    # data
+    treatga!,
+    dataprep!,
     # plotting
     mk_covpal,
     # spillover
