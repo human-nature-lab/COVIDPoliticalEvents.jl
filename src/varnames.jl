@@ -43,34 +43,23 @@ Pick based on maximum number of covariates used in any analysis to keep the colo
 
   # number of colors to generate
   N = 12;
-end
-  
-"""
-    covariateset(vn::VariableNames, outcome::Symbol; modeltype::String = "epi")
 
-Return the covariates for the specified model type ("epi", "nomob", "full").
-"""
-function covariateset(
-  vn::VariableNames, outcome::Symbol;
-  modeltype::String = "epi"
-)
-  if modeltype == "epi" & outcome == :death_rte
-    return [vn.cdr, vn.pd, vn.fc]
-  elseif modeltype == "epi" & outcome == :case_rte
-    return [vn.ccr, vn.pd, vn.fc]
-  elseif modeltype == "nomob" & outcome == :death_rte
-    return [vn.cdr, vn.fc, vn.pd, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65];
-  elseif modeltype == "nomob" & outcome == :case_rte
-    return [vn.ccr, vn.fc, vn.pd, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65];
-  elseif modeltype == "full" & outcome == :death_rte
-    return [
-      vn.cdr, vn.fc, vn.pd, vn.res, vn.groc,
-      vn.rec, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65
-    ];
-  elseif modeltype == "full" & outcome == :case_rte
-    return [
-      vn.ccr, vn.fc, vn.pd, vn.res, vn.groc,
-      vn.rec, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65
-    ];
-  end
+  # whether some variable changes over time
+  timevary = Dict(
+    phi => false,
+    pbl => false,
+    ccr => true, cdr => true,
+    ste => false, abbr => false,
+    fc => false, bac => false,
+    mil => false,
+    treg => false, tout => false,
+    pd => false,
+    ts16 => false,
+    p65 => false,
+    res => true, resl => true, groc => true, bar => true,
+    rec => true, relig => true,
+    prsz => false, te => false,
+    dr => true,
+    cr => true,
+  );
 end
