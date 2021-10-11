@@ -16,9 +16,7 @@ cc = deathmodel("test", :primary, :epi);
 
 dat = dataprep(
   dat, cc;
-  t_start = 0,
-  remove_incomplete = false,
-  incomplete_cutoff = nothing
+  t_start = 0
 );
 
 @time match!(cc, dat; distances = true);
@@ -76,3 +74,23 @@ caliper = Dict(
 @time calr = make_refined(cal; refinementnum = 5);
 
 @time estimate!(calr, dat; iter = 500);
+
+# paper plot
+mp = model_pl(
+  cc;
+  labels = labels
+);
+
+spth = ""
+
+# name and save models
+save_modelset(
+  spth * name_model(cc::AbstractCICModel),
+  cc;
+);
+
+plot_modelset(
+  model_path;
+  variablecolors = varcol, # from paper pkg.
+  base_savepath = "" # ends in /
+);
