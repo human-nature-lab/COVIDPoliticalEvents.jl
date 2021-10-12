@@ -33,11 +33,17 @@ end
 
 Create the treatment variable for the GA Special Election.
 """
-function treatga!(dat; gaspecialdate = Date("2021-01-05"))
+function treatga!(
+  dat;
+  state_abbreviation = "GA",
+  gaspecialdate = Date("2021-01-05"),
+  treatment_variable = :gaspecial,
+  date_column = :date
+)
 
-  dat[!, :gaspec] .= 0;
-  c1 = (dat[!, abbr] .== "GA") .& (dat.date .== gaspecialdate);
-  dat.gaspec[c1] .= 1;
+  dat[!, treatment_variable] .= 0;
+  c1 = (dat[!, VariableNames().abbr] .== state_abbreviation) .& (dat[!, date_column] .== gaspecialdate);
+  dat[c1, treatment_variable] .= 1;
 
   return dat
 end
