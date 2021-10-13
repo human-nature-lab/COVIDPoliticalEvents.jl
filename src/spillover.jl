@@ -301,6 +301,8 @@ function countyspillover_assignment!(cc, dat, degree)
     3 => "Degree 2",
     4 => "Degree 3",
   );
-  
-  return dat, stratassignments, labels
+
+  cc.treatment = :rallydayunion;
+
+  return cc, dat, stratassignments, labels
 end
