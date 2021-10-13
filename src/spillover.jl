@@ -292,8 +292,8 @@ function countyspillover_assignment!(cc, dat, degree)
     cc.treatment, cc.t, cc.id,
     id2ind, ind2id, C, dat, degree
   );
-  treatneighbors!(dat, adjf, degree, treatment);
-  stratassignments = degreeinfo(degree, dat, treatment, id, t);
+  treatneighbors!(dat, adjf, degree, cc.treatment);
+  stratassignments = degreeinfo(degree, dat, cc.treatment, cc.id, cc.t);
 
   labels = Dict(
     1 => "Treatment",
