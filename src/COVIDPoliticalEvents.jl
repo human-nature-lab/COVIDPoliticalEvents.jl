@@ -1,6 +1,7 @@
 module COVIDPoliticalEvents
 
   using tscsmethods, Dates, DataFrames, DataFramesMeta
+  import CSV
   
   include("varnames.jl")
   include("data.jl")
