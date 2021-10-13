@@ -302,7 +302,7 @@ function countyspillover_assignment!(cc, dat, degree)
     4 => "Degree 3",
   );
 
-  cc.treatment = :rallydayunion;
+  cc.treatment = Symbol(string(cc.treatment) * "union");
 
   return cc, dat, stratassignments, labels
 end
