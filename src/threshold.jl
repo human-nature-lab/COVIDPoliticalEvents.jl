@@ -5,27 +5,29 @@
 
 Mutate the treatment variable in the dataframe, subject to size thresholding. Events that are less than or equal to control_thres are treated as not-treated. Events in between the control threshold and the treatment threshold are removed from the data, over the outcome window (fmin to fmax), and are so not eligible to be control units.
 """
-function thresholdevent!(
-  dat, cc, control_thresh, treat_thresh, event_size::Symbol
+function thresholdevent2!(
+  dat, cc, control_thresh, treat_thresh, event_size
 )
 
   nix = Vector{Int64}(undef, 0);
 
-  @eachrow dat begin
-    if $cc.treatment == 1
-      if $event_size <= control_thresh
-        $cc.treatment = 0
-        c1a = $event_size > control_thresh
-        c1b = $event_size <= treat_thresh
-      elseif c1a & c1b
-        c2a = dat[!, cc.id] .== $cc.id;
-        c2b = dat[!, cc.t] .>= $cc.t + cc.fmin;
-        c2c = dat[!, cc.t] .<= $cc.t + cc.fmax;
-        anix = findall(c2a .& c2b .& c2c);
-        append!(nix, anix);
+  for r in eachrow(dat)
+    if r[cc.treatment] == 1
+      if r[event_size] <= control_thresh
+        r[cc.treatment] = 0
+        c1a = r[event_size] > control_thresh
+        c1b = r[event_size] <= treat_thresh
+        if c1a & c1b
+          c2a = dat[!, cc.id] .== r[cc.id];
+          c2b = dat[!, cc.t] .>= r[cc.t] + cc.fmin;
+          c2c = dat[!, cc.t] .<= r[cc.t] + cc.fmax;
+          anix = findall(c2a .& c2b .& c2c);
+          append!(nix, anix);
+        end
       end
     end
   end
+
   delete!(dat, sort(unique(nix)))
   return dat
 end
