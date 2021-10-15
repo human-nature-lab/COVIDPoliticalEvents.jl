@@ -5,7 +5,7 @@
 
 Mutate the treatment variable in the dataframe, subject to size thresholding. Events that are less than or equal to control_thres are treated as not-treated. Events in between the control threshold and the treatment threshold are removed from the data, over the outcome window (fmin to fmax), and are so not eligible to be control units.
 """
-function thresholdevent2!(
+function thresholdevent!(
   dat, cc, control_thresh, treat_thresh, event_size
 )
 
