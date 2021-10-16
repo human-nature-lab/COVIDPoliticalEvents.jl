@@ -303,7 +303,6 @@ function countyspillover_assignment!(cc, dat, degree)
   );
 
   cc.treatment = Symbol(string(cc.treatment) * "union");
-  cc.stratifier = :Exposure
 
   return cc, dat, stratassignments, labels
 end
