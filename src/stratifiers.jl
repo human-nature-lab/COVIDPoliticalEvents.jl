@@ -57,12 +57,12 @@ function datestrat!(
 
   cc.matches[!, :stratum] = Vector{Int}(undef, nrow(cc.matches));
   @eachrow! cc.matches begin
-    :stratum = assignq(:treattime, X, Xlen)
+    :stratum = tscsmethods.assignq(:treattime, X, Xlen)
   end
 
   cc.meanbalances[!, :stratum] = Vector{Int}(undef, nrow(cc.meanbalances));
   @eachrow! cc.meanbalances begin
-    :stratum = assignq(:treattime, X, Xlen)
+    :stratum = tscsmethods.assignq(:treattime, X, Xlen)
   end
 
   dteq = string.(datestart + Day.(X));
@@ -93,6 +93,7 @@ function primarydistancestrat!(cc, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
     ff = findfirst(udat[!, :casescum] .> 0);
     if !isnothing(ff)
       dd[u] = ff
+    else dd[u] = 0 # if there isn't a case yet assign value 0
     end
   end
 
@@ -101,13 +102,13 @@ function primarydistancestrat!(cc, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
   Xlen = length(X);
 
   cc.matches[!, :stratum] = Vector{Int}(undef, nrow(cc.matches));
-  @eachrow! cc.matches begin
-    :stratum = assignq(udict[:treatunit], X, Xlen)
+  for i in 1:nrow(cc.matches)
+    cc.matches[i, :stratum] = tscsmethods.assignq(dd[cc.matches[i, :treatunit]], X, Xlen)
   end
 
   cc.meanbalances[!, :stratum] = Vector{Int}(undef, nrow(cc.meanbalances));
-  @eachrow! cc.balances begin
-    :stratum = assignq(udict[:treatunit], X, Xlen)
+  for i in 1:nrow(cc.meanbalances)
+    cc.meanbalances[i, :stratum] = tscsmethods.assignq(dd[cc.meanbalances[i, :treatunit]], X, Xlen)
   end
 
   return cc, label_variablestrat(string.(X))
