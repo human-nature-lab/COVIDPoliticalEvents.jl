@@ -52,7 +52,7 @@ function datestrat!(
   udtes = unique(tts); # we want quantiles of unique
   # udtes = unique(@view dat[dat[!, treatment] .== 1, :date]);
 
-  X = sort(Int.(round.(quantile(udtes, qtes), digits = 0)));
+  X = sort(Int.(round.(tscsmethods.quantile(udtes, qtes), digits = 0)));
   Xlen = length(X);
 
   cc.matches[!, :stratum] = Vector{Int}(undef, nrow(cc.matches));
@@ -96,8 +96,8 @@ function primarydistancestrat!(cc, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
     end
   end
 
-  # X = sort(quantile(values(dd), qtes));
-  X = sort(Int.(round.(quantile(values(dd), qtes), digits = 0)))
+  # X = sort(tscsmethods.quantile(values(dd), qtes));
+  X = sort(Int.(round.(tscsmethods.quantile(values(dd), qtes), digits = 0)))
   Xlen = length(X);
 
   cc.matches[!, :stratum] = Vector{Int}(undef, nrow(cc.matches));
