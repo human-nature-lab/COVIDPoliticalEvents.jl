@@ -67,7 +67,7 @@ function datestrat!(
 
   dteq = string.(datestart + Day.(X));
 
-  return cc, label_variablestrat(dteq)
+  return cc, tscsmethods.label_variablestrat(dteq)
 end
 
 # Population Density
@@ -111,7 +111,7 @@ function primarydistancestrat!(cc, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
     cc.meanbalances[i, :stratum] = tscsmethods.assignq(dd[cc.meanbalances[i, :treatunit]], X, Xlen)
   end
 
-  return cc, label_variablestrat(string.(X))
+  return cc, tscsmethods.label_variablestrat(string.(X))
 end
 
 # Trump's Share of the Vote in 2016
