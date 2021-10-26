@@ -31,7 +31,7 @@ function regionate!(cc::AbstractCICModel; regiontype = :region, datpath = false)
 
   cc.matches[!, :stratum] = [dd[cc.matches[i, :treatunit]] for i in 1:nrow(cc.matches)];
 
-  cc.meanbalances[!, :stratum] = [dd[cc.balances[i, :treatunit]] for i in 1:nrow(cc.meanbalances)];
+  cc.meanbalances[!, :stratum] = [dd[cc.meanbalances[i, :treatunit]] for i in 1:nrow(cc.meanbalances)];
     
   return cc, Dict(1:length(X) .=> X)
 end
