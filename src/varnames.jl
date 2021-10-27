@@ -35,6 +35,7 @@ tscsmethods.@with_kw struct VariableNames
   relig = Symbol("Religious Organizations");
 
   prsz = Symbol("Protest Size");
+  prec = Symbol("Recent Protests");
   te = Symbol("Treatment exposure");
 
   # outcome names
