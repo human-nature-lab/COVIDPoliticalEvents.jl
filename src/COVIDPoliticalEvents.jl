@@ -27,5 +27,6 @@ module COVIDPoliticalEvents
     # threshold
     thresholdevent!,
     # stratifications
-    regionate!, datestrat!, primarydistancestrat!
+    regionate!, datestrat!, primarydistancestrat!,
+    add_recent_events!
 end

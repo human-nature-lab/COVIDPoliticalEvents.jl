@@ -137,3 +137,25 @@ end
 #   cc, dat, Symbol("Cum. Death Rate");
 #   qtes = [0, 0.25, 0.5, 0.75, 1.0], zerosep = false
 # )
+
+"""
+    add_recent_events!(dat, t, id, treatment; recency = 21)
+
+Add a column, only to units that corresponds to units at treatment, representing the number of recent events, within period recency, for the treated observation. Other rows receive value 0.
+"""
+function add_recent_events!(dat, t, id, treatment; recency = 21)
+  
+  sv = Symbol("Recent Protests");
+  
+  dat[!, sv] .= 0;
+  tobs = @views dat[dat[!, treatment] .== 1, [t, id, sv]];
+
+  for r in eachrow(tobs)
+    c1 = dat[!, id] .== r[id];
+    c2 = (dat[!, t] .< r[t]) .& (dat[!, t] .>= (r[t] - recency)); # past three weeks
+
+    r[sv] = sum(@views(dat[c1 .& c2, treatment]))
+  end
+  
+  return dat
+end
