@@ -39,7 +39,7 @@ function covariateset(
   end
 end
 
-function deathmodel(title::String, treatment, modeltype, dat)
+function deathmodel(title::String, treatment, modeltype, dat; iterations = 500)
   
   vn = VariableNames();
   
@@ -75,13 +75,14 @@ function deathmodel(title::String, treatment, modeltype, dat)
     ids = ids,
     matches = tobs,
     treatednum = length(observations),
-    estimator = "ATT"
+    estimator = "ATT",
+    iterations = iterations
   )
 
   return model
 end
 
-function casemodel(title::String, treatment, modeltype, dat)
+function casemodel(title::String, treatment, modeltype, dat; iterations = 500)
 
   vn = VariableNames();
   
@@ -117,7 +118,8 @@ function casemodel(title::String, treatment, modeltype, dat)
     ids = ids,
     matches = tobs,
     treatednum = length(observations),
-    estimator = "ATT"
+    estimator = "ATT",
+    iterations = iterations
   )
 
   return model
