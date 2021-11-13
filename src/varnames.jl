@@ -9,6 +9,12 @@ N = 12
 Pick based on maximum number of covariates used in any analysis to keep the colors consistent throughout the paper.
 """
 tscsmethods.@with_kw struct VariableNames
+  id = :fips;
+  t = :running;
+
+  deathoutcome = :death_rte
+  caseoutcome = :case_rte
+
   phi = Symbol("Pct. Hispanic");
   pbl = Symbol("Pct. Afr. American");
   ccr = Symbol("Cum. Case Rate");

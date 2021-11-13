@@ -4,12 +4,16 @@
 """
 US Census Region
 """
-function regionate!(cc::AbstractCICModel; regiontype = :region, datpath = false)
+function regionate(
+  model::AbstractCICModel; regiontype = :region, datpath = false
+)
+
   if !(regiontype .∈ Ref([:region, :state, :division]))
     error("supply valid region type")
   end
 
-  cc.stratifier = :Region;
+  @unpack meanbalances, observations = model
+  strata = Vector{Int}(undef, length(observations));
 
   if !datpath
     creg = CSV.read(download("https://raw.githubusercontent.com/kjhealy/fips-codes/master/county_fips_master.csv"), DataFrame)
@@ -29,45 +33,39 @@ function regionate!(cc::AbstractCICModel; regiontype = :region, datpath = false)
     dd[creg[i, :fips]] = isnothing(vx) ? 0 : vx
   end
 
-  cc.matches[!, :stratum] = [dd[cc.matches[i, :treatunit]] for i in 1:nrow(cc.matches)];
-
-  cc.meanbalances[!, :stratum] = [dd[cc.meanbalances[i, :treatunit]] for i in 1:nrow(cc.meanbalances)];
+  for (i, ob) in enumerate(observations)
+    strata[i] = get(dd, ob[2], 0)
+  end
     
-  return cc, Dict(1:length(X) .=> X)
+  return strata, Dict(1:length(X) .=> X), Symbol("Region")
 end
 
 """
 Treatment Date
 """
 function datestrat!(
-  cc::AbstractCICModel;
+  model::AbstractCICModel;
   qtes = [0, 0.25, 0.5, 0.75, 1.0],
   datestart = Date("2020-03-01")
 )
 
-  cc.stratifier = Symbol("Primary Date");
+  @unpack meanbalances, observations, t, treatment = model;
+  strata = Vector{Int}(undef, length(observations));
 
-  tts = unique(cc.matches[!, :treattime]);
-
-  udtes = unique(tts); # we want quantiles of unique
+  udtes = unique(dat[dat[!, treatment] .== 1, t]);
+  # we want quantiles of unique
   # udtes = unique(@view dat[dat[!, treatment] .== 1, :date]);
 
   X = sort(Int.(round.(tscsmethods.quantile(udtes, qtes), digits = 0)));
   Xlen = length(X);
 
-  cc.matches[!, :stratum] = Vector{Int}(undef, nrow(cc.matches));
-  @eachrow! cc.matches begin
-    :stratum = tscsmethods.assignq(:treattime, X, Xlen)
-  end
-
-  cc.meanbalances[!, :stratum] = Vector{Int}(undef, nrow(cc.meanbalances));
-  @eachrow! cc.meanbalances begin
-    :stratum = tscsmethods.assignq(:treattime, X, Xlen)
+  for (i, ob) in enumerate(observations)
+    strata[i] = tscsmethods.assignq(ob[1], X, Xlen)
   end
 
   dteq = string.(datestart + Day.(X));
 
-  return cc, tscsmethods.label_variablestrat(dteq)
+  return strata, tscsmethods.label_variablestrat(dteq), Symbol("Primary Date")
 end
 
 # Population Density
@@ -77,17 +75,17 @@ end
 # )
 
 # Treatment Date - Date of First Case
-function primarydistancestrat!(cc, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
+function primarydistancestrat!(model, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
 
-  cc.stratifier = Symbol("Date of First Case to Primary");
+  @unpack meanbalances, observations, ids, t, treatment = model;
+  strata = Vector{Int}(undef, length(observations));
 
   # get first case dates
-  uid = unique(dat[!, :fips]);
   
   dd = Dict{Int64, Int64}();
-  sizehint!(dd, length(uid));
+  sizehint!(dd, length(ids));
   # mm = maximum(dat[!, :running])
-  for u in uid
+  for u in ids
     udat = @view dat[dat[!, :fips] .== u, [:fips, :running, :casescum]];
     udat = sort(udat, [:fips, :running], view = true);
     ff = findfirst(udat[!, :casescum] .> 0);
@@ -101,17 +99,11 @@ function primarydistancestrat!(cc, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
   X = sort(Int.(round.(tscsmethods.quantile(values(dd), qtes), digits = 0)))
   Xlen = length(X);
 
-  cc.matches[!, :stratum] = Vector{Int}(undef, nrow(cc.matches));
-  for i in 1:nrow(cc.matches)
-    cc.matches[i, :stratum] = tscsmethods.assignq(dd[cc.matches[i, :treatunit]], X, Xlen)
+  for (i, ob) in enumerate(observations)
+    strata[i] = tscsmethods.assignq(dd[ob[2]], X, Xlen)
   end
 
-  cc.meanbalances[!, :stratum] = Vector{Int}(undef, nrow(cc.meanbalances));
-  for i in 1:nrow(cc.meanbalances)
-    cc.meanbalances[i, :stratum] = tscsmethods.assignq(dd[cc.meanbalances[i, :treatunit]], X, Xlen)
-  end
-
-  return cc, tscsmethods.label_variablestrat(string.(X))
+  return strata, tscsmethods.label_variablestrat(string.(X)), Symbol("Date of First Case to Primary")
 end
 
 # Trump's Share of the Vote in 2016

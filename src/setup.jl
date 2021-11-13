@@ -39,73 +39,86 @@ function covariateset(
   end
 end
 
-function deathmodel(title::String, treatment, modeltype)
-
-  outcome = :death_rte;
-
+function deathmodel(title::String, treatment, modeltype, dat)
+  
   vn = VariableNames();
-
-  modelcovariates = covariateset(
-    vn, outcome;
+  
+  covariates = covariateset(
+    vn, vn.deathoutcome;
     modeltype = modeltype
   );
 
   # filter timevary to entries in modelcovariates
-  modelcovariates_timevary = Dict{Symbol, Bool}();
+  timevary = Dict{Symbol, Bool}();
   for (covar, v) in vn.timevary
-    if covar ∈ modelcovariates
-      modelcovariates_timevary[covar] = v
+    if covar ∈ covariates
+      timevary[covar] = v
     end
-  end
+  end;
 
-  cc = cicmodel(
+  observations, ids = observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
+  
+  # tobs = make_tobsvec(length(observations), length(ids));
+  tobs = make_matches(length(observations), length(ids));
+
+  model = CIC(
     title = title,
-    id = :fips,
-    t = :running,
-    outcome = outcome,
+    id = vn.id,
+    t = vn.t,
     treatment = treatment,
-    covariates = modelcovariates,
-    timevary = modelcovariates_timevary,
-    fmin = 10,
-    fmax = 40,
-    mmin = -50,
-    mmax = -1
-  );
-  return cc
+    outcome = vn.deathoutcome,
+    covariates = covariates,
+    timevary = timevary,
+    F = 10:40,
+    L = -50:-1,
+    observations = observations,
+    ids = ids,
+    matches = tobs,
+    treatednum = length(observations),
+    estimator = "ATT"
+  )
+
+  return model
 end
 
-function casemodel(title::String, treatment, modeltype)
-
-  outcome = :case_rte;
+function casemodel(title::String, treatment, modeltype, dat)
 
   vn = VariableNames();
-
-  modelcovariates = covariateset(
-    vn, outcome;
+  
+  covariates = covariateset(
+    vn, vn.caseoutcome;
     modeltype = modeltype
   );
 
   # filter timevary to entries in modelcovariates
-  modelcovariates_timevary = Dict{Symbol, Bool}();
+  timevary = Dict{Symbol, Bool}();
   for (covar, v) in vn.timevary
-    if covar ∈ modelcovariates
-      modelcovariates_timevary[covar] = v
+    if covar ∈ covariates
+      timevary[covar] = v
     end
-  end
+  end;
 
-  cc = cicmodel(
-    title = title,
-    id = :fips,
-    t = :running,
-    outcome = outcome,
-    treatment = treatment,
-    covariates = modelcovariates,
-    timevary = modelcovariates_timevary,
-    fmin = 3, # CHECK
-    fmax = 40,
-    mmin = -50, # CHANGE PO DIFFERS FOR CASE RATE
-    mmax = -1
-  );
+  observations, ids = observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
   
-  return cc
+  # tobs = make_tobsvec(length(observations), length(ids));
+  tobs = make_matches(length(observations), length(ids));
+
+  model = CIC(
+    title = title,
+    id = vn.id,
+    t = vn.t,
+    treatment = treatment,
+    outcome = vn.caseoutcome,
+    covariates = covariates,
+    timevary = timevary,
+    F = 3:40, ## UPDATE
+    L = -50:-1, ## UPDATE
+    observations = observations,
+    ids = ids,
+    matches = tobs,
+    treatednum = length(observations),
+    estimator = "ATT"
+  )
+
+  return model
 end

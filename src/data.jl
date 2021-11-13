@@ -65,19 +65,21 @@ function dataprep(
   remove_incomplete = false,
   incomplete_cutoff = nothing
 )
+  
+  @unpack t, id, treatment, F, L = cc;
 
   if isnothing(t_start)
-    ttmin = minimum(dat[dat[!, cc.treatment] .== 1, cc.t]);
-    c1 = dat[!, cc.t] .>= ttmin + cc.mmin;
+    ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
+    c1 = dat[!, t] .>= ttmin + L[begin];
   else
-    c1 = dat[!, cc.t] .>= t_start
+    c1 = dat[!, t] .>= t_start
   end
   
   if isnothing(t_end)
-    ttmax = maximum(dat[dat[!, cc.treatment] .== 1, cc.t]);
-    c2 = dat[!, cc.t] .<= ttmax + cc.fmax;
+    ttmax = maximum(dat[dat[!, treatment] .== 1, t]);
+    c2 = dat[!, t] .<= ttmax + F[end];
   else
-    c2 = dat[!, cc.t] .<= t_end;
+    c2 = dat[!, t] .<= t_end;
   end
 
 
@@ -87,7 +89,7 @@ function dataprep(
     deleteincomplete!(dat, cc, incomplete_cutoff)
   end
 
-  sort!(dat, [cc.id, cc.t])
+  sort!(dat, [id, t])
 
   return dat
 end

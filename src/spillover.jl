@@ -176,7 +176,6 @@ function getneighbors_inner!(
   return adjf
 end
 
-
 function treatneighbors!(
   dat, adjf, degree, treatment;
   id = :fips, t = :running
@@ -221,7 +220,6 @@ function treatneighbors_inner!(
   end
   return dat
 end
-
 
 function degreeinfo(
   degree, dat, treatment, id, t;
