@@ -56,10 +56,10 @@ function deathmodel(title::String, treatment, modeltype, dat)
     end
   end;
 
-  observations, ids = observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
+  observations, ids = tscsmethods.observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
   
   # tobs = make_tobsvec(length(observations), length(ids));
-  tobs = make_matches(length(observations), length(ids));
+  tobs = tscsmethods.make_matches(length(observations), length(ids));
 
   model = CIC(
     title = title,
@@ -98,10 +98,10 @@ function casemodel(title::String, treatment, modeltype, dat)
     end
   end;
 
-  observations, ids = observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
+  observations, ids = tscsmethods.observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
   
   # tobs = make_tobsvec(length(observations), length(ids));
-  tobs = make_matches(length(observations), length(ids));
+  tobs = tscsmethods.make_matches(length(observations), length(ids));
 
   model = CIC(
     title = title,
