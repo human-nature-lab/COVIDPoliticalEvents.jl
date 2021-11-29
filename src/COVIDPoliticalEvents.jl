@@ -1,6 +1,6 @@
 module COVIDPoliticalEvents
 
-  using tscsmethods, Dates, DataFrames, DataFramesMeta, Parameters
+  using tscsmethods, Dates, DataFrames, DataFramesMeta, Parameters, Accessors
   import CSV
   
   include("varnames.jl")
@@ -12,7 +12,6 @@ module COVIDPoliticalEvents
   include("stratifiers.jl")
 
   export
-  
     # setup
     VariableNames,
     deathmodel,
