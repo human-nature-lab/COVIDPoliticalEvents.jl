@@ -20,6 +20,7 @@ module COVIDPoliticalEvents
     # data
     treatga!,
     dataprep,
+    primary_filter!,
     # plotting
     mk_covpal,
     # spillover

@@ -49,6 +49,23 @@ function treatga!(
 end
 
 """
+    primary_filter!(model;  mintime = 10)
+
+remove observations considered too early
+"""
+function primary_filter!(model;  mintime = 10)
+
+  # remove elections prior to March 10
+  obtimes = [model.observations[i][1] for i in eachindex(model.observations)];
+  obinclude = obtimes .>= mintime;
+  @reset model.observations = model.observations[obinclude];
+  @reset model.matches = model.matches[obinclude];
+  # @reset model.results = tscsmethods.DataFrame();
+
+  return model
+end
+
+"""
     dataprep!(
       dat, treatment, t, fmax;
       t_start = nothing, t_end = nothing;
