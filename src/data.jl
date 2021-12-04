@@ -53,7 +53,7 @@ end
 
 remove observations considered too early
 """
-function primary_filter!(model;  mintime = 10)
+function primary_filter(model;  mintime = 10)
 
   # remove elections prior to March 10
   obtimes = [model.observations[i][1] for i in eachindex(model.observations)];
@@ -62,6 +62,8 @@ function primary_filter!(model;  mintime = 10)
   @reset model.matches = model.matches[obinclude];
   # @reset model.results = tscsmethods.DataFrame();
 
+  @reset model.treatednum = length(model.observations)
+  
   return model
 end
 
