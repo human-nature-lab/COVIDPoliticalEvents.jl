@@ -44,7 +44,7 @@ end
 Treatment Date
 """
 function datestrat!(
-  model::AbstractCICModel;
+  model::AbstractCICModel, dat::DataFrame;
   qtes = [0, 0.25, 0.5, 0.75, 1.0],
   datestart = Date("2020-03-01")
 )
