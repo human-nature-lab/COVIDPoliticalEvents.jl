@@ -2,7 +2,9 @@
 # Paper-specific stratification functions.
 
 """
-US Census Region
+    regionate(model::AbstractCICModel; regiontype = :region, datpath = false)
+
+regiontype is one of: :region, :state, :division
 """
 function regionate(
   model::AbstractCICModel; regiontype = :region, datpath = false
@@ -43,7 +45,7 @@ end
 """
 Treatment Date
 """
-function datestrat!(
+function datestrat(
   model::AbstractCICModel, dat::DataFrame;
   qtes = [0, 0.25, 0.5, 0.75, 1.0],
   datestart = Date("2020-03-01")
@@ -75,7 +77,7 @@ end
 # )
 
 # Treatment Date - Date of First Case
-function primarydistancestrat!(model, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
+function primarydistancestrat(model, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
 
   @unpack meanbalances, observations, ids, t, treatment = model;
   strata = Vector{Int}(undef, length(observations));
