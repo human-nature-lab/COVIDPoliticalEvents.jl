@@ -23,7 +23,7 @@ module COVIDPoliticalEvents
     # plotting
     mk_covpal,
     # spillover
-    countyspillover_assignment!,
+    countyspillover_assignment,
     # threshold
     thresholdevent!,
     # stratifications
