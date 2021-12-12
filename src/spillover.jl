@@ -275,7 +275,7 @@ function degreeinfo(
 end
 
 """
-    countyspillover_assignment!(cc, dat, degree)
+    countyspillover_assignment!(dat, degree, treatment, t, id)
 
 Add new treatment-degree-stratified treatment variables to the dataframe, and generate the assignment of all treated and exposed units.
 
@@ -283,15 +283,15 @@ This should be executed prior to matching, where the treatment union variable sh
 
 Non-stratified analysis of the union variable estimates the ATT averaged indiscriminately over all exposure levels.
 """
-function countyspillover_assignment!(cc, dat, degree)
+function countyspillover_assignment!(dat, degree, treatment, t, id)
 
   C, id2ind, ind2id = getneighbordat();
   adjf = getneighbors(
-    cc.treatment, cc.t, cc.id,
+    treatment, t, id,
     id2ind, ind2id, C, dat, degree
   );
-  treatneighbors!(dat, adjf, degree, cc.treatment);
-  stratassignments = degreeinfo(degree, dat, cc.treatment, cc.id, cc.t);
+  treatneighbors!(dat, adjf, degree, treatment);
+  stratassignments = degreeinfo(degree, dat, treatment, id, t);
 
   labels = Dict(
     1 => "Treatment",
@@ -300,7 +300,5 @@ function countyspillover_assignment!(cc, dat, degree)
     4 => "Degree 3",
   );
 
-  cc.treatment = Symbol(string(cc.treatment) * "union");
-
-  return cc, dat, stratassignments, labels
+  return dat, stratassignments, labels, Symbol(string(treatment) * "union")
 end
