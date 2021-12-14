@@ -79,13 +79,14 @@ Prepare the data for analysis:
   2. Optionally, remove observations over the outcome window for a treatment event where the corresponding matching period (or portion thereof) is not present in the data. The portion is specified by incomplete_cutoff, the first day before a treatment event that must be included.
 """
 function dataprep(
-  dat, cc;
+  dat, model;
   t_start = nothing, t_end = nothing,
   remove_incomplete = false,
-  incomplete_cutoff = nothing
+  incomplete_cutoff = nothing,
+  convert_missing = true
 )
   
-  @unpack t, id, treatment, F, L = cc;
+  @unpack t, id, treatment, F, L = model;
 
   if isnothing(t_start)
     ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
@@ -105,10 +106,16 @@ function dataprep(
   dat = dat[c1 .& c2, :];
 
   if remove_incomplete
-    deleteincomplete!(dat, cc, incomplete_cutoff)
+    deleteincomplete!(dat, model, incomplete_cutoff)
   end
 
   sort!(dat, [id, t])
+
+  if convert_missing
+    for covar in model.covariates
+      dat[!, covar] = Missings.disallowmissing(dat[!, covar])
+    end
+  end
 
   return dat
 end
