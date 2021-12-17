@@ -1,26 +1,30 @@
 # data.jl
 
 """
-    deleteincomplete!(dat, cc::AbstractCICModel, cutoff)
+    deleteincomplete!(dat, t, id, treatment, F, cutoff)
 
 Remove observations for a unit with incomplete match periods (specified by cutoff, days before treatment, furthest day back to require that is included) in the outcome window for that treatment event. Mutates the data.
 """
-function deleteincomplete!(dat, cc::AbstractCICModel, cutoff)
+function deleteincomplete!(
+  dat,
+  t, id, treatment, F,
+  cutoff
+)
   # if there is no date at least to cutoff, remove data for unit up to fmax
-  tobs = unique(dat[dat[!, cc.treatment] .== 1, [cc.id, cc.t]]);
+  tobs = unique(dat[dat[!, treatment] .== 1, [id, t]]);
 
   removal_indices = Int64[];
   
   for r in eachrow(tobs)
-    treat_cutoff = r[cc.t] - cutoff;
-    c1 = dat[!, cc.id] .== r[cc.id];
-    c2 = dat[!, cc.t] .>= treat_cutoff;
-    c3 = dat[!, cc.t] .<= (r[cc.t] + cc.fmax);
+    treat_cutoff = r[t] - cutoff;
+    c1 = dat[!, id] .== r[id];
+    c2 = dat[!, t] .>= treat_cutoff;
+    c3 = dat[!, t] .<= (r[t] + maximum(F));
 
-    tf = @views dat[c1 .& c2 .& c3, cc.t];
+    tf = @views dat[c1 .& c2 .& c3, t];
     keep = minimum(tf) <= treat_cutoff;
     if !keep
-      c2b = dat[!, cc.t] .>= (r[cc.t] + cc.fmin); # remove during outcome window
+      c2b = dat[!, t] .>= (r[t] + minimum(F)); # remove during outcome window
       append!(removal_indices, findall(c1 .& c2b .& c3))
     end
   end
@@ -108,7 +112,7 @@ function dataprep(
   dat = dat[c1 .& c2, :];
 
   if remove_incomplete
-    deleteincomplete!(dat, model, incomplete_cutoff)
+    deleteincomplete!(dat, t, id, treatment, F, incomplete_cutoff)
   end
 
   sort!(dat, [id, t])
@@ -161,7 +165,7 @@ function dataprep(
   dat = dat[c1 .& c2, :];
 
   if remove_incomplete
-    deleteincomplete!(dat, model, incomplete_cutoff)
+    deleteincomplete!(dat, t, id, treatment, F, incomplete_cutoff)
   end
 
   sort!(dat, [id, t])
