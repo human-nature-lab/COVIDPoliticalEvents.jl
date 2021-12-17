@@ -69,9 +69,11 @@ end
 
 """
     dataprep!(
-      dat, treatment, t, fmax;
-      t_start = nothing, t_end = nothing;
-      remove_incomplete = false
+      dat, model;
+      t_start = nothing, t_end = nothing,
+      remove_incomplete = false,
+      incomplete_cutoff = nothing,
+      convert_missing = true
     )
 
 Prepare the data for analysis:
@@ -87,6 +89,59 @@ function dataprep(
 )
   
   @unpack t, id, treatment, F, L = model;
+
+  if isnothing(t_start)
+    ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
+    c1 = dat[!, t] .>= ttmin + L[begin];
+  else
+    c1 = dat[!, t] .>= t_start
+  end
+  
+  if isnothing(t_end)
+    ttmax = maximum(dat[dat[!, treatment] .== 1, t]);
+    c2 = dat[!, t] .<= ttmax + F[end];
+  else
+    c2 = dat[!, t] .<= t_end;
+  end
+
+
+  dat = dat[c1 .& c2, :];
+
+  if remove_incomplete
+    deleteincomplete!(dat, model, incomplete_cutoff)
+  end
+
+  sort!(dat, [id, t])
+
+  if convert_missing
+    for covar in model.covariates
+      dat[!, covar] = Missings.disallowmissing(dat[!, covar])
+    end
+  end
+
+  return dat
+end
+
+"""
+    dataprep!(
+      dat, t, id, treatment, F, L;
+      t_start = nothing, t_end = nothing,
+      remove_incomplete = false,
+      incomplete_cutoff = nothing,
+      convert_missing = true
+    )
+
+Prepare the data for analysis:
+  1. Limit date range to first day of matching period for first treatment, up to last outcome window day for last treatment.
+  2. Optionally, remove observations over the outcome window for a treatment event where the corresponding matching period (or portion thereof) is not present in the data. The portion is specified by incomplete_cutoff, the first day before a treatment event that must be included.
+"""
+function dataprep(
+  dat, t, id, treatment, F, L;
+  t_start = nothing, t_end = nothing,
+  remove_incomplete = false,
+  incomplete_cutoff = nothing,
+  convert_missing = true
+)
 
   if isnothing(t_start)
     ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
