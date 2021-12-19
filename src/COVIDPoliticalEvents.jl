@@ -2,7 +2,7 @@ module COVIDPoliticalEvents
 
   using tscsmethods, Dates, DataFrames, DataFramesMeta, Parameters, Accessors
   import CSV, HTTP
-  import JLD2.load_object
+  import JLD2:load_object
   import tscsmethods:mean,std
   using CairoMakie
   

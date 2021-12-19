@@ -110,19 +110,20 @@ function turnout_pl(;
   savepath = "supp out/",
   L = -50:-1
 )
+  
+  vn = VariableNames();
 
   # primary
   dat = load_object(datapath * "cvd_dat.jld2");
   c1 = ismissing.(dat[!, vn.tout]);
   c2 = dat.primary .== 1;
   c3 = dat[!, vn.t] .> (-1 * minimum(L)); # NOT RIGHT?
-  @linq mstates = @views(dat[c1 .& c2 .& c3, vn.abbr]) |>
-    unique();
+  mstates = unique(@views(dat[c1 .& c2 .& c3, vn.abbr]));
   primary = @views(dat[.!c1 .& c2 .& c3, :]);
   primary_avg_tout = mean(primary[!, vn.tout]);
 
   # ga special
-  ga_election = ga_turnout();
+  ga_election = ga_turnout(dat);
   ga_avg_tout = mean(ga_election[!, vn.tout]);
 
   tout_pl = Figure(resolution = (1200, 600));

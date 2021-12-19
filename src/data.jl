@@ -180,7 +180,7 @@ function dataprep(
   return dat
 end
 
-function ga_turnout(; datpath = "covid-19-data/data/")
+function ga_turnout(dat; datpath = "covid-19-data/data/")
 
   vn = VariableNames()
 
