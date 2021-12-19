@@ -128,7 +128,7 @@ end
 
 """
     dataprep!(
-      dat, t, id, treatment, F, L;
+      dat, t, id, treatment, F, L, covariates;
       t_start = nothing, t_end = nothing,
       remove_incomplete = false,
       incomplete_cutoff = nothing,
@@ -144,7 +144,8 @@ function dataprep(
   t_start = nothing, t_end = nothing,
   remove_incomplete = false,
   incomplete_cutoff = nothing,
-  convert_missing = true
+  convert_missing = true,
+  covariates = nothing
 )
 
   if isnothing(t_start)
@@ -171,10 +172,49 @@ function dataprep(
   sort!(dat, [id, t])
 
   if convert_missing
-    for covar in model.covariates
+    for covar in covariates
       dat[!, covar] = Missings.disallowmissing(dat[!, covar])
     end
   end
 
   return dat
 end
+
+function ga_turnout(; datpath = "covid-19-data/data/")
+
+  vn = VariableNames()
+
+  ge = CSV.read(
+      datpath * "ga_election_results_clean.csv", 
+      DataFrame
+  );
+
+  select!(ge, Not(Symbol("Total Votes")));
+
+  urlb = HTTP.get(
+    "https://raw.githubusercontent.com/kjhealy/fips-codes/master/state_and_county_fips_master.csv"
+  ).body;
+
+  ftab = CSV.read(urlb, DataFrame);
+  ftab = @subset(ftab, :state .== "GA");
+
+  ftab = @eachrow ftab begin
+    @newcol :county::Vector{String}
+    :county = replace(:name, " County" => "")
+  end;
+
+  select!(ftab, [:fips, :county]);
+
+  ge = leftjoin(ge, ftab, on = :County => :county);
+
+  copop = unique(select(dat, [:fips, :pop]));
+
+  ge = leftjoin(ge, copop, on = :fips);
+
+  ge.fips = convert(Vector{Int64}, ge.fips);
+
+  select!(ge, Not(:County))
+  ge[!, vn.tout] = ge.day_of ./ ge.pop;
+  
+  return ge
+end;
