@@ -383,7 +383,7 @@ function primary_mob_pl(;
 
     servals, serlabs, sercols = makeseries_state(
       datsub,
-      :State, :Day, vc
+      :State, :Day, vc, days
     );
 
     axr = Axis(
@@ -444,7 +444,7 @@ function primary_mob_pl(;
   return primary_mobility
 end
 
-function makeseries_state(datsub, idvar, tvar, var)
+function makeseries_state(datsub, idvar, tvar, var, days)
 
   ds = select(datsub, [idvar, tvar, var]);
   states = sort(unique(ds[!, idvar]));
@@ -673,7 +673,7 @@ function rally_mob_pl(;
 
     servals, serlabs, sercols = makeseries_state(
       datsub,
-      nds, :Day, vc
+      nds, :Day, vc, days
     );
 
     axr = Axis(
