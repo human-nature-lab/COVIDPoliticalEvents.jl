@@ -456,7 +456,7 @@ function makeseries_state(datsub, idvar, tvar, var, days)
   stedict = Dict(states .=> 1:length(states));
   sd = Dict{Tuple{Int, Int}, Float64}(); # time, state index
   @eachrow ds begin
-    sd[($tvar + days + 1, stedict[$idvar])] = $vc
+    sd[($tvar + days + 1, stedict[$idvar])] = $var
   end
 
   for j in 1:length(rnge) # time
