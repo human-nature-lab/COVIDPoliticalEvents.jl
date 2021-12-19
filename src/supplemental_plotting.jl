@@ -323,6 +323,8 @@ function primary_mob_pl(;
   popfactor = 10000
 )
 
+  vn = VariableNames();
+  
   mobvar = sort(
     [
       vn.res, vn.groc,
@@ -330,7 +332,6 @@ function primary_mob_pl(;
     ]
   );
 
-  vn = VariableNames();
   dat = load_object(datapath * "cvd_dat.jld2");
   primary = make_primary_info(; dat = dat, firstdate = Date("2020-03-17"));
 
