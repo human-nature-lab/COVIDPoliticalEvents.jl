@@ -665,6 +665,7 @@ function rally_mob_pl(;
   end
 
   rally_mobility = Figure(resolution = (h, w));
+  axr = nothing;
 
   for (r, e) in enumerate(unique(rallydat.Place))
     
@@ -785,7 +786,6 @@ function protest_mob_pl(;
   end
 
   blm_mobility = Figure(resolution = (h, w));
-
   axr = nothing;
 
   # (r, e) = collect(enumerate(unique(primdat.Place)))[1]

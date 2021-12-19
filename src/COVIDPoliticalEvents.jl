@@ -35,6 +35,6 @@ module COVIDPoliticalEvents
     add_recent_events!,
     # supplemental plotting
     turnout_pl, rescheduled_pl,
-    primary_mob_pl, ga_mob_pl,
+    primary_mob_pl, ga_mob_pl, rally_mob_pl, protest_mob_pl,
     exposure_shift, protest_size_hists
 end
