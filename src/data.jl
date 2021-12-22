@@ -126,10 +126,11 @@ function dataprep(
 
   # push the cumulative death rate back 10 days
   # by the infection-death distribution
+  # NaN doesn't matter since we drop the range anyway
   dat = @chain dat begin
     sort([vn.id, vn.t])
     groupby(vn.id)
-    transform(vn.cdr => Base.Fix2(lead, 10) => vn.cdr)
+    @transform($(vn.cdr) = lead($(vn.cdr), 10; default = NaN))
   end
 
   return dat
@@ -188,10 +189,11 @@ function dataprep(
 
   # push the cumulative death rate back 10 days
   # by the infection-death distribution
+  # NaN doesn't matter since we drop the range anyway
   dat = @chain dat begin
     sort([vn.id, vn.t])
     groupby(vn.id)
-    transform(vn.cdr => Base.Fix2(lead, 10) => vn.cdr)
+    @transform($(vn.cdr) = lead($(vn.cdr), 10; default = NaN))
   end
 
   return dat
