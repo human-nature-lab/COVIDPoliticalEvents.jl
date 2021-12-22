@@ -5,6 +5,7 @@ module COVIDPoliticalEvents
   import JLD2:load_object
   import tscsmethods:mean,std
   using CairoMakie
+  import ShiftedArrays:lead
   
   include("varnames.jl")
   include("data.jl")

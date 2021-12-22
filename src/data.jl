@@ -83,13 +83,14 @@ end
 Prepare the data for analysis:
   1. Limit date range to first day of matching period for first treatment, up to last outcome window day for last treatment.
   2. Optionally, remove observations over the outcome window for a treatment event where the corresponding matching period (or portion thereof) is not present in the data. The portion is specified by incomplete_cutoff, the first day before a treatment event that must be included.
+  3. Shift (lead) the cumulative death rate and cumulative case rate variables by the lower 5th percentile day of their infection-to-death distributions. This regards covariate matching.
 """
 function dataprep(
   dat, model;
   t_start = nothing, t_end = nothing,
   remove_incomplete = false,
   incomplete_cutoff = nothing,
-  convert_missing = true
+  convert_missing = true,
 )
   
   @unpack t, id, treatment, F, L = model;
@@ -123,6 +124,14 @@ function dataprep(
     end
   end
 
+  # push the cumulative death rate back 10 days
+  # by the infection-death distribution
+  dat = @chain dat begin
+    sort([vn.id, vn.t])
+    groupby(vn.id)
+    transform(vn.cdr => Base.Fix2(lead, 10) => vn.cdr)
+  end
+
   return dat
 end
 
@@ -138,6 +147,7 @@ end
 Prepare the data for analysis:
   1. Limit date range to first day of matching period for first treatment, up to last outcome window day for last treatment.
   2. Optionally, remove observations over the outcome window for a treatment event where the corresponding matching period (or portion thereof) is not present in the data. The portion is specified by incomplete_cutoff, the first day before a treatment event that must be included.
+  3. Shift (lead) the cumulative death rate and cumulative case rate variables by the lower 5th percentile day of their infection-to-death distributions. This regards covariate matching.
 """
 function dataprep(
   dat, t, id, treatment, F, L;
@@ -162,7 +172,6 @@ function dataprep(
     c2 = dat[!, t] .<= t_end;
   end
 
-
   dat = dat[c1 .& c2, :];
 
   if remove_incomplete
@@ -175,6 +184,14 @@ function dataprep(
     for covar in covariates
       dat[!, covar] = Missings.disallowmissing(dat[!, covar])
     end
+  end
+
+  # push the cumulative death rate back 10 days
+  # by the infection-death distribution
+  dat = @chain dat begin
+    sort([vn.id, vn.t])
+    groupby(vn.id)
+    transform(vn.cdr => Base.Fix2(lead, 10) => vn.cdr)
   end
 
   return dat
