@@ -59,7 +59,9 @@ function deathmodel(title::String, treatment, modeltype, dat; iterations = 500)
   observations, ids = tscsmethods.observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
   
   # tobs = make_tobsvec(length(observations), length(ids));
-  tobs = tscsmethods.make_matches(length(observations), length(ids), length(10:40));
+  tobs = tscsmethods.make_matches(
+    length(observations), length(ids), length(10:40)
+  );
 
   model = CIC(
     title = title,
@@ -70,7 +72,7 @@ function deathmodel(title::String, treatment, modeltype, dat; iterations = 500)
     covariates = covariates,
     timevary = timevary,
     F = 10:40,
-    L = -40:-10,
+    L = -40:-11, # 40 days before up to 1 day before (-10 is day of) 
     observations = observations,
     ids = ids,
     matches = tobs,
