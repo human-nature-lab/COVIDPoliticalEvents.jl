@@ -93,6 +93,7 @@ function dataprep(
   convert_missing = true,
 )
   
+  vn = VariableNames()
   @unpack t, id, treatment, F, L = model;
 
   if isnothing(t_start)
@@ -128,8 +129,8 @@ function dataprep(
   # by the infection-death distribution
   # NaN doesn't matter since we drop the range anyway
   dat = @chain dat begin
-    sort([vn.id, vn.t])
-    groupby(vn.id)
+    sort([id, t])
+    groupby(id)
     @transform($(vn.cdr) = lead($(vn.cdr), 10; default = NaN))
   end
 
@@ -138,7 +139,7 @@ end
 
 """
     dataprep!(
-      dat, t, id, treatment, F, L, covariates;
+      dat, treatment, F, L, covariates;
       t_start = nothing, t_end = nothing,
       remove_incomplete = false,
       incomplete_cutoff = nothing,
@@ -151,13 +152,17 @@ Prepare the data for analysis:
   3. Shift (lead) the cumulative death rate and cumulative case rate variables by the lower 5th percentile day of their infection-to-death distributions. This regards covariate matching.
 """
 function dataprep(
-  dat, t, id, treatment, F, L;
+  dat, treatment, F, L;
   t_start = nothing, t_end = nothing,
   remove_incomplete = false,
   incomplete_cutoff = nothing,
   convert_missing = true,
   covariates = nothing
 )
+
+  vn = VariableNames()
+
+  @unpack t, id, cdr = vn;
 
   if isnothing(t_start)
     ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
@@ -191,9 +196,9 @@ function dataprep(
   # by the infection-death distribution
   # NaN doesn't matter since we drop the range anyway
   dat = @chain dat begin
-    sort([vn.id, vn.t])
-    groupby(vn.id)
-    @transform($(vn.cdr) = lead($(vn.cdr), 10; default = NaN))
+    sort([id, t])
+    groupby(id)
+    @transform($(cdr) = lead($(cdr), 10; default = NaN))
   end
 
   return dat
