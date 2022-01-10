@@ -1,6 +1,7 @@
 module COVIDPoliticalEvents
 
   using tscsmethods, Dates, DataFrames, DataFramesMeta, Parameters, Accessors
+  import tscsmethods:ModelRecord
   import CSV, HTTP
   import JLD2:load_object
   import tscsmethods:mean,std
@@ -11,6 +12,7 @@ module COVIDPoliticalEvents
   include("data.jl")
   include("setup.jl")
   include("plotting.jl")
+  include("panel_plots.jl")
   include("supplemental_plotting.jl")
   include("spillover.jl")
   include("threshold.jl")
@@ -37,5 +39,6 @@ module COVIDPoliticalEvents
     # supplemental plotting
     turnout_pl, rescheduled_pl,
     primary_mob_pl, ga_mob_pl, rally_mob_pl, protest_mob_pl,
-    exposure_shift, protest_size_hists
+    exposure_shift, protest_size_hists,
+    primary_panel, blm_panel
 end
