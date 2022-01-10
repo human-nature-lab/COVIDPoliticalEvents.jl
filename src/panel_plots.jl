@@ -256,7 +256,7 @@ function blm_panel(
   );
 
   # do this for each sub analysis
-  ax_ancillary2!(
+  ax_ancillary!(
     Fig,
     refinedcalstrat;
     fpos = ancpos
