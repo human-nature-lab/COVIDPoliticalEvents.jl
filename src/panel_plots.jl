@@ -20,11 +20,15 @@ function ax_overall!(
       Fig[fpos...][1,1], fmin, fmax, model.results;
       outcome = model.outcome
     );
+
+    # Legend(Fig[3,2][1,1], axa)
     
     axc, _ = tscsmethods.ax_cb(
       Fig[fpos...][1,2], model.grandbalances, pomin, pomax, variablecolors;
       step = 10
     );
+
+    Legend(Fig[3,2][1,1], axc, nbanks = 3, framevisible = false)
 
   end
 
@@ -166,23 +170,15 @@ function ax_ancillary!(
     end
   end
 
-  # Label(
-  #   Fig[fpos...][2:end-1, 0],
-  #   text = "ATT Estimate",
-  #   textsize = 10,
-  #   rotation = pi/2
-  # )
-
   return Fig
 end
 
 function primary_panel(
   ; modpth = "grace out/primary out/", spth = "", ext = ".png", dosave = true,
-  figwid = 800, figlen = 800,
-  oepos = [1,1], ancpos = [2,1],
-  treatpos = [:, 2],
-  pathtoimg = "covid-political-events-paper (working)/method_diagram-01.png",
-  importimg = true
+  figwid = 1800, figlen = 800,
+  oepos = [1,2], ancpos = [2,2],
+  treatpos = [:, 1],
+  pathtoimg = "covid-political-events-paper (working)/method_diagram-01.png"
 )
 
   # overall
@@ -202,6 +198,11 @@ function primary_panel(
 
   Fig = Figure(resolution = (figwid, figlen));
 
+  g1 = Fig[:, 1] = GridLayout();
+  g2 = Fig[1, 2] = GridLayout();
+  g3 = Fig[2, 2] = GridLayout();
+  g4 = Fig[3, 2] = GridLayout();
+
   ax_overall!(
     Fig,
     refinedcal;
@@ -217,22 +218,44 @@ function primary_panel(
     fpos = ancpos
   );
 
-  if importimg
-    img = load(pathtoimg);
+  img = load(pathtoimg);
 
-    axd = Axis(Fig[treatpos...])
-    hidedecorations!(axd);
-    image!(Fig[treatpos...], rotr90(img),)
-    axd.aspect = DataAspect()
-    
-    # sideinfo = Label(Fig[2,1][:,0], "ATT Estimate", rotation = pi/2);
+  axd = Axis(Fig[treatpos...])
+  hidedecorations!(axd);
+  hidespines!(axd)
+  image!(Fig[treatpos...], rotr90(img),)
+  axd.aspect = DataAspect()
 
-    if dosave
-      save(
-        spth * "primary_panel" * ext,
-        Fig
-      )
-    end
+
+  for (label, layout) in zip(["a", "b", "c"], [g1, g2, g3])
+    Label(layout[1, 1, TopLeft()], label,
+        textsize = 26,
+        padding = (0, 5, 5, 0),
+        halign = :right)
+  end
+  
+  # sideinfo = Label(Fig[2,1][:,0], "ATT Estimate", rotation = pi/2);
+  
+  rowsize!(g2, 1, Relative(0.9))
+  rowsize!(g3, 1, Relative(0.9))
+  rowsize!(g3, 2, Relative(0.9))
+
+  colsize!(Fig.layout, 2, Auto())
+
+  colgap!(g2, 1)
+  rowgap!(g2, 0.1)
+
+  colgap!(g3, 1)
+  rowgap!(g3, 0.1)
+
+  colgap!(g4, 1)
+  rowgap!(g4, 0.1)
+
+  if dosave
+    save(
+      spth * "primary_panel2" * ext,
+      Fig
+    )
   end
 
   return Fig
@@ -275,6 +298,16 @@ function blm_panel(
   );
 
   # sideinfo = Label(Fig[2,1][:,0], "ATT Estimate", rotation = pi/2);
+
+  g1 = Fig[1, 1] = GridLayout();
+  g2 = Fig[2, 1] = GridLayout();
+
+  for (label, layout) in zip(["a", "b"], [g1, g2])
+    Label(layout[1, 1, TopLeft()], label,
+        textsize = 26,
+        padding = (0, 5, 5, 0),
+        halign = :right)
+  end
 
   if dosave
     save(
