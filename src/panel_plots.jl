@@ -4,6 +4,7 @@ function ax_overall!(
   Fig,
   model::ModelRecord;
   fpos = [1,1],
+  lpos = [3,2],
   variablecolors = nothing
 )
 
@@ -28,7 +29,7 @@ function ax_overall!(
       step = 10
     );
 
-    Legend(Fig[3,2][1,1], axc, nbanks = 3, framevisible = false)
+    Legend(Fig[lpos...][1,1], axc, nbanks = 3, framevisible = false)
 
   end
 
@@ -253,7 +254,7 @@ function primary_panel(
 
   if dosave
     save(
-      spth * "primary_panel2" * ext,
+      spth * "primary_panel" * ext,
       Fig
     )
   end
@@ -263,7 +264,7 @@ end
 
 function blm_panel(
   ; modpth = "grace out/protest out/", spth = "", ext = ".png", dosave = true,
-  figwid = 800, figlen = 800,
+  figwid = 1000, figlen = 800,
   oepos = [1,1], ancpos = [2,1]
 )
 
@@ -283,10 +284,14 @@ function blm_panel(
 
   Fig = Figure(resolution = (figwid, figlen));
 
+  g1 = Fig[1, 1] = GridLayout();
+  g2 = Fig[2, 1] = GridLayout();
+
   ax_overall!(
     Fig,
     refinedcal;
     fpos = oepos,
+    lpos = [3,1],
     variablecolors = variablecolors
   );
 
@@ -299,15 +304,26 @@ function blm_panel(
 
   # sideinfo = Label(Fig[2,1][:,0], "ATT Estimate", rotation = pi/2);
 
-  g1 = Fig[1, 1] = GridLayout();
-  g2 = Fig[2, 1] = GridLayout();
-
   for (label, layout) in zip(["a", "b"], [g1, g2])
     Label(layout[1, 1, TopLeft()], label,
         textsize = 26,
         padding = (0, 5, 5, 0),
         halign = :right)
   end
+
+  rowsize!(g1, 1, Relative(0.9))
+  rowsize!(g2, 1, Relative(0.9))
+  rowsize!(g2, 2, Relative(0.9))
+
+  colsize!(Fig.layout, 1, Auto())
+
+  # colgap!(g1, 1)
+  # rowgap!(g1, 0.1)
+
+  # colgap!(g2, 1)
+  # rowgap!(g2, 0.1)
+
+  Fig
 
   if dosave
     save(
