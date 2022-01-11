@@ -179,7 +179,10 @@ end
 function primary_panel(
   ; modpth = "grace out/primary out/", spth = "", ext = ".png", dosave = true,
   figwid = 800, figlen = 800,
-  oepos = [1,1], ancpos = [2,1]
+  oepos = [1,1], ancpos = [2,1],
+  treatpos = [:, 2],
+  pathtoimg = "covid-political-events-paper (working)/method_diagram-01.png",
+  importimg = true
 )
 
   # overall
@@ -214,13 +217,22 @@ function primary_panel(
     fpos = ancpos
   );
 
-  # sideinfo = Label(Fig[2,1][:,0], "ATT Estimate", rotation = pi/2);
+  if importimg
+    img = load(pathtoimg);
 
-  if dosave
-    save(
-      spth * "primary_panel" * ext,
-      Fig
-    )
+    axd = Axis(Fig[treatpos...])
+    hidedecorations!(axd);
+    image!(Fig[treatpos...], rotr90(img),)
+    axd.aspect = DataAspect()
+    
+    # sideinfo = Label(Fig[2,1][:,0], "ATT Estimate", rotation = pi/2);
+
+    if dosave
+      save(
+        spth * "primary_panel" * ext,
+        Fig
+      )
+    end
   end
 
   return Fig

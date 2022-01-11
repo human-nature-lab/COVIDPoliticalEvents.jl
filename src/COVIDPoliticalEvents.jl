@@ -7,6 +7,7 @@ module COVIDPoliticalEvents
   import tscsmethods:mean,std
   using CairoMakie
   import ShiftedArrays:lead
+  import FileIO.load
   
   include("varnames.jl")
   include("data.jl")
