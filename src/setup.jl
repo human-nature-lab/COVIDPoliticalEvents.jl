@@ -2,6 +2,24 @@
 # functions involved in setting up the models
 
 """
+    protest_treatmentcategories(x)
+
+(For use as input to match!)
+Protest treatment history categories.
+We look at total count in the pre-treatment crossover
+period for both the treated unit and its (potential) match.
+If the totals, for each, in the same period fall into the same cateory,
+we allow the match.
+"""
+function protest_treatmentcategories(x)
+  if x == 0; g = 0 end
+  if (x == 1) | (x == 2); g = 1 end
+  if (x > 2) & (x < 10); g = 2 end
+  if (x >= 10); g = 3 end
+  return g
+end
+
+"""
     covariateset(vn::VariableNames, outcome::Symbol; modeltype::String = "epi")
 
 Return the covariates for the specified model type ("epi", "nomob", "full").

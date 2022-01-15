@@ -41,5 +41,6 @@ module COVIDPoliticalEvents
     turnout_pl, rescheduled_pl,
     primary_mob_pl, ga_mob_pl, rally_mob_pl, protest_mob_pl,
     exposure_shift, protest_size_hists,
-    primary_panel, blm_panel
+    primary_panel, blm_panel,
+    protest_treatmentcategories
 end
