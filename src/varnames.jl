@@ -37,7 +37,7 @@ tscsmethods.@with_kw struct VariableNames
   resl = Symbol("Restaurants Limited-Service");
   groc = :Grocers;
   bar = Symbol("Drinking Places (Alcoholic Beverages)");
-  rec = Symbol("Fitness and Recreational Sports Centers");
+  rec = Symbol("Fitness and Recreation");
   relig = Symbol("Religious Organizations");
 
   prsz = Symbol("Protest Size");

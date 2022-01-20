@@ -33,20 +33,26 @@ function deleteincomplete!(
 end
 
 """
-    gaprep!(dat; gaspecialdate = Date("2021-01-05"))
+    treatstateondate!(
+      dat;
+      state_abbreviation = "GA",
+      eventdate = Date("2021-01-05"),
+      treatment_variable = :gaspecial,
+      date_column = :date
+    )
 
-Create the treatment variable for the GA Special Election.
+Create the treatment variable for an event in a whole state, on a day). e.g. the ga special election.
 """
-function treatga!(
+function treatstateondate!(
   dat;
   state_abbreviation = "GA",
-  gaspecialdate = Date("2021-01-05"),
+  eventdate = Date("2021-01-05"),
   treatment_variable = :gaspecial,
   date_column = :date
 )
 
   dat[!, treatment_variable] .= 0;
-  c1 = (dat[!, VariableNames().abbr] .== state_abbreviation) .& (dat[!, date_column] .== gaspecialdate);
+  c1 = (dat[!, VariableNames().abbr] .== state_abbreviation) .& (dat[!, date_column] .== eventdate);
   dat[c1, treatment_variable] .= 1;
 
   return dat

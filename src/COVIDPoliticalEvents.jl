@@ -25,7 +25,7 @@ module COVIDPoliticalEvents
     deathmodel,
     casemodel,
     # data
-    treatga!,
+    treatstateondate!,
     dataprep,
     primary_filter,
     # plotting
