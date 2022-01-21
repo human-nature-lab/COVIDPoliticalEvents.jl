@@ -45,7 +45,7 @@ Create the treatment variable for an event in a whole state, on a day). e.g. the
 """
 function treatstateondate!(
   dat;
-  state_abbreviation = "GA",
+  state_abbreviation::String = "GA",
   eventdate = Date("2021-01-05"),
   treatment_variable = :gaspecial,
   date_column = :date
@@ -54,6 +54,35 @@ function treatstateondate!(
   dat[!, treatment_variable] .= 0;
   c1 = (dat[!, VariableNames().abbr] .== state_abbreviation) .& (dat[!, date_column] .== eventdate);
   dat[c1, treatment_variable] .= 1;
+
+  return dat
+end
+
+"""
+    treatstateondate!(
+      dat;
+      state_abbreviation = "GA",
+      eventdate = Date("2021-01-05"),
+      treatment_variable = :gaspecial,
+      date_column = :date
+    )
+
+Create the treatment variable for an event in a whole state, on a day). e.g. the ga special election.
+"""
+function treatstateondate!(
+  dat;
+  state_abbreviations::Vector{String} = ["VA", "NJ"],
+  eventdate = Date("2021-11-02"),
+  treatment_variable = :gub,
+  date_column = :date
+)
+
+  dat[!, treatment_variable] .= 0;
+
+  for state_abbreviation in state_abbreviations
+    c1 = (dat[!, VariableNames().abbr] .== state_abbreviation) .& (dat[!, date_column] .== eventdate);
+    dat[c1, treatment_variable] .= 1;
+  end
 
   return dat
 end
