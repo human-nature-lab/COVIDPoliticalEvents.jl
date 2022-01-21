@@ -42,5 +42,6 @@ module COVIDPoliticalEvents
     primary_mob_pl, ga_mob_pl, rally_mob_pl, protest_mob_pl,
     exposure_shift, protest_size_hists,
     primary_panel, blm_panel,
-    protest_treatmentcategories
+    protest_treatmentcategories,
+    rally_treatmentcategories
 end
