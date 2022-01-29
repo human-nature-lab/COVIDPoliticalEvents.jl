@@ -73,7 +73,10 @@ function covariateset(
   end
 end
 
-function deathmodel(title::String, treatment, modeltype, dat; iterations = 500)
+function deathmodel(
+  title::String, treatment, modeltype, dat;
+  F = 10:40, L = -30:-1, iterations = 500
+)
   
   vn = VariableNames();
   
@@ -91,10 +94,10 @@ function deathmodel(title::String, treatment, modeltype, dat; iterations = 500)
   end;
 
   observations, ids = tscsmethods.observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
-  
+
   # tobs = make_tobsvec(length(observations), length(ids));
   tobs = tscsmethods.make_matches(
-    length(observations), length(ids), length(10:40)
+    length(observations), length(ids), length(F)
   );
 
   model = CIC(
@@ -105,8 +108,8 @@ function deathmodel(title::String, treatment, modeltype, dat; iterations = 500)
     outcome = vn.deathoutcome,
     covariates = covariates,
     timevary = timevary,
-    F = 10:40,
-    L = -30:-1, # 40 days before up to 1 day before (-10 is day of) 
+    F = F,
+    L = L, # 40 days before up to 1 day before (-10 is day of) 
     observations = observations,
     ids = ids,
     matches = tobs,
@@ -118,7 +121,9 @@ function deathmodel(title::String, treatment, modeltype, dat; iterations = 500)
   return model
 end
 
-function casemodel(title::String, treatment, modeltype, dat; iterations = 500)
+function casemodel(title::String, treatment, modeltype, dat;
+  F = 10:40, L = -30:-1, iterations = 500
+)
 
   vn = VariableNames();
   
@@ -136,9 +141,9 @@ function casemodel(title::String, treatment, modeltype, dat; iterations = 500)
   end;
 
   observations, ids = tscsmethods.observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
-  
+
   # tobs = make_tobsvec(length(observations), length(ids));
-  tobs = tscsmethods.make_matches(length(observations), length(ids), length(3:20));
+  tobs = tscsmethods.make_matches(length(observations), length(ids), length(F));
 
   model = CIC(
     title = title,
@@ -148,8 +153,8 @@ function casemodel(title::String, treatment, modeltype, dat; iterations = 500)
     outcome = vn.caseoutcome,
     covariates = covariates,
     timevary = timevary,
-    F = 10:40,
-    L = -30:-1,
+    F = F,
+    L = L,
     observations = observations,
     ids = ids,
     matches = tobs,
