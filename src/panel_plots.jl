@@ -11,7 +11,8 @@ function ax_overall!(
   strat = !(model.stratifier == Symbol(""));
   
   fmin = minimum(model.F); fmax = maximum(model.F)
-  pomin = minimum(model.L); pomax = maximum(model.L)
+  pomin = minimum(model.L); pomax = maximum(model.L);
+  
   
   if strat
     error("no stratified models for overall plot")
@@ -172,6 +173,10 @@ function ax_ancillary!(
   end
 
   return Fig
+end
+
+function primary_plot()
+
 end
 
 function primary_panel(
