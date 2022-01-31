@@ -75,15 +75,19 @@ end
 
 function deathmodel(
   title::String, treatment, modeltype, dat;
-  F = 10:40, L = -30:-1, iterations = 500
+  F = 10:40, L = -30:-1, iterations = 500,
+  matchingcovariates = nothing
 )
   
   vn = VariableNames();
   
-  covariates = covariateset(
-    vn, vn.deathoutcome;
-    modeltype = modeltype
-  );
+  covariates = if isnothing(matchingcovariates)
+    covariateset(
+      vn, vn.deathoutcome;
+      modeltype = modeltype
+    );
+  else matchingcovariates
+  end
 
   # filter timevary to entries in modelcovariates
   timevary = Dict{Symbol, Bool}();
@@ -121,16 +125,21 @@ function deathmodel(
   return model
 end
 
-function casemodel(title::String, treatment, modeltype, dat;
-  F = 10:40, L = -30:-1, iterations = 500
+function casemodel(
+  title::String, treatment, modeltype, dat;
+  F = 10:40, L = -30:-1, iterations = 500,
+  matchingcovariates = nothing
 )
 
   vn = VariableNames();
   
-  covariates = covariateset(
-    vn, vn.caseoutcome;
-    modeltype = modeltype
-  );
+  covariates = if isnothing(matchingcovariates)
+    covariateset(
+      vn, vn.caseoutcome;
+      modeltype = modeltype
+    );
+  else matchingcovariates
+  end
 
   # filter timevary to entries in modelcovariates
   timevary = Dict{Symbol, Bool}();
