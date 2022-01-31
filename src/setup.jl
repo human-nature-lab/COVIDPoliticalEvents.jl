@@ -76,7 +76,8 @@ end
 function deathmodel(
   title::String, treatment, modeltype, dat;
   F = 10:40, L = -30:-1, iterations = 500,
-  matchingcovariates = nothing
+  matchingcovariates = nothing,
+  rate = true
 )
   
   vn = VariableNames();
@@ -109,7 +110,7 @@ function deathmodel(
     id = vn.id,
     t = vn.t,
     treatment = treatment,
-    outcome = vn.deathoutcome,
+    outcome = rate ? vn.deathoutcome : :deaths,
     covariates = covariates,
     timevary = timevary,
     F = F,
@@ -128,7 +129,8 @@ end
 function casemodel(
   title::String, treatment, modeltype, dat;
   F = 10:40, L = -30:-1, iterations = 500,
-  matchingcovariates = nothing
+  matchingcovariates = nothing,
+  rate = true
 )
 
   vn = VariableNames();
@@ -159,7 +161,7 @@ function casemodel(
     id = vn.id,
     t = vn.t,
     treatment = treatment,
-    outcome = vn.caseoutcome,
+    outcome = rate ? vn.caseoutcome : cases,
     covariates = covariates,
     timevary = timevary,
     F = F,
