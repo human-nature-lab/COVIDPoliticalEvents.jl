@@ -8,7 +8,7 @@ Struct that contains easy references to "nice" variable names; only some of whic
 N = 12
 Pick based on maximum number of covariates used in any analysis to keep the colors consistent throughout the paper.
 """
-tscsmethods.@with_kw struct VariableNames
+TSCSMethods.@with_kw struct VariableNames
   id = :fips;
   t = :running;
 

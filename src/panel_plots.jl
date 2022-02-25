@@ -18,14 +18,14 @@ function ax_overall!(
     error("no stratified models for overall plot")
   else
 
-    axa, _ = tscsmethods.ax_att(
+    axa, _ = TSCSMethods.ax_att(
       Fig[fpos...][1,1], fmin, fmax, model.results;
       outcome = model.outcome
     );
 
     # Legend(Fig[3,2][1,1], axa)
     
-    axc, _ = tscsmethods.ax_cb(
+    axc, _ = TSCSMethods.ax_cb(
       Fig[fpos...][1,2], model.grandbalances, pomin, pomax, variablecolors;
       step = 10
     );
@@ -50,7 +50,7 @@ function ax_ancillary!(
   if !strat
     error("ancillary analyses are stratified")
   elseif strat
-    pdict = tscsmethods.make_pdict()
+    pdict = TSCSMethods.make_pdict()
 
     sn = sort(unique(
       sort([k for k in keys(model.grandbalances)])
@@ -65,7 +65,7 @@ function ax_ancillary!(
       resi = model.results[model.results.stratum .== s, :];
       
       subfpos = pdict[i];
-      axa, _ = tscsmethods.ax_att(
+      axa, _ = TSCSMethods.ax_att(
         Fig[fpos...][subfpos...], fmin, fmax, resi;
         outcome = model.outcome,
         attl = model.labels[s],
@@ -98,7 +98,7 @@ function ax_ancillary!(
   if !strat
     error("ancillary analyses are stratified")
   elseif strat
-    pdict = tscsmethods.make_pdict()
+    pdict = TSCSMethods.make_pdict()
 
     sn = sort(unique(
       sort([k for k in keys(model.grandbalances)])
@@ -113,7 +113,7 @@ function ax_ancillary!(
       resi = model.results[model.results.stratum .== s, :];
       
       subfpos = pdict[i];
-      axa, _ = tscsmethods.ax_att(
+      axa, _ = TSCSMethods.ax_att(
         Fig[fpos...][subfpos...], fmin, fmax, resi;
         outcome = model.outcome,
         attl = model.labels[s],
@@ -147,7 +147,7 @@ function ax_ancillary!(
   if !strat
     error("ancillary analyses are stratified")
   elseif strat
-    pdict = tscsmethods.make_pdict()
+    pdict = TSCSMethods.make_pdict()
 
     sn = sort(unique(
       sort([k for k in results.stratum])
@@ -162,7 +162,7 @@ function ax_ancillary!(
       resi = results[results.stratum .== s, :];
       
       subfpos = pdict[i];
-      axa, _ = tscsmethods.ax_att(
+      axa, _ = TSCSMethods.ax_att(
         Fig[fpos...][subfpos...], fmin, fmax, resi;
         outcome = model.outcome,
         attl = model.labels[s],

@@ -2,7 +2,7 @@
 
 function mk_covpal(vn::VariableNames)
 
-  pal = tscsmethods.gen_colors(vn.N);
+  pal = TSCSMethods.gen_colors(vn.N);
 
   variablecolors = Dict(
     vn.cdr => pal[3],

@@ -468,7 +468,7 @@ function makeseries_state(datsub, idvar, tvar, var, days)
   serlabs = states;
 
   # assume same states for each metric:
-  sercols = tscsmethods.gen_colors(length(serlabs)); 
+  sercols = TSCSMethods.gen_colors(length(serlabs)); 
 
   return servals, serlabs, sercols
 end
@@ -904,7 +904,7 @@ function exposure_shift(;
   select!(dat, [vn.t, vn.id, var, nds]);
 
   tes = sort(unique(dat[!, nds]));
-  tescols = tscsmethods.gen_colors(length(tes));
+  tescols = TSCSMethods.gen_colors(length(tes));
 
   # vals = @chain dat begin
   #   groupby(nds)

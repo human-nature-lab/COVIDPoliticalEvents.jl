@@ -58,16 +58,16 @@ function datestrat(
   # we want quantiles of unique
   # udtes = unique(@view dat[dat[!, treatment] .== 1, :date]);
 
-  X = sort(Int.(round.(tscsmethods.quantile(udtes, qtes), digits = 0)));
+  X = sort(Int.(round.(TSCSMethods.quantile(udtes, qtes), digits = 0)));
   Xlen = length(X);
 
   for (i, ob) in enumerate(observations)
-    strata[i] = tscsmethods.assignq(ob[1], X, Xlen)
+    strata[i] = TSCSMethods.assignq(ob[1], X, Xlen)
   end
 
   dteq = string.(datestart + Day.(X));
 
-  return strata, tscsmethods.label_variablestrat(dteq), Symbol("Primary Date")
+  return strata, TSCSMethods.label_variablestrat(dteq), Symbol("Primary Date")
 end
 
 # Population Density
@@ -98,14 +98,14 @@ function primarydistancestrat(model, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
   end
 
   # X = sort(tscsmethods.quantile(values(dd), qtes));
-  X = sort(Int.(round.(tscsmethods.quantile(values(dd), qtes), digits = 0)))
+  X = sort(Int.(round.(TSCSMethods.quantile(values(dd), qtes), digits = 0)))
   Xlen = length(X);
 
   for (i, ob) in enumerate(observations)
-    strata[i] = tscsmethods.assignq(dd[ob[2]], X, Xlen)
+    strata[i] = TSCSMethods.assignq(dd[ob[2]], X, Xlen)
   end
 
-  return strata, tscsmethods.label_variablestrat(string.(X)), Symbol("Date of First Case to Primary")
+  return strata, TSCSMethods.label_variablestrat(string.(X)), Symbol("Date of First Case to Primary")
 end
 
 # Trump's Share of the Vote in 2016
