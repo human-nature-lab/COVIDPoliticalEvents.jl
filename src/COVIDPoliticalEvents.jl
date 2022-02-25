@@ -1,10 +1,10 @@
 module COVIDPoliticalEvents
 
-  using tscsmethods, Dates, DataFrames, DataFramesMeta, Parameters, Accessors
-  import tscsmethods:ModelRecord
+  using TSCSMethods, Dates, DataFrames, DataFramesMeta, Parameters, Accessors
+  import TSCSMethods:ModelRecord
   import CSV, HTTP
   import JLD2:load_object
-  import tscsmethods:mean,std
+  import TSCSMethods:mean,std
   using CairoMakie
   import ShiftedArrays:lead
   import FileIO.load
