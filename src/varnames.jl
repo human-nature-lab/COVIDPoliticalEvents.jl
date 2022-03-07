@@ -14,6 +14,7 @@ TSCSMethods.@with_kw struct VariableNames
 
   deathoutcome = :death_rte
   caseoutcome = :case_rte
+  rt = :Rt
 
   phi = Symbol("Pct. Hispanic");
   pbl = Symbol("Pct. Afr. American");
@@ -68,5 +69,6 @@ TSCSMethods.@with_kw struct VariableNames
     prsz => false, te => false,
     dr => true,
     cr => true,
+    rt => true
   );
 end

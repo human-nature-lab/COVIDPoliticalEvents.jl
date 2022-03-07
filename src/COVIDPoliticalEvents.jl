@@ -28,6 +28,7 @@ module COVIDPoliticalEvents
     treatstateondate!,
     dataprep,
     primary_filter,
+    merge_Rt_data,
     # plotting
     mk_covpal,
     # spillover
