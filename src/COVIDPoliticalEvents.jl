@@ -24,6 +24,7 @@ module COVIDPoliticalEvents
     VariableNames,
     deathmodel,
     casemodel,
+    rtmodel,
     # data
     treatstateondate!,
     dataprep,

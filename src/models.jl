@@ -104,12 +104,10 @@ function casemodel(
   return model
 end
 
-function rt_model(
+function rtmodel(
   title::String, treatment, modeltype, dat;
   F = 0:40, L = -30:-1, iterations = 500,
-  matchingcovariates = nothing,
-  timevary = nothing,
-  rate = true
+  matchingcovariates = nothing
 )
 
   vn = VariableNames();

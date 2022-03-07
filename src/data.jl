@@ -264,6 +264,19 @@ function merge_Rt_data(dat, transdatafile)
   rename!(td, Symbol("Rt.hi") => :Rt_hi, Symbol("Rt.lo") => :Rt_lo)
   select!(td, :fips, :date, :Rt) # :Rt_hi, :Rt_lo
     # hi and low estimates are missing?
-  dat = leftjoin(dat, td, on = [:date, :fips])
+  tdict = Dict{Tuple{Int, Dates.Date}, Float64}();
+
+  # (unit, dte, rval) = collect(zip(td.fips, td.date, td.Rt))[1]
+  for (unit, dte, rval) in zip(td.fips, td.date, td.Rt)
+    tdict[(unit, dte)] = rval
+  end
+
+  dat[!, :Rt] = Vector{Union{Float64, Missing}}(missing, nrow(dat));
+
+  for r in eachrow(dat)
+    r[:Rt] = get(tdict, (r[:fips], r[:date]), missing)
+  end
+
+  # dat = leftjoin(dat, td, on = [:date, :fips])
   return dat
 end
