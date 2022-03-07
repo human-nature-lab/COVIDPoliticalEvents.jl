@@ -116,7 +116,7 @@ function rt_model(
   
   covariates = if isnothing(matchingcovariates)
     covariateset(
-      vn, vn.caseoutcome;
+      vn, vn.rt;
       modeltype = modeltype
     );
   else matchingcovariates
