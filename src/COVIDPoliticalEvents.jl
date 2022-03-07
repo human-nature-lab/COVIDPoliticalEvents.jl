@@ -12,6 +12,7 @@ module COVIDPoliticalEvents
   include("varnames.jl")
   include("data.jl")
   include("setup.jl")
+  include("models.jl")
   include("plotting.jl")
   include("panel_plots.jl")
   include("supplemental_plotting.jl")
