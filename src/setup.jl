@@ -51,6 +51,7 @@ function covariateset(
 
   deathrte = outcome == :death_rte
   caserte = outcome == :case_rte
+  rt = outcome == :Rt
 
   if epi & deathrte
     return [vn.cdr, vn.pd, vn.fc]
@@ -70,6 +71,15 @@ function covariateset(
       vn.ccr, vn.fc, vn.pd, vn.res, vn.groc,
       vn.rec, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65
     ];
+  elseif full & rt
+    return [
+      vn.rt, vn.fc, vn.pd, vn.res, vn.groc,
+      vn.rec, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65
+    ];
+  elseif nomob & rt
+    return [vn.rt, vn.fc, vn.pd, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65];
+  elseif epi & rt
+    return [vn.rt, vn.pd, vn.fc]
   end
 end
 
