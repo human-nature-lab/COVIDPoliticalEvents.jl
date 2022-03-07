@@ -258,3 +258,12 @@ function ga_turnout(dat; datpath = "covid-19-data/data/")
   
   return ge
 end;
+
+function merge_Rt_data(dat, transdatafile)
+  td = CSV.read(transdatafile, DataFrame);
+  rename!(td, Symbol("Rt.hi") => :Rt_hi, Symbol("Rt.lo") => :Rt_lo)
+  select!(td, :fips, :date, :Rt) # :Rt_hi, :Rt_lo
+    # hi and low estimates are missing?
+  dat = leftjoin(dat, td, on = [:date, :fips])
+  return dat
+end
