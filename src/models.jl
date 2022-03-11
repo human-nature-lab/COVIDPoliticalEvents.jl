@@ -138,7 +138,7 @@ function rtmodel(
     id = vn.id,
     t = vn.t,
     treatment = treatment,
-    outcome = :rt,
+    outcome = vn.rt,
     covariates = covariates,
     timevary = timevary,
     F = F,
