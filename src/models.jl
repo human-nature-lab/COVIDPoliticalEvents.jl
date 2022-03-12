@@ -153,3 +153,53 @@ function rtmodel(
 
   return model
 end
+
+function mobmodel(
+  title::String, outcome, refoutcome, treatment, modeltype, dat;
+  F = 0:40, L = -30:-1, iterations = 500,
+  matchingcovariates = nothing
+)
+
+  vn = VariableNames();
+  
+  covariates = if isnothing(matchingcovariates)
+    covariateset(
+      vn, refoutcome;
+      modeltype = modeltype
+    );
+  else matchingcovariates
+  end
+
+  # filter timevary to entries in modelcovariates
+  timevary = Dict{Symbol, Bool}();
+  for (covar, v) in vn.timevary
+    if covar ∈ covariates
+      timevary[covar] = v
+    end
+  end;
+
+  observations, ids = TSCSMethods.observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
+
+  # tobs = make_tobsvec(length(observations), length(ids));
+  tobs = TSCSMethods.make_matches(length(observations), length(ids), length(F));
+
+  model = CIC(
+    title = title,
+    id = vn.id,
+    t = vn.t,
+    treatment = treatment,
+    outcome = outcome,
+    covariates = covariates,
+    timevary = timevary,
+    F = F,
+    L = L,
+    observations = observations,
+    ids = ids,
+    matches = tobs,
+    treatednum = length(observations),
+    estimator = "ATT",
+    iterations = iterations
+  )
+
+  return model
+end
