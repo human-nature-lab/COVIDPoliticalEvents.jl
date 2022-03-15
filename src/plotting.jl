@@ -16,7 +16,8 @@ function mk_covpal(vn::VariableNames)
     vn.phi => pal[8],
     vn.ts16 => pal[9],
     vn.mil => pal[10],
-    vn.p65 => pal[11]
+    vn.p65 => pal[11],
+    vn.rare => TSCSMethods.gen_colors(13)[13]
   );
   return variablecolors
 end
