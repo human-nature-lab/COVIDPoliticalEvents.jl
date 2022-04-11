@@ -37,7 +37,7 @@ Files that must be downloaded by the user are linked, files that are included in
 1. Download the covidestim county-level data, and the mobility data (see above)
 2. Specify a census api key, obtainable through the US census website, in "preprocess.R", as an argument to ```preprocess()```.
 3. If you possess the SafeGraph mobility data, you must specify it as "patpth" as an argument to ```process_csv()``` in "preprocess.jl". N.B., this data is not freely available, but is provided by SafeGraph, Inc.
-4. Execute "covid_data_make.sh to generate "cvd_dat.jld2", used for the main analyses.
+4. Execute "covid_data_make.sh" to generate "cvd_dat.jld2", used for the main analyses.
 
 ## Replication of main results
 
@@ -45,11 +45,11 @@ Files that must be downloaded by the user are linked, files that are included in
 
 ## Hardware Requirements
 
-`TSCSMethods` works on a standard computer, with sufficient RAM and processing power to support the size of the dataset analyzed by the user. This will be a computer with at least 16 GB, and 4 cores. The package was tested, and the analysis conducted, on a computer with 64 GB of RAM, 16 cores @ 3.4Ghz.
+`TSCSMethods` works on a standard computer, with sufficient RAM and processing power to support the size of the dataset analyzed by the user. This will be a computer with at least 16 GB, and 4 cores. Analysis and testing was carried out on a system running MAC OS 17.0, with 64 Gb RAM, and an intel i9 processor @ 2.30Ghz.
 
 ## Software Requirements
 
-Analysis and testing was carried out on a system running MAC OS 17.0, with 64 Gb RAM, and an intel i9 processor @ 2.30Ghz. However, all of the underlying dependencies are compatible with Windows, Mac, and Linux systems. This package has been tested on Julia 1.7.1. Data was constructed using R 4.1.
+While analysis was executed on a MAC OSX system, all of the underlying dependencies are compatible with Windows, Mac, and Linux systems. This package has been tested on Julia 1.7.1. Data was constructed using R 4.1.
 
 **R system information and platform details**
 ```
