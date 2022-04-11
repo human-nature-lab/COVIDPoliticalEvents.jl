@@ -1,5 +1,7 @@
 # COVIDPoliticalEvents.jl
 
+## Introduction
+
 Paper replication package and source code.
  
 This repository contains three components
@@ -31,8 +33,8 @@ large-scale political events in the USA in 2020 and 2021".
 ### data preparation
 
 1. Download the covidestim county-level data (see above)
-2. Specify a census api key, obtainable through the US census website, in "preprocess.R", as an argument to ```r preprocess()```.
-3. If you possess the SafeGraph mobility data, you must specify it as "patpth" as an argument ```julia to process_csv()``` in "preprocess.jl". N.B., this data is not freely available, but is provided by SafeGraph, Inc.
+2. Specify a census api key, obtainable through the US census website, in "preprocess.R", as an argument to ```preprocess()```.
+3. If you possess the SafeGraph mobility data, you must specify it as "patpth" as an argument to ```process_csv()``` in "preprocess.jl". N.B., this data is not freely available, but is provided by SafeGraph, Inc.
 4. Execute "covid_data_make.sh to generate "cvd_dat.jld2", used for the main analyses.
 
 ## Replication of main results
@@ -63,9 +65,9 @@ brew install julia
 
 Otherwise, consult the Julia Language website for installation on your system <https://julialang.org/downloads/>.
 
-### Package dependencies
+### Dependencies
 
-### dependencies
+### programming languages
 
 * R version 4.1.0 (2021-05-18) https://www.r-project.org
   * Packages: dplyr, magrittr, tibble, lubridate, ggplot2
@@ -111,7 +113,7 @@ Environment:
   JULIA_NUM_THREADS = 16
 ```
 
-### package Installation
+### package installation
 
 From within a `julia` session, type:
 
