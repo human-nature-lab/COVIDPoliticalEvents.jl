@@ -186,7 +186,7 @@ balance!(model, dat);
 estimate!(model, dat);
 ```
 
-5. Refine the model to the `refinementnum` (5) best matches, and estimate:
+5. Refine the model to the `refinementnum` (e.g., 5) best matches, and estimate:
 
 ```{julia}
 refinedmodel = refine(
