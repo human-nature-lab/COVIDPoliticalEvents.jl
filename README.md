@@ -77,6 +77,7 @@ All packages are available through the standard repositories, except TSCSMethods
 Analysis was carried out on a system running MAC OS 17.0, with 64 Gb RAM, and an intel i9 processor @ 2.30Ghz.
 
 **R system information and platform details**
+```
                _                           
 platform       x86_64-apple-darwin17.0     
 arch           x86_64                      
@@ -92,9 +93,11 @@ svn rev        80317
 language       R                           
 version.string R version 4.1.0 (2021-05-18)
 nickname       Camp Pontanezen
+```
 
 **Julia system information and platform details**
 
+```
 Julia Version 1.7.1
 Commit ac5cc99908 (2021-12-22 19:35 UTC)
 Platform Info:
@@ -106,6 +109,7 @@ Platform Info:
 Environment:
   JULIA_EDITOR = code
   JULIA_NUM_THREADS = 16
+```
 
 ### package Installation
 
