@@ -1,0 +1,63 @@
+# turnout_model.jl
+
+include("preamble.jl");
+
+# create strat dict for two-level stratification
+stratdict = Dict{Tuple{Int, Int}, Int}();
+labels = Dict{Int, String}();
+begin
+    c = dat[!, :gaspecial] .== 1;
+    toutbar = TSCSMethods.mean(dat[c, vn.tout]);
+
+    for r in eachrow(dat[c, :])
+      stratdict[(r[vn.t], r[vn.id])] = (r[vn.tout] < toutbar) + 1
+    end
+
+    mx = string(round(maximum(dat[c, vn.tout]), digits = 2));
+    labels[1] = "0.0 to " * string(round(toutbar, digits = 2))
+    labels[2] = string(round(toutbar, digits = 2)) * " to " * mx
+end
+
+@time match!(model, dat);
+
+@time balance!(model, dat);
+
+# Trump's Share of the Vote in 2016
+# 50% is what qunatile?
+# import TSCSMethods.DataFramesMeta
+# TSCSMethods.quantile(
+#   TSCSMethods.@subset(dat, $(model.treatment) .== 1)[!, vn.ts16],
+#   [0, 0.5, 1.0]
+# )
+# TSCSMethods.quantile(
+#   TSCSMethods.@subset(dat, $(model.treatment) .== 1)[!, vn.ts16],
+#   [0, 0.195, 1.0]
+# )
+
+# model = stratify(
+#   variablestrat, model, vn.tout, dat;
+#   zerosep = false
+# );
+
+model = stratify(customstrat, model, vn.tout, stratdict);
+
+for (k,v) in labels; model.labels[k] = v end # add labels
+
+@time estimate!(model, dat);
+
+@time refinedmodel = refine(
+  model, dat;
+  refinementnum = refinementnum, dobalance = true, doestimate = true
+);
+
+@time calmodel, refcalmodel = autobalance(
+  model, dat;
+  calmin = 0.08, step = 0.05,
+  initial_bals = Dict(vn.ccr => 0.25)
+);
+
+relabel!(calmodel, refcalmodel, dat)
+
+recordset = makerecords(
+  dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
+)
