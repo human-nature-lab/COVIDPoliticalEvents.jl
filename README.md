@@ -30,7 +30,7 @@ Files that must be downloaded by the user are linked, files that are included in
 * [ALCED protest events](https://acleddata.com/#/dashboard) ("final_protest_data.csv")
 * Primary elections turnout ("2020_presidential_primary_turnout.csv")
 * GA election turnout ("ga_election_results_clean.csv")
-* [SafeGraph mobility]("https://www.safegraph.com")
+* [SafeGraph mobility](https://www.safegraph.com)
 
 ### data preparation
 
