@@ -20,13 +20,13 @@ large-scale political events in the USA in 2020 and 2021".
 Files that must be downloaded by the user are linked, files that are included in the package are noted, and appear in the "data" directory.
 
 * JHU COVID ([deaths](https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv), [cases](https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv))
-* [covidestim](https://covidestim.org) R_t [county level estimates](https://covidestim.s3.us-east-2.amazonaws.com/latest/estimates.csv)
+* [County level estimates](https://covidestim.s3.us-east-2.amazonaws.com/latest/estimates.csv) of R_t (from [covidestim](https://covidestim.org))
 * US Census / ACS (via [tidycensus](https://walker-data.com/tidycensus/))
 * BLS unemployment ("bls_unemployment.csv")
 * [US Census region definitions](https://www.census.gov/geographies/reference-files/time-series/demo/metro-micro/delineation-files.html) ("census_delineation.csv")
 * [US county adjacency information](https://www2.census.gov/geo/docs/reference/county_adjacency.txt)
 * [US Urban-rural code classification](https://www.census.gov/programs-surveys/geography/guidance/geo-areas/urban-rural.html) ("ruralurbancodes2013.csv)
-* [NYT mask](https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv)
+* [NYT county-level masking](https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv)
 * [ALCED protest events](https://acleddata.com/#/dashboard) ("final_protest_data.csv")
 * Primary elections turnout ("2020_presidential_primary_turnout.csv")
 * GA election turnout ("ga_election_results_clean.csv")
