@@ -17,22 +17,24 @@ large-scale political events in the USA in 2020 and 2021".
 
 ### data files
 
-* JHU COVID ("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv")
-* COVIDEstim R_t estimtates ("https://covidestim.s3.us-east-2.amazonaws.com/latest/estimates.csv")
-* US Census / ACS (extracted through tidycensus, "https://walker-data.com/tidycensus/)
+Files that must be downloaded by the user are linked, files that are included in the package are noted, and appear in the "data" directory.
+
+* JHU COVID ([deaths](https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv), [cases](https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv))
+* [covidestim](https://covidestim.org) R_t [county level estimates](https://covidestim.s3.us-east-2.amazonaws.com/latest/estimates.csv)
+* US Census / ACS (via [tidycensus](https://walker-data.com/tidycensus/))
 * BLS unemployment ("bls_unemployment.csv")
-* US Census region definitions ("census_delineation.csv")
-* US county adjacency information ("https://www2.census.gov/geo/docs/reference/county_adjacency.txt")
-* US Urban-rural code classification ("ruralurbancodes2013.csv)
-* NYT mask ("https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv")
-* ALCED protest events ("final_protest_data.csv")
+* [US Census region definitions](https://www.census.gov/geographies/reference-files/time-series/demo/metro-micro/delineation-files.html) ("census_delineation.csv")
+* [US county adjacency information](https://www2.census.gov/geo/docs/reference/county_adjacency.txt)
+* [US Urban-rural code classification](https://www.census.gov/programs-surveys/geography/guidance/geo-areas/urban-rural.html) ("ruralurbancodes2013.csv)
+* [NYT mask](https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv)
+* [ALCED protest events](https://acleddata.com/#/dashboard) ("final_protest_data.csv")
 * Primary elections turnout ("2020_presidential_primary_turnout.csv")
 * GA election turnout ("ga_election_results_clean.csv")
-* SafeGraph mobility data ("https://www.safegraph.com")
+* [SafeGraph mobility]("https://www.safegraph.com")
 
 ### data preparation
 
-1. Download the covidestim county-level data (see above)
+1. Download the covidestim county-level data, and the mobility data (see above)
 2. Specify a census api key, obtainable through the US census website, in "preprocess.R", as an argument to ```preprocess()```.
 3. If you possess the SafeGraph mobility data, you must specify it as "patpth" as an argument to ```process_csv()``` in "preprocess.jl". N.B., this data is not freely available, but is provided by SafeGraph, Inc.
 4. Execute "covid_data_make.sh to generate "cvd_dat.jld2", used for the main analyses.
@@ -43,40 +45,11 @@ large-scale political events in the USA in 2020 and 2021".
 
 ## Hardware Requirements
 
-`TSCSMethods` works on a standard computer, with sufficient RAM and processing power to support the size of the dataset analyzed by the user. This will be a computer with at least 16 GB, and 4 cores.
-
-The package was tested on a computer with 64 GB of RAM, 16 cores @ 3.4Ghz.
+`TSCSMethods` works on a standard computer, with sufficient RAM and processing power to support the size of the dataset analyzed by the user. This will be a computer with at least 16 GB, and 4 cores. The package was tested, and the analysis conducted, on a computer with 64 GB of RAM, 16 cores @ 3.4Ghz.
 
 ## Software Requirements
 
-### OS Requirements
-
-This package was tested on on MAC OSX 17.0. All of the underlying dependencies are compatible with Windows, Mac, and Linux systems.
-
-This package has been tested on Julia 1.7.1.
-
-# Installation Guide
-
-Julia may be installed on Mac OSX using homebrew <https://brew.sh> by executing:
-
-```shell
-brew install julia
-```
-
-Otherwise, consult the Julia Language website for installation on your system <https://julialang.org/downloads/>.
-
-### Dependencies
-
-### programming languages
-
-* R version 4.1.0 (2021-05-18) https://www.r-project.org
-  * Packages: dplyr, magrittr, tibble, lubridate, ggplot2
-* Julia version 1.7.1 (2021-12-22) https://julialang.org
-  * Packages: Random, TSCSMethods, COVIDPoliticalEvents, DataFrames, Dates, CSV, JLD2
-
-All packages are available through the standard repositories, except TSCSMethods and COVIDPoliticalEvents, which are available from <https://github.com/human-nature-lab/TSCSMethods.jl> and <https://github.com/human-nature-lab/COVIDPoliticalEvents.jl>
-
-Analysis was carried out on a system running MAC OS 17.0, with 64 Gb RAM, and an intel i9 processor @ 2.30Ghz.
+Analysis and testing was carried out on a system running MAC OS 17.0, with 64 Gb RAM, and an intel i9 processor @ 2.30Ghz. However, all of the underlying dependencies are compatible with Windows, Mac, and Linux systems. This package has been tested on Julia 1.7.1. Data was constructed using R 4.1.
 
 **R system information and platform details**
 ```
@@ -113,6 +86,27 @@ Environment:
   JULIA_NUM_THREADS = 16
 ```
 
+# Installation Guide
+
+Julia may be installed on Mac OSX using [homebrew](https://brew.sh) by executing:
+
+```shell
+brew install julia
+```
+
+Otherwise, consult the [Julia Language download page](https://julialang.org/downloads/) for installation on your system.
+
+### Dependencies
+
+### programming languages
+
+* [R](https://www.r-project.org) version 4.1.0 (2021-05-18)
+  * Packages: dplyr, magrittr, tibble, lubridate, ggplot2 (each available through the [CRAN repository](https://cran.r-project.org))
+* [Julia](https://julialang.org) version 1.7.1 (2021-12-22)
+  * Packages: TSCSMethods, COVIDPoliticalEvents, Random, DataFrames, Dates, CSV, JLD2 (all except the first two available through Julia's package manager)
+
+All packages are available through the standard repositories, except [TSCSMethods](https://github.com/human-nature-lab/TSCSMethods.jl) and [COVIDPoliticalEvents](https://github.com/human-nature-lab/COVIDPoliticalEvents.jl).
+
 ### package installation
 
 From within a `julia` session, type:
@@ -129,8 +123,7 @@ After installation of the software dependencies, a given model should take anywh
 
 The models for a given scenario may be executed together, by executing the "run" file, e.g., "run_blm.jl", or separately, by executing the file for a specific model (e.g., "base_model.jl"). Each scenario is housed in a specific subdirectory.
 
-The output for each model is saved as a Julia Data Format object
-(https://juliaio.github.io/JLD2.jl/dev/), and the file structure itself
+The output for each model is saved as a [Julia Data Format](https://juliaio.github.io/JLD2.jl/dev/) file (".jld2"), and the file structure itself
 depends on the above packages.
 
 Executing a "run" file creates output files for each model in the "out",
