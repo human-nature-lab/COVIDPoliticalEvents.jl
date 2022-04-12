@@ -85,17 +85,7 @@ Environment:
   JULIA_NUM_THREADS = 16
 ```
 
-# Installation Guide
-
-Julia may be installed on Mac OSX using [homebrew](https://brew.sh) by executing:
-
-```shell
-brew install julia
-```
-
-Otherwise, consult the [Julia Language download page](https://julialang.org/downloads/) for installation on your system.
-
-### Dependencies
+## Dependencies
 
 ### programming languages
 
@@ -106,15 +96,31 @@ Otherwise, consult the [Julia Language download page](https://julialang.org/down
 
 All packages are available through the standard repositories, except [TSCSMethods](https://github.com/human-nature-lab/TSCSMethods.jl) and [COVIDPoliticalEvents](https://github.com/human-nature-lab/COVIDPoliticalEvents.jl).
 
+### language installation
+
+Julia and R may be installed on Mac OSX using [homebrew](https://brew.sh) by executing:
+
+```shell
+brew install julia
+```
+
+```shell
+brew install r
+```
+
+Otherwise, consult the [Julia Language download page](https://julialang.org/downloads/) and the [R Language download page](https://cran.r-project.org/mirrors.html) for installation on your system.
+
 ### package installation
 
 From within a `julia` session, type:
 
 ```{julia}
 import Pkg; Pkg.add("https://github.com/human-nature-lab/TSCSMethods.jl")
+
+import Pkg; Pkg.add("https://github.com/human-nature-lab/COVIDPoliticalEvents.jl")
 ```
 
-The package should take approximately 1 minute to install. 
+The packages should take approximately 1-2 minutes to install.
 
 # Replication of main results
 
