@@ -34,8 +34,8 @@ Files that must be downloaded by the user are linked, files that are included in
 
 ### data preparation
 
-1. Download the covidestim county-level data, and the mobility data (see above)
-2. Specify a census api key, obtainable through the US census website, in "preprocess.R", as an argument to ```preprocess()```.
+1. Download the covidestim county-level data, and the mobility data (see above), into the "data" directory.
+2. Specify your [Census Data API key](https://www.census.gov/data/developers/guidance/api-user-guide.html), in "preprocess.R", as an argument to ```preprocess()```.
 3. If you possess the SafeGraph mobility data, you must specify it as "patpth" as an argument to ```process_csv()``` in "preprocess.jl". N.B., this data is not freely available, but is provided by SafeGraph, Inc.
 4. Execute "covid_data_make.sh" to generate "cvd_dat.jld2", used for the main analyses.
 
@@ -49,7 +49,7 @@ Files that must be downloaded by the user are linked, files that are included in
 
 ## Software Requirements
 
-While analysis was executed on a MAC OSX system, all of the underlying dependencies are compatible with Windows, Mac, and Linux systems. This package has been tested on Julia 1.7.1. Data was constructed using R 4.1.
+While analysis was executed on a MAC OSX system, all of the underlying dependencies are compatible with Windows, Mac, and Linux systems. This package has been tested on Julia 1.7.1. Data was additionally processed using R 4.1.
 
 **R system information and platform details**
 ```
@@ -138,12 +138,12 @@ output = load_object("ga full_death_rte_.jld2")
 ```
 
 the output object contains the following fields:
-* model
-* refinedmodel
-* calmodel
-* refcalmodel
-* matchinfo
-* obsinfo
+* model (without refinement)
+* refinedmodel (refined to best matches)
+* calmodel (with caliper)
+* refcalmodel (refined to best matches, with a caliper)
+* matchinfo (information about the matches)
+* obsinfo (info about the treated observations)
 
 For example, access the results of the refined caliper model as:
 
