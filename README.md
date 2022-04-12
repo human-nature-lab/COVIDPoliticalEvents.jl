@@ -39,7 +39,6 @@ Files that must be downloaded by the user are linked, files that are included in
 3. If you possess the SafeGraph mobility data, you must specify it as "patpth" as an argument to ```process_csv()``` in "preprocess.jl". N.B., this data is not freely available, but is provided by SafeGraph, Inc.
 4. Execute "covid_data_make.sh" to generate "cvd_dat.jld2", used for the main analyses.
 
-## Replication of main results
 
 # System Requirements
 
@@ -117,7 +116,7 @@ import Pkg; Pkg.add("https://github.com/human-nature-lab/TSCSMethods.jl")
 
 The package should take approximately 1 minute to install. 
 
-### execution
+# Replication of main results
 
 After installation of the software dependencies, a given model should take anywhere from 10-60 minutes to execute, depending on workstation specifications.
 
