@@ -56,12 +56,12 @@ function extrtinfo!(UC, model, mname; refpth = false)
     if (refpth == false) | !calbool
       # makes it way slow, refine beforehand
       # if !calbool
-      #   tscsmethods.refine!(model);
+      #   TSCSMethods.refine!(model);
       # end
       ldict = labdict(model);
     else
       # makes it way slow, refine beforehand
-      # tscsmethods.refine!(refmod);
+      # TSCSMethods.refine!(refmod);
       ldict = labdict(refmod);
     end
 

@@ -97,7 +97,7 @@ function primarydistancestrat(model, dat; qtes = [0, 0.25, 0.5, 0.75, 1.0])
     end
   end
 
-  # X = sort(tscsmethods.quantile(values(dd), qtes));
+  # X = sort(TSCSMethods.quantile(values(dd), qtes));
   X = sort(Int.(round.(TSCSMethods.quantile(values(dd), qtes), digits = 0)))
   Xlen = length(X);
 

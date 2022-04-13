@@ -78,7 +78,7 @@ function primary_filter(model;  mintime = 10)
   obinclude = obtimes .>= mintime;
   @reset model.observations = model.observations[obinclude];
   @reset model.matches = model.matches[obinclude];
-  # @reset model.results = tscsmethods.DataFrame();
+  # @reset model.results = TSCSMethods.DataFrame();
 
   @reset model.treatednum = length(model.observations)
   
