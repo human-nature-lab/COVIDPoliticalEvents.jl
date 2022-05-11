@@ -91,12 +91,24 @@ end
 function make_weekly(dat, pr_vars, trump_variables)
     vn = VariableNames();
 
+    @transform!(
+        dat,
+        :week = Dates.Week.(:date),
+        :year = Dates.Year.(:date),
+    )
+
+    dict = Dict{Tuple, Int}()
+    for (i, r) in enumerate(eachrow(sort(unique(dat[!, [:year, :week]]))))
+        dict[(r[:year], r[:week])] = i
+    end
+
+    dat[!, :running] .= 0;
+    for r in eachrow(dat)
+        r[:running] = dict[(r[:year], r[:week])]
+    end
+
     wkd = @chain dat begin
-        @transform(
-            :week = Dates.Week.(:date),
-            :year = Dates.Year.(:date),
-        )
-        groupby([:year, :week, :fips])
+        groupby([:running, :fips])
         combine(
             # outcome vars
             vn.cd => mean => vn.cd,
@@ -108,21 +120,21 @@ function make_weekly(dat, pr_vars, trump_variables)
             :deaths => sum => :deaths,
             :cases => sum => :cases,
             # mobility vars
-            vn.rec => vn.rec,
+            vn.rec => mean => vn.rec,
             vn.res => mean => vn.res,
             vn.groc => mean => vn.groc,
             # matching covariates
-            vn.fc => vn.fc,
-            vn.pd => vn.pd,
-            vn.pbl => vn.pbl,
-            vn.phi => vn.phi,
-            vn.ts16 => vn.ts16,
-            vn.mil => vn.mil,
-            vn.p65 => vn.p65,
+            vn.fc => maximum => vn.fc,
+            vn.pd => maximum => vn.pd,
+            vn.pbl => maximum => vn.pbl,
+            vn.phi => maximum => vn.phi,
+            vn.ts16 => maximum => vn.ts16,
+            vn.mil => maximum => vn.mil,
+            vn.p65 => maximum => vn.p65,
             # other variables
-            :pop => :pop,
-            vn.tout => vn.tout,
-            vn.gaout => vn.gaout,
+            :pop => maximum => :pop,
+            vn.tout => maximum => vn.tout,
+            vn.gaout => maximum => vn.gaout,
             # treatment variables
             :primary => sum => :primary,
             :gaspecial => sum => :gaspecial,
@@ -130,8 +142,9 @@ function make_weekly(dat, pr_vars, trump_variables)
             [prv => sum => prv for prv in trump_variables],
             :Exposure => maximum => :Exposure, 
             [prv => sum => prv for prv in pr_vars]
+    
         )
-        sort([:fips, :year, :week])
+        sort([:fips, :running])
     end
     return wkd
 end
