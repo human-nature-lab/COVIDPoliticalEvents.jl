@@ -36,12 +36,14 @@ function rally_treatmentcategories(x)
 end
 
 """
-    covariateset(vn::VariableNames, outcome::Symbol; modeltype::String = "epi")
+    covariateset(
+      vn::VariableNames, reference_outcome::Symbol; modeltype::String = "epi"
+    )
 
 Return the covariates for the specified model type ("epi", "nomob", "full").
 """
 function covariateset(
-  vn::VariableNames, outcome::Symbol;
+  vn::VariableNames, reference_outcome::Symbol;
   modeltype::Symbol = :epi
 )
 
@@ -49,37 +51,28 @@ function covariateset(
   nomob = modeltype == :nomob
   full = modeltype == :full
 
-  deathrte = outcome == :death_rte
-  caserte = outcome == :case_rte
-  rt = outcome == :Rt
-
-  if epi & deathrte
-    return [vn.cdr, vn.pd, vn.fc]
-  elseif epi & caserte
-    return [vn.ccr, vn.pd, vn.fc]
-  elseif nomob & deathrte
-    return [vn.cdr, vn.fc, vn.pd, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65];
-  elseif nomob & caserte
-    return [vn.ccr, vn.fc, vn.pd, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65];
-  elseif full & deathrte
-    return [
-      vn.cdr, vn.fc, vn.pd, vn.res, vn.groc,
-      vn.rec, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65
-    ];
-  elseif full & caserte
-    return [
-      vn.ccr, vn.fc, vn.pd, vn.res, vn.groc,
-      vn.rec, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65
-    ];
-  elseif full & rt
-    return [
-      vn.rt, vn.fc, vn.pd, vn.res, vn.groc,
-      vn.rec, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65
-    ];
-  elseif nomob & rt
-    return [vn.rt, vn.fc, vn.pd, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65];
-  elseif epi & rt
-    return [vn.rt, vn.pd, vn.fc]
+  outmatch = if (reference_outcome == :death_rte) | (reference_outcome == vn.cdr)
+    vn.cdr
+  elseif (reference_outcome == :case_rte) | (reference_outcome == vn.ccr)
+    vn.ccr
+  elseif reference_outcome == :deathscum
+    :deathscum
+  elseif reference_outcome == :casescum
+    :casescum
+  elseif reference_outcome == :Rt
+    :Rt
+  else
+    error("reference_outcome not specified")
   end
+
+  if epi
+    return [outmatch, vn.pd, vn.fc]
+  elseif nomob
+    return [outmatch, vn.fc, vn.pd, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65];
+  elseif full
+    return [
+      outmatch, vn.fc, vn.pd, vn.res, vn.groc,
+      vn.rec, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65
+    ];
 end
 

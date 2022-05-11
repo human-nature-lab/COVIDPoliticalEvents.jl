@@ -3,26 +3,15 @@
 function deathmodel(
   title::String, treatment, modeltype, dat;
   F = 10:40, L = -30:-1, iterations = 500,
+  outcome = :deathscum,
   matchingcovariates = nothing,
-  rate = true, cumul = false,
-  outcome = nothing
 )
   
   vn = VariableNames();
-  
-  theoutcome = if cumul
-    vn.cdr
-  else
-    vn.deathoutcome
-  end
-
-  if !isnothing(outcome)
-    theoutcome = outcome
-  end
 
   covariates = if isnothing(matchingcovariates)
     covariateset(
-      vn, vn.deathoutcome; # stays the same
+      vn, outcome;
       modeltype = modeltype
     );
   else matchingcovariates
@@ -36,7 +25,9 @@ function deathmodel(
     end
   end;
 
-  observations, ids = TSCSMethods.observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
+  observations, ids = TSCSMethods.observe(
+    dat[!, vn.t], dat[!, vn.id], dat[!, treatment]
+  );
 
   # tobs = make_tobsvec(length(observations), length(ids));
   tobs = TSCSMethods.make_matches(
@@ -48,7 +39,7 @@ function deathmodel(
     id = vn.id,
     t = vn.t,
     treatment = treatment,
-    outcome = rate ? theoutcome : :deaths,
+    outcome = outcome,
     covariates = covariates,
     timevary = timevary,
     F = F,
@@ -67,25 +58,15 @@ end
 function casemodel(
   title::String, treatment, modeltype, dat;
   F = 10:40, L = -30:-1, iterations = 500,
+  outcome = :casescum,
   matchingcovariates = nothing,
-  rate = true, cumul = false, outcome = nothing
 )
 
   vn = VariableNames();
-
-  theoutcome = if cumul
-    vn.cdr
-  else
-    vn.caseoutcome
-  end
-
-  if !isnothing(outcome)
-    theoutcome = outcome
-  end
   
   covariates = if isnothing(matchingcovariates)
     covariateset(
-      vn, vn.caseoutcome; # stays the same
+      vn, outcome;
       modeltype = modeltype
     );
   else matchingcovariates
@@ -99,7 +80,9 @@ function casemodel(
     end
   end;
 
-  observations, ids = TSCSMethods.observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
+  observations, ids = TSCSMethods.observe(
+    dat[!, vn.t], dat[!, vn.id], dat[!, treatment]
+  );
 
   # tobs = make_tobsvec(length(observations), length(ids));
   tobs = TSCSMethods.make_matches(length(observations), length(ids), length(F));
@@ -109,7 +92,7 @@ function casemodel(
     id = vn.id,
     t = vn.t,
     treatment = treatment,
-    outcome = rate ? theoutcome : cases,
+    outcome = outcome,
     covariates = covariates,
     timevary = timevary,
     F = F,
@@ -149,7 +132,9 @@ function rtmodel(
     end
   end;
 
-  observations, ids = TSCSMethods.observe(dat[!, vn.t], dat[!, vn.id], dat[!, treatment]);
+  observations, ids = TSCSMethods.observe(
+    dat[!, vn.t], dat[!, vn.id], dat[!, treatment]
+  );
 
   # tobs = make_tobsvec(length(observations), length(ids));
   tobs = TSCSMethods.make_matches(length(observations), length(ids), length(F));
