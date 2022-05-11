@@ -49,6 +49,9 @@ TSCSMethods.@with_kw struct VariableNames
   dr = Symbol("Death Rate")
   cr = Symbol("Case Rate")
 
+  cc = Symbol("Cum. Cases")
+  cd = Symbol("Cum. Deaths")
+
   rare = Symbol("Rarely Mask")
 
   # number of colors to generate
@@ -71,6 +74,8 @@ TSCSMethods.@with_kw struct VariableNames
     prsz => false, te => false,
     dr => true,
     cr => true,
+    cc => true,
+    cd => true,
     rt => true,
     rare => false
   );
