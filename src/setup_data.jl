@@ -105,8 +105,8 @@ function make_weekly(dat, pr_vars, trump_variables)
             vn.ccr => mean => vn.ccr,
             vn.deathoutcome => sum => vn.deathoutcome,
             vn.caseoutcome => sum => vn.caseoutcome,
-            vn.deaths => sum => vn.deaths,
-            vn.cases => sum => vn.cases,
+            :deaths => sum => :deaths,
+            :cases => sum => :cases,
             # mobility vars
             vn.rec => vn.rec,
             vn.res => mean => vn.res,
