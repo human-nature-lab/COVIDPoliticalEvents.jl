@@ -4,14 +4,25 @@ function deathmodel(
   title::String, treatment, modeltype, dat;
   F = 10:40, L = -30:-1, iterations = 500,
   matchingcovariates = nothing,
-  rate = true
+  rate = true, cumul = false,
+  outcome = nothing
 )
   
   vn = VariableNames();
   
+  theoutcome = if cumul
+    vn.cdr
+  else
+    vn.deathoutcome
+  end
+
+  if !isnothing(outcome)
+    theoutcome = outcome
+  end
+
   covariates = if isnothing(matchingcovariates)
     covariateset(
-      vn, vn.deathoutcome;
+      vn, theoutcome;
       modeltype = modeltype
     );
   else matchingcovariates
@@ -37,7 +48,7 @@ function deathmodel(
     id = vn.id,
     t = vn.t,
     treatment = treatment,
-    outcome = rate ? vn.deathoutcome : :deaths,
+    outcome = rate ? theoutcome : :deaths,
     covariates = covariates,
     timevary = timevary,
     F = F,
@@ -57,14 +68,24 @@ function casemodel(
   title::String, treatment, modeltype, dat;
   F = 10:40, L = -30:-1, iterations = 500,
   matchingcovariates = nothing,
-  rate = true
+  rate = true, cumul = false, outcome = nothing
 )
 
   vn = VariableNames();
+
+  theoutcome = if cumul
+    vn.cdr
+  else
+    vn.deathoutcome
+  end
+
+  if !isnothing(outcome)
+    theoutcome = outcome
+  end
   
   covariates = if isnothing(matchingcovariates)
     covariateset(
-      vn, vn.caseoutcome;
+      vn, theoutcome;
       modeltype = modeltype
     );
   else matchingcovariates
@@ -88,7 +109,7 @@ function casemodel(
     id = vn.id,
     t = vn.t,
     treatment = treatment,
-    outcome = rate ? vn.caseoutcome : cases,
+    outcome = rate ? theoutcome : cases,
     covariates = covariates,
     timevary = timevary,
     F = F,
