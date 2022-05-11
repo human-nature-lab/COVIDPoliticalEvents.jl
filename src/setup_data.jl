@@ -3,14 +3,12 @@ function finish_data(dat, datapath)
     vn = VariableNames();
   
     # add the GA special turnout data
-    begin
-        ga_election = ga_turnout(dat; datpath = datapath)
-        ed = Dict(ga_election[!, vn.id] .=> ga_election[!, vn.tout]);
-        dat[!, vn.gaout] .= 0.0;
-        tochng = @views dat[dat.State .== "Georgia", [vn.id, vn.gaout]]
-        for r in eachrow(tochng)
-            r[vn.gaout] = ed[r[vn.id]]
-        end
+    ga_election = ga_turnout(dat; datpath = datapath)
+    ed = Dict(ga_election[!, vn.id] .=> ga_election[!, vn.tout]);
+    dat[!, vn.gaout] .= 0.0;
+    tochng = @views dat[dat.State .== "Georgia", [vn.id, vn.gaout]]
+    for r in eachrow(tochng)
+        r[vn.gaout] = ed[r[vn.id]]
     end
   
     # mask data
