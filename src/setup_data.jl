@@ -61,7 +61,7 @@ function finish_data(dat, datapath)
     dat[!, :Exposure] .= 0;
   
     for r in eachrow(dat)
-        r[:Exposure] = get(stratassignments, (r[vn.t], r[vn.id]), -1)
+        r[:Exposure] = get(trump_stratassignments, (r[vn.t], r[vn.id]), -1)
         # -1 placeholder for observations that are not treated
     end
   
