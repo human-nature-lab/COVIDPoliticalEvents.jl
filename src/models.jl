@@ -22,7 +22,7 @@ function deathmodel(
 
   covariates = if isnothing(matchingcovariates)
     covariateset(
-      vn, theoutcome;
+      vn, vn.deathoutcome; # stays the same
       modeltype = modeltype
     );
   else matchingcovariates
@@ -85,7 +85,7 @@ function casemodel(
   
   covariates = if isnothing(matchingcovariates)
     covariateset(
-      vn, theoutcome;
+      vn, vn.caseoutcome; # stays the same
       modeltype = modeltype
     );
   else matchingcovariates
