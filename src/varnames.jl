@@ -54,6 +54,9 @@ TSCSMethods.@with_kw struct VariableNames
 
   rare = Symbol("Rarely Mask")
 
+  tshigh = Symbol("Trump Share > 50%")
+  gaout = Symbol("In-Person Turnout Rate (GA)")
+
   # number of colors to generate
   N = 12;
 

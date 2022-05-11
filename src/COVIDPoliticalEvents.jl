@@ -1,6 +1,6 @@
 module COVIDPoliticalEvents
 
-  using TSCSMethods, Dates, DataFrames, DataFramesMeta, Parameters, Accessors
+  using TSCSMethods, Dates, DataFrames, DataFramesMeta, Parameters, Accessors, Downloads
   import TSCSMethods:ModelRecord
   import CSV, HTTP
   import JLD2:load_object
@@ -12,6 +12,7 @@ module COVIDPoliticalEvents
   include("varnames.jl")
   include("data.jl")
   include("setup.jl")
+  include("setup_data.jl")
   include("models.jl")
   include("plotting.jl")
   include("panel_plots.jl")
@@ -47,5 +48,6 @@ module COVIDPoliticalEvents
     exposure_shift, protest_size_hists,
     primary_panel, blm_panel,
     protest_treatmentcategories,
-    rally_treatmentcategories
+    rally_treatmentcategories,
+    finish_data, indicatetreatments, make_weekly
 end
