@@ -125,7 +125,7 @@ function make_weekly(dat, pr_vars, trump_variables)
             vn.gaout => vn.gaout,
             # treatment variables
             :primary => sum => :primary,
-            :ga_special => sum => :gaspecial,
+            :gaspecial => sum => :gaspecial,
             :gub => sum => :gub,
             [prv => sum => prv for prv in trump_variables],
             :Exposure => maximum => :Exposure, 
