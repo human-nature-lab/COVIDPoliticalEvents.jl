@@ -74,5 +74,6 @@ function covariateset(
       outmatch, vn.fc, vn.pd, vn.res, vn.groc,
       vn.rec, vn.pbl, vn.phi, vn.ts16, vn.mil, vn.p65
     ];
+  end
 end
 
