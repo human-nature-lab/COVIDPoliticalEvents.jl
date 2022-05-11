@@ -13,7 +13,7 @@ function finish_data(dat, datapath)
   
     # mask data
     rare = Symbol("Rarely Mask");
-    http_response = Downloads.download("https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv")
+    http_response = download("https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv")
     maskdat = CSV.File(http_response) |> DataFrame
     @transform!(maskdat, $rare = :NEVER + :RARELY)
     maskdat[!, rare] = disallowmissing(maskdat[!, rare])

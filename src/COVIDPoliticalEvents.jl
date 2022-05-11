@@ -1,7 +1,7 @@
 module COVIDPoliticalEvents
 
   using TSCSMethods, Dates, DataFrames, DataFramesMeta
-  using Parameters, Accessors, Downloads
+  using Parameters, Accessors
   import TSCSMethods:ModelRecord
   import CSV, HTTP
   import JLD2:load_object
