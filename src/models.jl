@@ -76,7 +76,7 @@ function casemodel(
   theoutcome = if cumul
     vn.cdr
   else
-    vn.deathoutcome
+    vn.caseoutcome
   end
 
   if !isnothing(outcome)
