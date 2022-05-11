@@ -51,9 +51,9 @@ function covariateset(
   nomob = modeltype == :nomob
   full = modeltype == :full
 
-  outmatch = if (reference_outcome == :death_rte) | (reference_outcome == vn.cdr)
+  outmatch = if ((reference_outcome == :death_rte) | (reference_outcome == vn.cdr))
     vn.cdr
-  elseif (reference_outcome == :case_rte) | (reference_outcome == vn.ccr)
+  elseif ((reference_outcome == :case_rte) | (reference_outcome == vn.ccr))
     vn.ccr
   elseif reference_outcome == :deathscum
     :deathscum
