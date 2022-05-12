@@ -1,9 +1,9 @@
 # models.jl
 
 function deathmodel(
-  title::String, treatment, modeltype, dat;
+  title::String, treatment, modeltype, dat,
+  outcome;
   F = 10:40, L = -30:-1, iterations = 500,
-  outcome = :deathscum,
   matchingcovariates = nothing,
 )
   
@@ -56,9 +56,9 @@ function deathmodel(
 end
   
 function casemodel(
-  title::String, treatment, modeltype, dat;
+  title::String, treatment, modeltype, dat,
+  outcome;
   F = 10:40, L = -30:-1, iterations = 500,
-  outcome = :casescum,
   matchingcovariates = nothing,
 )
 
