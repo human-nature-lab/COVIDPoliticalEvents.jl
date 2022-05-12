@@ -107,19 +107,16 @@ function dataprep(
   convert_missing = true,
 )
 
-  leadsize = 10;
-
-  vn = VariableNames()
   @unpack t, id, treatment, F, L = model;
   
   # push the cumulative death rate back 10 days
   # by the infection-death distribution
   # NaN doesn't matter since we drop the range anyway
-  dat = @chain dat begin
-    sort([id, t])
-    groupby(id)
-    @transform($(vn.cdr) = lead($(vn.cdr), leadsize; default = NaN))
-  end
+  # dat = @chain dat begin
+  #   sort([id, t])
+  #   groupby(id)
+  #   @transform($(vn.cdr) = lead($(vn.cdr), leadsize; default = NaN))
+  # end
   
   if isnothing(t_start)
     ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
@@ -130,7 +127,7 @@ function dataprep(
   
   if isnothing(t_end)
     ttmax = maximum(dat[dat[!, treatment] .== 1, t]);
-    c2 = dat[!, t] .<= ttmax + F[end] + leadsize;
+    c2 = dat[!, t] .<= ttmax + F[end];
   else
     c2 = dat[!, t] .<= t_end;
   end
@@ -211,11 +208,11 @@ function dataprep(
   # push the cumulative death rate back 10 days
   # by the infection-death distribution
   # NaN doesn't matter since we drop the range anyway
-  dat = @chain dat begin
-    sort([id, t])
-    groupby(id)
-    @transform($(cdr) = lead($(cdr), 10; default = NaN))
-  end
+  # dat = @chain dat begin
+  #   sort([id, t])
+  #   groupby(id)
+  #   @transform($(cdr) = lead($(cdr), 10; default = NaN))
+  # end
 
   return dat
 end

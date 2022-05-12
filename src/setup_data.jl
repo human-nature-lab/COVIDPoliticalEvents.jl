@@ -135,6 +135,7 @@ function make_weekly(dat, pr_vars, trump_variables)
             :pop => maximum => :pop,
             vn.tout => maximum => vn.tout,
             vn.gaout => maximum => vn.gaout,
+            vn.rare => maximum => vn.rare,
             # treatment variables
             :primary => sum => :primary,
             :gaspecial => sum => :gaspecial,
