@@ -97,7 +97,7 @@ end
 Prepare the data for analysis:
   1. Limit date range to first day of matching period for first treatment, up to last outcome window day for last treatment.
   2. Optionally, remove observations over the outcome window for a treatment event where the corresponding matching period (or portion thereof) is not present in the data. The portion is specified by incomplete_cutoff, the first day before a treatment event that must be included.
-  3. Shift (lead) the cumulative death rate and cumulative case rate variables by the lower 5th percentile day of their infection-to-death distributions. This regards covariate matching.
+  3. Optionally, shift (lead) the cumulative death rate and cumulative case rate variables by the lower 5th percentile day of their infection-to-death distributions. This regards covariate matching.
 """
 function dataprep(
   dat, model;
@@ -132,7 +132,6 @@ function dataprep(
     c2 = dat[!, t] .<= t_end;
   end
 
-
   dat = dat[c1 .& c2, :];
 
   if remove_incomplete
@@ -162,7 +161,7 @@ end
 Prepare the data for analysis:
   1. Limit date range to first day of matching period for first treatment, up to last outcome window day for last treatment.
   2. Optionally, remove observations over the outcome window for a treatment event where the corresponding matching period (or portion thereof) is not present in the data. The portion is specified by incomplete_cutoff, the first day before a treatment event that must be included.
-  3. Shift (lead) the cumulative death rate and cumulative case rate variables by the lower 5th percentile day of their infection-to-death distributions. This regards covariate matching.
+  3. Optionally, shift (lead) the cumulative death rate and cumulative case rate variables by the lower 5th percentile day of their infection-to-death distributions. This regards covariate matching.
 """
 function dataprep(
   dat, treatment, F, L;

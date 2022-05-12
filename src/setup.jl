@@ -56,9 +56,11 @@ function covariateset(
   elseif ((reference_outcome == :case_rte) | (reference_outcome == vn.ccr))
     vn.ccr
   elseif reference_outcome == vn.cd
-    vn.cd
+    # vn.cd
+    vn.ccr
   elseif reference_outcome == vn.cc
-    vn.cc
+    # vn.cc
+    vn.ccr
   elseif reference_outcome == :Rt
     :Rt
   else

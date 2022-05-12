@@ -110,6 +110,8 @@ function make_weekly(dat, pr_vars, trump_variables)
     wkd = @chain dat begin
         groupby([:running, :fips])
         combine(
+            :year => maximum => :year,
+            :week => maximum => :week,
             # outcome vars
             vn.cd => mean => vn.cd,
             vn.cc => mean => vn.cc,
