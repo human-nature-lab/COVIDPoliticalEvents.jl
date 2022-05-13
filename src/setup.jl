@@ -58,7 +58,7 @@ function covariateset(
   elseif (reference_outcome == vn.cd) | (reference_outcome == :deaths)
     # vn.cd
     vn.ccr
-  elseif reference_outcome == vn.cc | (reference_outcome == :cases)
+  elseif (reference_outcome == vn.cc) | (reference_outcome == :cases)
     # vn.cc
     vn.ccr
   elseif reference_outcome == :Rt
