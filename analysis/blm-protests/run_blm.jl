@@ -5,8 +5,8 @@ scenario = prefix * " protest "
 
 models = [
     "base_model.jl",
-    # "recent_model.jl",
-    # "size_model.jl"
+    "recent_model.jl",
+    "size_model.jl"
 ]
 
 argvals = ["full", "nomob", "nomob"]
