@@ -3,7 +3,7 @@
 include("preamble.jl");
 
 using DataFrames, DataFramesMeta
-@subset(dat, :protest .== 1, :prsize .>= 800)
+# @subset(dat, :protest .== 1, :prsize .>= 800)
 
 @time match!(model, dat; treatcat = protest_treatmentcategories);
 
@@ -28,8 +28,23 @@ model = variable_filter(
   dooverall = true
 );
 
+import TSCSMethods:mean,quantile
+mean(@subset(dat, :protest .== 1).deaths)
+quantile(@subset(dat, :protest .== 1).deaths)
+sum(@subset(dat, :protest .== 1).deaths)
+
 recordset = makerecords(
   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
 )
 
-TSCSMethods.save_object(savepath * "overall_estimate.jld2", overall)
+TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)
+
+
+# overall[1] * mean(refcalmodel.results.treated)
+# (overall[2][1] * mean(refcalmodel.results.treated), overall[2][3] * mean(refcalmodel.results.treated))
+
+# res = refcalmodel.results;
+
+# sum(res.att .* res.treated)
+# (sum(res[!, Symbol("2.5%")] .* res.treated), sum(res[!, Symbol("97.5%")] .* res.treated))
+

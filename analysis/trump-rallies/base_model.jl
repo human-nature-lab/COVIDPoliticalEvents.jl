@@ -1,7 +1,5 @@
 # base_model.jl
 
-push!(ARGS, "full")
-
 include("preamble.jl");
 
 @time match!(model, dat; treatcat = rally_treatmentcategories);
@@ -9,7 +7,9 @@ include("preamble.jl");
 @time balance!(model, dat);
 
 # dat, stratassignments, labels, stratifier
-model = stratify(customstrat, model, :exposure, stratassignments; labels);
+model = stratify(
+  customstrat, model, :exposure, trump_stratassignments; labels = trump_labels
+);
 
 @time estimate!(model, dat);
 
@@ -29,4 +29,4 @@ recordset = makerecords(
   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
 )
 
-TSCSMethods.save_object(savepath * "overall_estimate.jld2", overall)
+TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)

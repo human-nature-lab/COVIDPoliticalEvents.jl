@@ -1,7 +1,5 @@
 # size_model.jl
 
-push!(ARGS, "nomob")
-
 include("preamble.jl");
 
 @time match!(model, dat; treatcat = protest_treatmentcategories);
@@ -65,13 +63,3 @@ recordset = makerecords(
   obscovars = obvars
 )
 
-variablecolors = mk_covpal(VariableNames());
-
-mpset = plot_modelset(
-  model = model,
-  refinedmodel = refinedmodel,
-  calipermodel = calmodel,
-  refinedcalipermodel = refcalmodel,
-  variablecolors = variablecolors,
-  base_savepath = savepath
-);

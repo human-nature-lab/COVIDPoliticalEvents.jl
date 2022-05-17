@@ -29,4 +29,4 @@ recordset = makerecords(
   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
 )
 
-TSCSMethods.save_object(savepath * "overall_estimate.jld2", overall)
+TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)

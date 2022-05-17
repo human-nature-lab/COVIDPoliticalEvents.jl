@@ -7,8 +7,8 @@ include("preamble.jl");
 @time balance!(model, dat);
 
 model = stratify(
-  combostrat, model, [:Exposure, tshigh], dat;
-  varslabs = Dict(:Exposure => labels)
+  combostrat, model, [:Exposure, vn.tshigh], dat;
+  varslabs = Dict(:Exposure => trump_labels)
 );
 
 @time estimate!(model, dat);

@@ -1,10 +1,12 @@
 # basepth = "covid-19-political-events-analysis/primary-elections/"
 
-push!(ARGS, "")
+savepath = "protest out/";
+scenario = prefix * " protest "
 
 models = [
-    "base_model.jl", "recent_model.jl",
-    "size_model.jl"
+    "base_model.jl",
+    # "recent_model.jl",
+    # "size_model.jl"
 ]
 
 argvals = ["full", "nomob", "nomob"]

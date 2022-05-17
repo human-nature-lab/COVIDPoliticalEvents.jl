@@ -25,19 +25,19 @@ twovec = Float64[];
 begin
     c = dat[!, :gaspecial] .== 1;
     
-    rnvec = dat[c, rare];
+    rnvec = dat[c, vn.rare];
 
     # use median
     thresh = median(rnvec);
 
     for r in eachrow(dat[c, :])
-      stratdict[(r[vn.t], r[vn.id])] = r[rare] < thresh ? 1 : 2
-      stratdict[(r[vn.t], r[vn.id])] = r[rare] < thresh ? 1 : 2
-      stratout[(r[vn.t], r[vn.id])] = r[rare]
+      stratdict[(r[vn.t], r[vn.id])] = r[vn.rare] < thresh ? 1 : 2
+      stratdict[(r[vn.t], r[vn.id])] = r[vn.rare] < thresh ? 1 : 2
+      stratout[(r[vn.t], r[vn.id])] = r[vn.rare]
       if stratdict[(r[vn.t], r[vn.id])] == 1
-        push!(onevec, r[rare])
+        push!(onevec, r[vn.rare])
       else
-        push!(twovec, r[rare])
+        push!(twovec, r[vn.rare])
       end
     end
 
@@ -48,7 +48,7 @@ begin
     labels[2] = string(mn2) * " to " * string(mx2)
 end
 
-model = stratify(customstrat, model, rare, stratdict);
+model = stratify(customstrat, model, vn.rare, stratdict);
 
 for (k,v) in labels; model.labels[k] = v end # add labels
 

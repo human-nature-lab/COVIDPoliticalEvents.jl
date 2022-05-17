@@ -1,13 +1,17 @@
 # basepth = "covid-19-political-events-analysis/primary-elections/"
 
-push!(ARGS, "")
+savepath = "ga out/";
+scenario = prefix * " ga "
 
 models = [
     "base_model.jl", "mask_model.jl",
-    # "ts_model.jl", "turnout_model.jl"
-]
+    "ts_model.jl", "turnout_model.jl"
+];
 
-argvals = ["full", "nomob"]#, "nomob", "nomob"]
+argvals = ["nomob", "nomob", "nomob", "nomob"]
+# argvals = ["full", "nomob"]
+# argvals = ["nomob", "nomob"]
+# argvals = ["epi", "epi"]
 
 for (x, a) in zip(models, argvals)
     ARGS[1] = a
