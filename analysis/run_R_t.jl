@@ -13,10 +13,10 @@ dat_store = merge_Rt_data(dat_store, transdatafile);
 
 # models
 modelsets = [
-    "primary-elections-Rt/base_model.jl",
-    "ga-election-Rt/base_model.jl",
-    "gub-elections-Rt/base_model.jl",
-    "trump-rallies-Rt/base_model.jl",
+    # "primary-elections-Rt/base_model.jl",
+    # "ga-election-Rt/base_model.jl",
+    # "gub-elections-Rt/base_model.jl",
+    # "trump-rallies-Rt/base_model.jl",
     "blm-protests-Rt/base_model.jl"
 ];
 
