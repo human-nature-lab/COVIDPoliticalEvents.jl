@@ -9,7 +9,7 @@ datafile = "cvd_dat_use.jld2";
 
 vn = VariableNames();
 
-# outcome = :death_rte # :case_rte
+outcome = :death_rte # :case_rte
 
 push!(ARGS, "full")
 
