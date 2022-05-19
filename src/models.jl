@@ -110,7 +110,7 @@ end
 
 function rtmodel(
   title::String, treatment, modeltype, dat;
-  F = 0:40, L = -30:-1, iterations = 500,
+  F = 0:20, L = -30:-1, iterations = 500,
   matchingcovariates = nothing
 )
 
