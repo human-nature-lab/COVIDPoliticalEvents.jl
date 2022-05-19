@@ -2,7 +2,6 @@
 
 Random.seed!(2019)
 
-savepath = "Rt out/";
 scenario = "rally "
 
 model = rtmodel(

@@ -2,7 +2,6 @@
 
 Random.seed!(2019)
 
-savepath = "Rt out/";
 scenario = "gub "
 
 obvars = [vn.pd, vn.ts16];
