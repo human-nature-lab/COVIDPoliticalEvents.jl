@@ -1,6 +1,6 @@
 # base_model.jl
 
-push!(ARGS, "full")
+ARGS[1] = "full";
 
 include("preamble.jl");
 
