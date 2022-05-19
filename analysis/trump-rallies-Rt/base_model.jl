@@ -11,7 +11,9 @@ model = trim_model(model)
 @time balance!(model, dat);
 
 # dat, stratassignments, labels, stratifier
-model = stratify(customstrat, model, :exposure, stratassignments; labels);
+model = stratify(
+  customstrat, model, :exposure, trump_stratassignments; labels = trump_labels
+);
 
 @time estimate!(model, dat);
 

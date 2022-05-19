@@ -11,9 +11,9 @@ cvs = COVIDPoliticalEvents.covariateset(
 )
 
 model = rtmodel(
-  scenario * ARGS[1], :gaspec, Symbol(ARGS[1]), dat;
+  scenario * ARGS[1], :gaspecial, Symbol(ARGS[1]), dat;
   iterations = iters,
-  matchingcovariates = [cvs..., rare]
+  matchingcovariates = [cvs..., vn.rare]
 );
 
 dat = dataprep(dat, model, convert_missing = false);
