@@ -1,7 +1,5 @@
 # base_model.jl
 
-push!(ARGS, "nomob")
-
 include("preamble.jl");
 
 @time match!(model, dat; treatcat = rally_treatmentcategories);

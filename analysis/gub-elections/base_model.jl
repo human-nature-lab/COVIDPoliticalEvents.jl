@@ -1,6 +1,6 @@
 # base_model.jl
 
-ARGS[1] = "full";
+ARGS[1] = "nomob"
 
 include("preamble.jl");
 

@@ -1,8 +1,5 @@
 # base_model.jl
 
-push!(ARGS, "full")
-# ARGS[1] = "nomob"
-
 include("preamble.jl");
 
 @time match!(model, dat);

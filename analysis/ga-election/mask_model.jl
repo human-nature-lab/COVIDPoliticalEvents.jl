@@ -96,4 +96,4 @@ recordset = makerecords(
   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
 )
 
-TSCSMethods.save_object(savepath * "mask_overall_estimate.jld2", overall)
+TSCSMethods.save_object(savepath * string(outcome) * string(model.stratifier) * model.title * "overall_estimate.jld2", overall)

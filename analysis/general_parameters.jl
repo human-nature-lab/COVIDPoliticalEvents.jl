@@ -9,9 +9,7 @@ datafile = "cvd_dat_use.jld2";
 
 vn = VariableNames();
 
-outcome = :death_rte # :case_rte
-
-push!(ARGS, "full")
+outcome = :death_rte
 
 F = 10:40; L = -30:-1
 refinementnum = 5; iters = 10000;

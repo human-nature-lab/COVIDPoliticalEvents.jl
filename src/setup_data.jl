@@ -1,3 +1,5 @@
+# setup_data.jl
+
 function finish_data(dat, datapath)
     # add other data to dat  
     vn = VariableNames();

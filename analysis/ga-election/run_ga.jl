@@ -4,11 +4,13 @@ savepath = "ga out/";
 scenario = prefix * " ga "
 
 models = [
-    "base_model.jl", "mask_model.jl",
-    "ts_model.jl", "turnout_model.jl"
+    "base_model.jl",
+    # "mask_model.jl",
+    #"ts_model.jl", "turnout_model.jl"
 ];
 
 argvals = ["nomob", "nomob", "nomob", "nomob"]
+# argvals = fill("epi", 4)
 # argvals = ["full", "nomob"]
 # argvals = ["nomob", "nomob"]
 # argvals = ["epi", "epi"]

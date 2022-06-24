@@ -32,7 +32,7 @@ module COVIDPoliticalEvents
     # data
     treatstateondate!,
     dataprep,
-    primary_filter,
+    primary_filter, filter_treated,
     merge_Rt_data,
     # plotting
     mk_covpal,
