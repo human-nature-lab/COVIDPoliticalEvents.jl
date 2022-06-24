@@ -5,11 +5,12 @@ scenario = prefix * " protest "
 
 models = [
     "base_model.jl",
-    "recent_model.jl",
-    "size_model.jl"
+    # "size_model.jl"
+    # "recent_model.jl",
 ]
 
-argvals = ["full", "nomob", "nomob"]
+# argvals = ["full", "nomob", "nomob"]
+argvals = ["nomob", "nomob", "nomob"]
 
 for (x, a) in zip(models, argvals)
     ARGS[1] = a
