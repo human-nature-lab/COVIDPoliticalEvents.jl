@@ -358,3 +358,35 @@ function calc_county_distances(matches)
     )
   end
 end
+
+"""
+    exclude_border_counties(dat, trtment, adjmat, id2rc, rc2id)
+
+exlude the border counties (by treating and putting into a different strata that we throw out) for units that are already considered treated and not exluded (directly treated observations)
+
+N.B. this removes adj counties for the BLM protests
+"""
+function exclude_border_counties(dat, trtment, adjmat, id2rc, rc2id)
+  # select the treated counties at time of treatment
+  tobs = @views dat[(dat[!, trtment] .== 1) .& (dat[!, trtment] .== 0), [:date, :fips]];
+
+  # only consider counties that are not already treated
+  c3 = (dat[!, trtment] .== 0) .& (dat[!, :exclude] .== 0);
+  subdat = @views dat[c3, :];
+  for tob in eachrow(tobs)
+    bordercounties = [rc2id[x] for x in findall(adjmat[:, id2rc[tob[:fips]]] .== 1)];
+    # ignore the actual county
+    # (irrelevant by def of c3)
+    # bordercounties = setdiff(bordercounties, tob[:fips]);
+    if length(bordercounties) > 0
+      c1 = (subdat[!, :fips] .∈ Ref(bordercounties))
+      c2 = (subdat[!, :date] .== tob[:date])
+
+      if sum(c1 .& c2) > 0
+        subdat[c1 .& c2, trtment] .= 1
+        subdat[c1 .& c2, :exclude] .= 1
+      end
+    end
+  end
+  return dat
+end
