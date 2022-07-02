@@ -1,7 +1,5 @@
 # base_model.jl
 
-push!(ARGS, "full")
-
 include("preamble.jl");
 
 @time match!(model, dat; treatcat = protest_treatmentcategories);

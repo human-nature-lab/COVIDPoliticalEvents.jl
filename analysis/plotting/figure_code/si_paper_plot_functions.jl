@@ -73,6 +73,37 @@ function modelfigure(
     end
 end
 
+function modelfigure_simple(
+    Fl, savepth; stratum = nothing, format = ".svg"
+)
+
+    X = JLD2.load_object(Fl)
+
+    if !isnothing(stratum)
+        [@subset!(x.results, :stratum .== stratum) for x in [X.model, X.refinedmodel, X.calmodel, X.refcalmodel]]
+        
+        [
+            select!(
+                x.results, Not(:stratum)) for x in [X.model, X.refinedmodel, X.calmodel, X.refcalmodel]
+        ]
+
+        @reset X.model.balances = X.model.balances[stratum]
+        @reset X.refinedmodel.balances = X.refinedmodel.balances[stratum]
+        @reset X.calmodel.balances = X.calmodel.balances[stratum]
+        @reset X.refcalmodel.balances = X.refcalmodel.balances[stratum]
+    end
+
+    f = _modelfigure_nostrat(
+        [X.model, X.refinedmodel, X.calmodel, X.refcalmodel]
+    )
+    if !isnothing(savepth)
+        save(
+                split(split(Fl, "/")[2], ".jld2")[1] * format, f
+            )
+    end
+    return f
+end
+
 # plot a whole model result, in the SI
 function _modelfigure_nostrat(models)
 
@@ -101,6 +132,10 @@ function _modelfigure_nostrat(models)
         "Case rate (per 10K pers.)"
     elseif models[1].outcome == :death_rte
         "Death rate (per 10K pers.)"
+    elseif models[1].outcome == :deaths
+        "Deaths"
+    elseif models[1].outcome == :cases
+        "Cases"
     else "ATT"
     end
 
@@ -130,7 +165,7 @@ function _modelfigure_nostrat(models)
         nbanks = 3;
         framevisible = false,
         labelsize = 12,
-        position = :lt,
+        # position = :lt,
         tellwidth = false,
         tellheight = false,
         # margin = (30, 30, 300, 30),
@@ -138,7 +173,7 @@ function _modelfigure_nostrat(models)
         # orientation = :horizontal
     )
 
-    for (label, layout) in zip(["a", "b", "c", "d"], [ga, gb, gc, gd])
+    for (label, layout) in zip(["A", "B", "C", "D"], [ga, gb, gc, gd])
         Label(layout[1, 1, TopLeft()], label,
             textsize = 26,
             # font = noto_sans_bold,
@@ -253,7 +288,7 @@ function _modelfigure_strat(models)
         nbanks = 6;
         framevisible = false,
         labelsize = 12,
-        position = :lt,
+        # position = :lt,
         tellwidth = false,
         tellheight = false,
         margin = (-130, 30, 30, 30),
@@ -261,7 +296,7 @@ function _modelfigure_strat(models)
         orientation = :horizontal
     )
 
-    for (label, layout) in zip(["a", "b"], [G1, G2])
+    for (label, layout) in zip(["A", "B"], [G1, G2])
         Label(layout[1, 1, TopLeft()], label,
             textsize = 26,
             # font = noto_sans_bold,
@@ -349,7 +384,7 @@ function rally_ts_x_exposure_fig(
             nbanks = 6;
             framevisible = false,
             labelsize = 12,
-            position = :lt,
+            # position = :lt,
             tellwidth = false,
             tellheight = false,
             margin = (130, 30, 100, 30),

@@ -3,11 +3,11 @@
 function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     modspth = "primary out/"
-    overalldeathmod = "primary full_death_rte_.jld2"
-    overallcasemod = "case primary full_case_rte_.jld2"
+    overalldeathmod = " primary full_death_rte_.jld2"
+    overallcasemod = " primary full_case_rte_.jld2"
 
-    stratdeathmod = "primary full_death_rte_In-person Turnout Rate.jld2"
-    stratcasemod = "case primary full_case_rte_In-person Turnout Rate.jld2"
+    stratdeathmod = " primary full_death_rte_In-person Turnout Rate.jld2"
+    stratcasemod = " primary full_case_rte_In-person Turnout Rate.jld2"
 
     oamd = JLD2.load_object(modspth * overalldeathmod);
     oamc = JLD2.load_object(modspth * overallcasemod);
@@ -45,7 +45,6 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         xticks = xt,
         yticklabelcolor = outcomecolors[2],
         yaxisposition = :right,
-        grid = false
     );
 
     hidespines!(axm2)
@@ -138,7 +137,6 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
             xticks = xt,
             yticklabelcolor = outcomecolors[2],
             yaxisposition = :right,
-            grid = false,
             title = labels[s]
         );
 
@@ -204,7 +202,7 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         )
     end
 
-    for (label, layout) in zip(["a", "b"], [panelA, panelB])
+    for (label, layout) in zip(["A", "B"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
             textsize = 26,
             # font = noto_sans_bold,

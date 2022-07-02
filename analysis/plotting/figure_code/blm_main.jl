@@ -3,10 +3,10 @@
 function blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     modspth = "protest out/"
-    overalldeathmod = "protest full_death_rte_.jld2"
-    stratdeathmod = "protest nomob_death_rte_prsize.jld2"
-    overallcasemod = "protest full_case_rte_.jld2"
-    stratcasemod = "protest nomob_case_rte_prsize.jld2"
+    overalldeathmod = " protest nomob_death_rte_.jld2"
+    stratdeathmod = " protest nomob_death_rte_prsize.jld2"
+    overallcasemod = " protest nomob_case_rte_.jld2"
+    stratcasemod = " protest nomob_case_rte_prsize.jld2"
 
     oamd = JLD2.load_object(modspth * overalldeathmod);
     oamc = JLD2.load_object(modspth * overallcasemod);
@@ -43,8 +43,7 @@ function blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         ylabel = ylabels[2],
         xticks = xt,
         yticklabelcolor = outcomecolors[2],
-        yaxisposition = :right,
-        grid = false
+        yaxisposition = :right
     );
 
     hidespines!(axm2)
@@ -137,7 +136,6 @@ function blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
             xticks = xt,
             yticklabelcolor = outcomecolors[2],
             yaxisposition = :right,
-            grid = false,
             title = labels[s]
         );
 
@@ -201,7 +199,7 @@ function blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         )
     end
 
-    for (label, layout) in zip(["a", "b"], [panelA, panelB])
+    for (label, layout) in zip(["A", "B"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
             textsize = 26,
             # font = noto_sans_bold,

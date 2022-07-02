@@ -2,10 +2,10 @@
 
 function gub_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
-    gamod_case = "ga out/case ga full_case_rte_.jld2"
-    gamod_death = "ga out/ga full_death_rte_.jld2"
-    gubmod_case = "gub out/gub full_case_rte_.jld2"
-    gubmod_death = "gub out/gub full_death_rte_.jld2"
+    gamod_case = "ga out/ ga nomob_case_rte_.jld2"
+    gamod_death = "ga out/ ga nomob_death_rte_.jld2"
+    gubmod_case = "gub out/ gub out nomob_case_rte_.jld2"
+    gubmod_death = "gub out/ gub out nomob_death_rte_.jld2"
 
     gad = JLD2.load_object(gamod_death);
     gac = JLD2.load_object(gamod_case);
@@ -39,8 +39,7 @@ function gub_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         ylabel = ylabels[2],
         xticks = xt,
         yticklabelcolor = outcomecolors[2],
-        yaxisposition = :right,
-        grid = false
+        yaxisposition = :right
     );
 
     hidespines!(axm2)
@@ -117,8 +116,7 @@ function gub_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         # ylabel = ylabels[2],
         xticks = xt,
         yticklabelcolor = outcomecolors[2],
-        yaxisposition = :right,
-        grid = false
+        yaxisposition = :right
     );
 
     hidespines!(axm2)
@@ -182,7 +180,7 @@ function gub_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         color = :black, linestyle = nothing, linewidth = 0.2
     )
 
-    for (label, layout) in zip(["a", "b"], [panelA, panelB])
+    for (label, layout) in zip(["A", "B"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
             textsize = 26,
             # font = noto_sans_bold,

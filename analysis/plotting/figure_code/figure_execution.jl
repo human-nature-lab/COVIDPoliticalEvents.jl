@@ -5,8 +5,8 @@ import Colors, ColorSchemes
 using CairoMakie
 using JLD2
 
-savepth = "main_figures/";
-format = ".svg"
+savepth = "plotting/main_figures/";
+format = ".svg";
 
 ylabels = ("Death rate (per 10,000)", "Case rate (per 10,000)")
 xlabel = "Day"
@@ -26,7 +26,7 @@ include("blm_main.jl")
 include("rally_figure.jl")
 include("transmissibility_main.jl")
 include("mobility_main.jl")
-include("long_fig.jl")
+# include("long_fig.jl")
 
 # execution
 primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format);
@@ -39,13 +39,13 @@ blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format);
 
 rt_main(;
     savepath = savepth,
-    format = format
+    format = format,
+    basepath = "Rt out/"
 )
 
 mobility_main(
     format = format,
-    savepath = savepth,
-    basepath = "Rt out/"
+    savepath = savepth
 )
 
 long_fig(xlabel, ylabels, outcomecolors, offsets, savepth, format)

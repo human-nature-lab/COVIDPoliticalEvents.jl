@@ -11,15 +11,15 @@ function rt_main(;
     models = [
         "primary full_Rt_.jld2",
         "ga epi_Rt_.jld2",
-        "gub full_Rt_.jld2",
+        "gub nomob_Rt_.jld2",
         "rally nomob_Rt_exposure.jld2",
-        "protest full_Rt_.jld2"
+        "protest nomob_Rt_.jld2"
     ];
 
     ms = Vector{Any}(undef, 5)
     for (i, m) in enumerate(models)
         ms[i] = JLD2.load_object(basepath * m).refcalmodel;
-    end    
+    end
 
     # COLORS
 
@@ -62,10 +62,11 @@ function rt_main(;
     offsetvals = [-0.25, 0, 0.25]
     colors = eventcolors(true);
 
+    (i, mi) = collect(enumerate(elections))[1]
     for (i, mi) in enumerate(elections)
 
         @unpack results, covariates, balances = mi
-        @subset!(results, :f <= 20)
+        # @subset!(results, :f .<= 20)
 
         att, lo, hi = extract(results);
         fs = results.f
@@ -78,7 +79,6 @@ function rt_main(;
             xticks = xt,
             # yticklabelcolor = variablecolors[oc],
             yaxisposition = :left,
-            grid = false,
             xgridvisible = false,
             ygridvisible = false,
             xminorgridvisible = false
@@ -163,7 +163,6 @@ function rt_main(;
             xticks = xt,
             # yticklabelcolor = variablecolors[oc],
             yaxisposition = :left,
-            grid = false,
             xgridvisible = false,
             ygridvisible = false,
             xminorgridvisible = false
@@ -234,14 +233,14 @@ function rt_main(;
         evs, "Events";
         framevisible = false,
         # labelsize = 12,
-        position = :left,
+        # position = :left,
         tellheight = false,
         tellwidth = false,
         orientation = :horizontal,
         nbanks = 1
     )
     
-    for (label, layout) in zip(["a", "b"], [panelA, panelB])
+    for (label, layout) in zip(["A", "B"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
             textsize = 26,
             # font = noto_sans_bold,

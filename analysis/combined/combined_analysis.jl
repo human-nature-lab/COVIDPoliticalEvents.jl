@@ -4,9 +4,7 @@ include("combined_preamble.jl");
 
 @time match!(model, dat; treatcat = protest_treatmentcategories);
 
-import JLD2; JLD2.save_object(scenario * string(model.outcome) * model.title * "combined_model_matched.jld2", model)
-
-# x = JLD2.load_object(scenario * string(:cases) * model.title * "combined_model_matched.jld2")
+import JLD2; JLD2.save_object(savepath * scenario * string(model.outcome) * model.title * "combined_model_matched.jld2", model)
 
 @time balance!(model, dat);
 
@@ -20,7 +18,7 @@ end
 
 model = stratify(customstrat, model, :excluded, stratdict);
 
-import JLD2; JLD2.save_object(scenario * string(model.outcome) * model.title * "combined_model_matched_post_strat.jld2", model)
+import JLD2; JLD2.save_object(savepath * scenario * string(model.outcome) * model.title * "combined_model_matched_post_strat.jld2", model)
 
 @time estimate!(model, dat);
 
@@ -29,15 +27,16 @@ import JLD2; JLD2.save_object(scenario * string(model.outcome) * model.title * "
   refinementnum = refinementnum, dobalance = true, doestimate = true
 );
 
-@chain refinedmodel.results begin
-    #@subset(:stratum .== 1)
-    #select(Not(:stratum))
-    groupby(:stratum)
-    @combine(
-        :att = mean(:att),
-        :Σatt = sum(:att)
-    )
-end
+# import TSCSMethods.mean
+# @chain refinedmodel.results begin
+#     #@subset(:stratum .== 1)
+#     #select(Not(:stratum))
+#     groupby(:stratum)
+#     @combine(
+#         :att = mean(:att),
+#         :Σatt = sum(:att)
+#     )
+# end
 
 @time calmodel, refcalmodel, overall = autobalance(
   model, dat;
@@ -50,9 +49,9 @@ recordset = makerecords(
   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
 )
 
-TSCSMethods.save_object(
-  savepath * "death_final_model.jld2", [model, refinedmodel, calmodel, refcalmodel]
-)
+TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)
+
+# model, refinedmodel, calmodel, refcalmodel = TSCSMethods.load_object(savepath * "death_final_model_border.jld2")
 
 # import Statistics:mean
 # @chain refcalmodel.results begin

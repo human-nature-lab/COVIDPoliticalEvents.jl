@@ -3,8 +3,8 @@
 function rally_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     modspth = "rally out/"
-    stratdeathmod = "rally nomob_death_rte_exposure.jld2"
-    stratcasemod = "case rally nomob_case_rte_exposure.jld2"
+    stratdeathmod = " rally nomob_death_rte_exposure.jld2"
+    stratcasemod = " rally nomob_case_rte_exposure.jld2"
 
     smd = JLD2.load_object(modspth * stratdeathmod);
     smc = JLD2.load_object(modspth * stratcasemod);
@@ -39,8 +39,7 @@ function rally_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         ylabel = ylabels[2],
         xticks = xt,
         yticklabelcolor = outcomecolors[2],
-        yaxisposition = :right,
-        grid = false
+        yaxisposition = :right
     );
 
     hidespines!(axm2)
@@ -133,7 +132,6 @@ function rally_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
             xticks = xt,
             yticklabelcolor = outcomecolors[2],
             yaxisposition = :right,
-            grid = false,
             title = labels[s]
         );
 
@@ -199,7 +197,7 @@ function rally_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         )
     end
 
-    for (label, layout) in zip(["a", "b"], [panelA, panelB])
+    for (label, layout) in zip(["A", "B"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
             textsize = 26,
             # font = noto_sans_bold,

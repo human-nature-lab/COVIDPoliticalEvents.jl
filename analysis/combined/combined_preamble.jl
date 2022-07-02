@@ -28,12 +28,6 @@ dat[(dat[!, :prsize] .< 800) .& (dat[!, :protest] .== 1), :exclude] .= 1
 # remove rally exposures less than direct treatment
 dat[(dat[!, :Exposure] .>= 1) .& (dat[!, :rallydayunion] .== 1), :exclude] .= 1
 
-# adj mat, fips => row / col, row / col => fips
-adjmat, id2rc, rc2id = COVIDPoliticalEvents.getneighbordat();
-
-# adjacent to GA
-trtment = :gaspecial;
-
 # for each county-timetreated
 # look for the set of adjacent counties, if not treated already
 # treat and mark as excluded (these will necessarily be in other states)
@@ -41,8 +35,9 @@ trtment = :gaspecial;
 # combine the treated into `political`
 dat[!, :political] = 1 .* (sum([dat[!, trt] for trt in treatments]) .> 0)
 
-
-
+# adj mat, fips => row / col, row / col => fips
+adjmat, id2rc, rc2id = COVIDPoliticalEvents.getneighbordat();
+dat = exclude_border_counties(dat, :political, adjmat, id2rc, rc2id)
 
 model = deathmodel(
   scenario * ARGS[1], :political, Symbol(ARGS[1]) , dat,
@@ -50,5 +45,5 @@ model = deathmodel(
   F = F, L = L,
   iterations = iters,
 );
-
+  
 dat = dataprep(dat, model);

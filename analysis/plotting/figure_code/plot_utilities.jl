@@ -152,7 +152,9 @@ function colorvariables()
         vn.mil => pal[10],
         vn.p65 => pal[6],
         vn.rare => pal[13],
-        vn.rt => pal[15]
+        vn.rt => pal[15],
+        :deaths => pal[3],
+        :cases => pal[2]
     );
     return variablecolors
 end
