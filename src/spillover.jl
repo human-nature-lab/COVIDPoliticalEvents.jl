@@ -1,130 +1,5 @@
 # spillover.jl
 
-# helpers
-
-function mkDataFrame(cts)
-  df = DataFrame()
-  for (k, v) in cts
-    df[!, k] = v
-  end
-  return df
-end
-
-# end helpers
-
-"""
-    getneighbordat()
-
-Get the county adjacecy info from the US Census Bureau website.
-
-"https://www2.census.gov/geo/docs/reference/county_adjacency.txt"
-"""
-function getneighbordat()
-
-  C = CSV.read(
-    download("https://www2.census.gov/geo/docs/reference/county_adjacency.txt"),
-    DataFrame;
-    header = false
-  )
-
-  brks = findall((ismissing.(C.Column2) .- 1) * .- 1 .== 1)
-  # last is nrow(C)
-
-  cc = zeros(Int64, nrow(C), 2);
-  cnt = 0
-  for i = eachindex(brks)
-    i1 = brks[i]
-    cnt += 1
-    if i < length(brks)
-      i2 = brks[i + 1] - 1
-    else
-      i2 = nrow(C)
-    end
-    cc[(i1 : i2), 1] = fill(C.Column2[i1], i2 - i1 + 1)
-    cc[(i1 : i2), 2] = C.Column4[i1 : i2]
-  end
-
-  ccd = sort!(DataFrame(from = cc[:,1], to = cc[:,2]), :from);
-
-  ul = unique(ccd.from);
-  UL = zeros(Int64, length(ul), 2);
-  UL[:,1] = ul;
-  UL[:,2] = 1:length(ul);
-
-  ky = DataFrame(id = UL[:,1], numfrom = UL[:,2]);
-  ky2 = DataFrame(id = UL[:,1], numto = UL[:,2]);
-
-  ccd = leftjoin(ccd, ky, on = [:from => :id]);
-  ccd = leftjoin(ccd, ky2, on = [:to => :id]);
-
-  # C is the county adj matrix, in increasing-fips order
-  C = zeros(Int64, length(ul), length(ul));
-
-  id2ind = Dict(UL[:, 1] .=> UL[:, 2])
-  ind2id = Dict(UL[:, 2] .=> UL[:, 1])
-
-
-  # for each unique treated observation, look across its unit's row and mark the others as treated
-  for i = eachindex(1:nrow(ccd))
-    # C[ccd.numfrom[i], ccd.numto[i]] = 1;
-    C[id2ind[ccd.from[i]], id2ind[ccd.to[i]]] = 1;
-  end
-  return C, id2ind, ind2id
-end
-
-"""
-return the set of neighbors up to degree
-"""
-function getneighbors(
-  treatment, t, id,
-  id2ind, ind2id, C,
-  dat, degree::Int
-)
-
-  CoDict = Dict{Int64, Matrix{Int64}};
-  codict = CoDict();
-  pathsmat!(codict, C, degree);
-
-  # unique treatments
-  trtobs = unique(dat[dat[!, treatment] .== 1, [t, id]]);
-
-  adjf = mkDataFrame(
-    Dict(
-      :degree => Int64[],
-      :egoid => Int64[],
-      :egot => Int64[],
-      :aid => Int64[],
-      :aitreated => Bool[]
-    )
-  );
-
-  tot = trtobs[!, t];
-  toid = trtobs[!, id];
-
-  # include self-loops to treated units as degree 0
-  for i in 1:length(trtobs[!, id])
-    append!(
-      adjf,
-      DataFrame(
-        degree = 0,
-        egoid = trtobs[!, id][i],
-        egot = trtobs[!, t][i],
-        aid = trtobs[!, id][i],
-        aitreated = true
-      )
-    )
-  end
-  
-  getneighbors_inner!(
-    adjf,
-    trtobs,
-    codict, degree,
-    tot, toid,
-    id2ind, ind2id
-  )
-  return adjf
-end
-
 function pathsmat!(codict, C, degree)
   for k in 1:degree
     codict[k] = (C^k .> 0) .* 1 # is there a path of length degree
@@ -133,47 +8,116 @@ function pathsmat!(codict, C, degree)
 end
 
 """
-construct a vector for i in 1:degree that contains the set of untreated neighbors of treated units in the data, for each neighor degree in 1:degree.
+        getneighbors(
+            treatment, t, id,
+            id2ind, ind2id, C,
+            dat, degree::Int
+        )
+
+Return the set of neighbors up to degree.
 """
-function getneighbors_inner!(
-  adjf,
-  trtobs,
-  codict, degree,
-  tot, toid,
-  id2ind, ind2id
+function getneighbors(
+    treatment, t, id,
+    id2ind, ind2id, C,
+    dat, degree::Int
 )
-  
-  for i = eachindex(1:nrow(trtobs))
-    egot = @views(tot[i])
-    egoid = @views(toid[i])
-    
-    eind = id2ind[egoid]
-    for j in 1:size(codict[1])[1] # over alters to ego
-      
-      # loop over degree values
-      # stop when append happens
-      for o in 1:degree
-        aijk = @views(codict[o][j, eind]) # i, j of matrix k
-        g0 = aijk > 0
-        aid = ind2id[j]
-        taid = aid .∈ Ref(toid) # alter treated?
-        if g0 & (egoid != aid)
-          append!(
+
+    CoDict = Dict{Int64, Matrix{Int64}};
+    codict = CoDict();
+    pathsmat!(codict, C, degree);
+
+    # unique treatments
+    trtobs = unique(dat[dat[!, treatment] .== 1, [t, id]]);
+
+    adjf = mkDataFrame(
+    Dict(
+        :degree => Int64[],
+        :egoid => Int64[],
+        :egot => Int64[],
+        :aid => Int64[],
+        :aitreated => Bool[]
+        )
+    );
+
+    # include self-loops to treated units as degree 0
+    for i in 1:length(trtobs[!, id])
+        append!(
             adjf,
             DataFrame(
-              degree = o,
-              egoid = egoid,
-              egot = egot,
-              aid = aid,
-              aitreated = taid
+                degree = 0,
+                egoid = trtobs[!, id][i],
+                egot = trtobs[!, t][i],
+                aid = trtobs[!, id][i],
+                aitreated = true
             )
-          )
-          break # finds first (:. minimum) path from ego to alter, and skips longer paths
-        end
-      end
+        )
     end
-  end
-  return adjf
+
+    tot = trtobs[!, t];
+    toid = trtobs[!, id];
+
+    getneighbors_inner!(
+        adjf,
+        trtobs,
+        codict, degree,
+        tot, toid,
+        id2ind, ind2id
+    )
+
+    return adjf
+end
+
+"""
+        getneighbors_inner!(
+            adjf,
+            trtobs,
+            codict, degree,
+            tot, toid,
+            id2ind, ind2id
+        )
+
+Construct a vector for i in 1:degree that contains the set of untreated neighbors of treated units in the data, for each neighor degree in 1:degree.
+
+For cases where multiple direct treatments spillover onto a county, find the minimum path from ego to alter, and skip longer paths
+"""
+function getneighbors_inner!(
+    adjf,
+    trtobs,
+    codict, degree,
+    tot, toid,
+    id2ind, ind2id
+)
+  
+    for i = eachindex(1:nrow(trtobs))
+        egot = @views(tot[i])
+        egoid = @views(toid[i]) # the directly treated unit
+    
+        eind = id2ind[egoid]
+        for j in 1:size(codict[1])[1] # over alters to ego
+            # loop over degree values and stop when append happens
+            for o in 1:degree
+                aijk = @views(codict[o][j, eind]) # i, j of matrix k
+                g0 = aijk > 0
+                aid = ind2id[j]
+                taid = aid .∈ Ref(toid) # alter treated?
+                if g0 & (egoid != aid)
+                    append!(
+                        adjf,
+                        DataFrame(
+                            degree = o,
+                            egoid = egoid,
+                            egot = egot,
+                            aid = aid,
+                            aitreated = taid
+                        )
+                    )
+                    # find first (:. minimum) path from ego to alter; skip longer paths
+                    break
+                end
+            end
+        end
+    end
+    return adjf
 end
 
 function treatneighbors!(

@@ -10,17 +10,15 @@ module COVIDPoliticalEvents
   import ShiftedArrays:lead
   import FileIO.load
   
-  include("varnames.jl")
-  include("data.jl")
-  include("setup.jl")
-  include("setup_data.jl")
-  include("models.jl")
-  include("plotting.jl")
-  include("panel_plots.jl")
-  include("supplemental_plotting.jl")
-  include("spillover.jl")
-  include("threshold.jl")
-  include("stratifiers.jl")
+  depfiles = [
+    "varnames.jl", "data.jl", "setup.jl", "setup_data.jl",
+    "models.jl",
+    "plotting.jl", "panel_plots.jl", "supplemental_plotting.jl",
+    "spillover.jl", "threshold.jl", "stratifiers.jl",
+    "countyadjacencies.jl", "countydistances.jl"
+  ];
+  
+  for x in depfiles; include(x) end
 
   export
     # setup

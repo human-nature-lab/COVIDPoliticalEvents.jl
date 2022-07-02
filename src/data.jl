@@ -275,118 +275,76 @@ function ga_turnout(dat; datpath = "covid-19-data/data/")
 end;
 
 function merge_Rt_data(dat, transdatafile)
-  td = CSV.read(transdatafile, DataFrame);
-  rename!(td, Symbol("Rt.hi") => :Rt_hi, Symbol("Rt.lo") => :Rt_lo)
-  select!(td, :fips, :date, :Rt) # :Rt_hi, :Rt_lo
+    td = CSV.read(transdatafile, DataFrame);
+    rename!(td, Symbol("Rt.hi") => :Rt_hi, Symbol("Rt.lo") => :Rt_lo)
+    select!(td, :fips, :date, :Rt) # :Rt_hi, :Rt_lo
     # hi and low estimates are missing?
-  tdict = Dict{Tuple{Int, Dates.Date}, Float64}();
+    tdict = Dict{Tuple{Int, Dates.Date}, Float64}();
 
-  # (unit, dte, rval) = collect(zip(td.fips, td.date, td.Rt))[1]
-  for (unit, dte, rval) in zip(td.fips, td.date, td.Rt)
-    tdict[(unit, dte)] = rval
-  end
-
-  dat[!, :Rt] = Vector{Union{Float64, Missing}}(missing, nrow(dat));
-
-  for r in eachrow(dat)
-    r[:Rt] = get(tdict, (r[:fips], r[:date]), missing)
-  end
-
-  # dat = leftjoin(dat, td, on = [:date, :fips])
-  return dat
-end
-
-"""
-    get_county_dist_dict(
-      pth = "../../../covid-19-data/data/sf12010countydistancemiles.csv"
-    )
-
-Use [NBER County Distance Database](https://www.nber.org/research/data/county-distance-database) to check distances between counties.
-
-Pairs are sorted by fips code.
-"""
-function county_dist_dict(; pth = "../../../covid-19-data/data/sf12010countydistancemiles.csv")
-  cdist = CSV.read(pth, DataFrame)
-
-  cdict = Dict{Tuple{Int, Int}, Float64}();
-  for r in eachrow(cdist)
-    x, y = sort([r[:county1], r[:county2]])
-    cdict[(x, y)] = r[:mi_to_county]
-  end
-  return cdict
-end
-"""
-
-"""
-function get_county_distances(
-  matches, cdict
-)
-  
-  # not model matches
-  # matches
-
-  matches[!, :match_miles] .= 0.0;
-  for r in eachrow(matches)
-    cnt = 0
-    v = 0
-    for rm in r[:matchunits]
-      tple = Tuple(sort([r[:treatedunit], rm]))
-      vi = get(cdict, tple, missing)
-      if !ismissing(vi)
-        cnt += 1
-        v += vi
-      end
+    # (unit, dte, rval) = collect(zip(td.fips, td.date, td.Rt))[1]
+    for (unit, dte, rval) in zip(td.fips, td.date, td.Rt)
+        tdict[(unit, dte)] = rval
     end
-    r[:match_miles] = v * inv(cnt)
-  end
 
-  return matches
-end
+    dat[!, :Rt] = Vector{Union{Float64, Missing}}(missing, nrow(dat));
 
-function calc_county_distances(matches)
-  q25(x) = quantile(x, 0.025)
-  q975(x) = quantile(x, 0.975)
+    for r in eachrow(dat)
+        r[:Rt] = get(tdict, (r[:fips], r[:date]), missing)
+    end
 
-  return @chain unique(matches, [:timetreated, :treatedunit]) begin
-    combine(
-      :match_miles => mean => :mean,
-      :match_miles => std => :std,
-      :match_miles => minimum => :min,
-      :match_miles => maximum => :max,
-      :match_miles => q25 => :p25,
-      :match_miles => q975 => :p975
-    )
-  end
+    return dat
 end
 
 """
     exclude_border_counties(dat, trtment, adjmat, id2rc, rc2id)
 
-exlude the border counties (by treating and putting into a different strata that we throw out) for units that are already considered treated and not exluded (directly treated observations)
+Exclude the border counties (by treating and putting into a different strata that we throw out) for units that are already considered treated and not exluded (directly treated observations).
 
-N.B. this removes adj counties for the BLM protests
+N.B. this removes adj. counties for the BLM protests
 """
 function exclude_border_counties(dat, trtment, adjmat, id2rc, rc2id)
-  # select the treated counties at time of treatment
-  tobs = @views dat[(dat[!, trtment] .== 1) .& (dat[!, trtment] .== 0), [:date, :fips]];
+    
+    # for each row create a vector that records the source counties
+    tp = Union{Missing, Vector{Int}}[]
+    for i in 1:nrow(dat); push!(tp, missing) end;
+    dat[!, :source] = tp;
 
-  # only consider counties that are not already treated
-  c3 = (dat[!, trtment] .== 0) .& (dat[!, :exclude] .== 0);
-  subdat = @views dat[c3, :];
-  for tob in eachrow(tobs)
-    bordercounties = [rc2id[x] for x in findall(adjmat[:, id2rc[tob[:fips]]] .== 1)];
-    # ignore the actual county
-    # (irrelevant by def of c3)
-    # bordercounties = setdiff(bordercounties, tob[:fips]);
-    if length(bordercounties) > 0
-      c1 = (subdat[!, :fips] .∈ Ref(bordercounties))
-      c2 = (subdat[!, :date] .== tob[:date])
+    # select the treated counties at time of treatment who are not excluded
+    tobs = @views dat[(dat[!, trtment] .== 1) .& (dat[!, :exclude] .== 0), [:date, :fips]];
 
-      if sum(c1 .& c2) > 0
-        subdat[c1 .& c2, trtment] .= 1
-        subdat[c1 .& c2, :exclude] .= 1
-      end
+    # only consider counties that are not already treated
+    c3 = (dat[!, trtment] .== 0) .& (dat[!, :exclude] .== 0);
+    subdat = @views dat[c3, :];
+
+    tob = collect(eachrow(tobs))[1]
+    for tob in eachrow(tobs)
+        bordercounties = [
+            rc2id[x] for x in findall(adjmat[:, id2rc[tob[:fips]]] .== 1)
+        ];
+        
+        # ignore the actual county
+        # (irrelevant by def of c3)
+        # bordercounties = setdiff(bordercounties, tob[:fips]);
+        if length(bordercounties) > 0
+            c1 = (subdat[!, :fips] .∈ Ref(bordercounties))
+            c2 = (subdat[!, :date] .== tob[:date])
+
+            subsubdat = @views subdat[c1 .& c2, :];
+
+            if sum(c1 .& c2) > 0
+                subsubdat[!, trtment] .= 1
+                subsubdat.exclude .= 1
+
+                for l in eachindex(subsubdat[!, :exclude])
+                    if ismissing(subdat[!, :source][l])
+                        subsubdat.source[1] = [tob[:fips]]
+                      else
+                        append!(subsubdat[!, :source][l], tob[:fips])
+                      end
+                end
+                
+            end
+        end
     end
-  end
-  return dat
+    return dat
 end
