@@ -335,3 +335,11 @@ function _bordercounties!(subdat, tobs, adjmat, id2rc, rc2id, treatment)
         end
     end
 end
+
+# test border county situation
+# Kent Co., RI gets spillover from two ct counties
+# kent = 44003; windham = 09015; newlondon = 09011;
+# ds = dat[(.!(ismissing.(dat.source))), :];
+# @subset(
+#   dat, :date .== Date("2020-08-11"), :fips .== kent
+# )[!, [:political, :source]]
