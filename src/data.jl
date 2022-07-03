@@ -5,65 +5,61 @@
 
 Remove observations for a unit with incomplete match periods (specified by cutoff, days before treatment, furthest day back to require that is included) in the outcome window for that treatment event. Mutates the data.
 """
-function deleteincomplete!(
-  dat,
-  t, id, treatment, F,
-  cutoff
-)
-  # if there is no date at least to cutoff, remove data for unit up to fmax
-  tobs = unique(dat[dat[!, treatment] .== 1, [id, t]]);
+function deleteincomplete!(dat, t, id, treatment, F, cutoff)
+    # if there is no date at least to cutoff, remove data for unit up to fmax
+    tobs = unique(dat[dat[!, treatment] .== 1, [id, t]]);
 
-  removal_indices = Int64[];
-  
-  for r in eachrow(tobs)
-    treat_cutoff = r[t] - cutoff;
-    c1 = dat[!, id] .== r[id];
-    c2 = dat[!, t] .>= treat_cutoff;
-    c3 = dat[!, t] .<= (r[t] + maximum(F));
+    removal_indices = Int64[];
 
-    tf = @views dat[c1 .& c2 .& c3, t];
-    keep = minimum(tf) <= treat_cutoff;
-    if !keep
-      c2b = dat[!, t] .>= (r[t] + minimum(F)); # remove during outcome window
-      append!(removal_indices, findall(c1 .& c2b .& c3))
+    for r in eachrow(tobs)
+        treat_cutoff = r[t] - cutoff;
+        c1 = dat[!, id] .== r[id];
+        c2 = dat[!, t] .>= treat_cutoff;
+        c3 = dat[!, t] .<= (r[t] + maximum(F));
+
+        tf = @views dat[c1 .& c2 .& c3, t];
+        keep = minimum(tf) <= treat_cutoff;
+        if !keep
+            c2b = dat[!, t] .>= (r[t] + minimum(F)); # remove during outcome window
+            append!(removal_indices, findall(c1 .& c2b .& c3))
+        end
     end
-  end
-  delete!(dat, removal_indices)
-  return dat
+    delete!(dat, removal_indices)
+    return dat
 end
 
 """
     treatstateondate!(
-      dat;
-      state_abbreviation = ["VA", "GA"],
-      eventdate = Date("2021-01-05"),
-      treatment_variable = :gaspecial,
-      date_column = :date
+        dat;
+        state_abbreviation = ["VA", "GA"],
+        eventdate = Date("2021-01-05"),
+        treatment_variable = :gaspecial,
+        date_column = :date
     )
 
 Create the treatment variable for an event in a whole state, on a day). e.g. the ga special election.
 """
 function treatstateondate!(
-  dat;
-  state_abbreviation = ["VA", "NJ"],
-  eventdate = Date("2021-11-02"),
-  treatment_variable = :gub,
-  date_column = :date
+    dat;
+    state_abbreviation = ["VA", "NJ"],
+    eventdate = Date("2021-11-02"),
+    treatment_variable = :gub,
+    date_column = :date
 )
 
-  dat[!, treatment_variable] .= 0;
+    dat[!, treatment_variable] .= 0;
 
-  if typeof(state_abbreviation) == Vector{String}
+    if typeof(state_abbreviation) == Vector{String}
     for state_abbreviation in state_abbreviation
-      c1 = (dat[!, VariableNames().abbr] .== state_abbreviation) .& (dat[!, date_column] .== eventdate);
-      dat[c1, treatment_variable] .= 1;
+        c1 = (dat[!, VariableNames().abbr] .== state_abbreviation) .& (dat[!, date_column] .== eventdate);
+        dat[c1, treatment_variable] .= 1;
     end
-  else
+    else
     c1 = (dat[!, VariableNames().abbr] .== state_abbreviation) .& (dat[!, date_column] .== eventdate);
     dat[c1, treatment_variable] .= 1;
-  end
+    end
 
-  return dat
+    return dat
 end
 
 """
@@ -73,16 +69,16 @@ remove observations considered too early
 """
 function filter_treated(model; mintime = 10)
 
-  # remove elections prior to March 10
-  obtimes = [model.observations[i][1] for i in eachindex(model.observations)];
-  obinclude = obtimes .>= mintime;
-  @reset model.observations = model.observations[obinclude];
-  @reset model.matches = model.matches[obinclude];
-  # @reset model.results = TSCSMethods.DataFrame();
+    # remove elections prior to March 10
+    obtimes = [model.observations[i][1] for i in eachindex(model.observations)];
+    obinclude = obtimes .>= mintime;
+    @reset model.observations = model.observations[obinclude];
+    @reset model.matches = model.matches[obinclude];
+    # @reset model.results = TSCSMethods.DataFrame();
 
-  @reset model.treatednum = length(model.observations)
-  
-  return model
+    @reset model.treatednum = length(model.observations)
+
+    return model
 end
 
 """
@@ -92,25 +88,25 @@ remove observations considered too early
 """
 function primary_filter(model;  mintime = 10)
 
-  # remove elections prior to March 10
-  obtimes = [model.observations[i][1] for i in eachindex(model.observations)];
-  obinclude = obtimes .>= mintime;
-  @reset model.observations = model.observations[obinclude];
-  @reset model.matches = model.matches[obinclude];
-  # @reset model.results = TSCSMethods.DataFrame();
+    # remove elections prior to March 10
+    obtimes = [model.observations[i][1] for i in eachindex(model.observations)];
+    obinclude = obtimes .>= mintime;
+    @reset model.observations = model.observations[obinclude];
+    @reset model.matches = model.matches[obinclude];
+    # @reset model.results = TSCSMethods.DataFrame();
 
-  @reset model.treatednum = length(model.observations)
-  
-  return model
+    @reset model.treatednum = length(model.observations)
+
+    return model
 end
 
 """
     dataprep!(
-      dat, model;
-      t_start = nothing, t_end = nothing,
-      remove_incomplete = false,
-      incomplete_cutoff = nothing,
-      convert_missing = true
+        dat, model;
+        t_start = nothing, t_end = nothing,
+        remove_incomplete = false,
+        incomplete_cutoff = nothing,
+        convert_missing = true
     )
 
 Prepare the data for analysis:
@@ -119,62 +115,53 @@ Prepare the data for analysis:
   3. Optionally, shift (lead) the cumulative death rate and cumulative case rate variables by the lower 5th percentile day of their infection-to-death distributions. This regards covariate matching.
 """
 function dataprep(
-  dat, model;
-  t_start = nothing, t_end = nothing,
-  remove_incomplete = false,
-  incomplete_cutoff = nothing,
-  convert_missing = true,
+    dat, model;
+    t_start = nothing, t_end = nothing,
+    remove_incomplete = false,
+    incomplete_cutoff = nothing,
+    convert_missing = true,
 )
 
-  @unpack t, id, treatment, F, L = model;
-  
-  # push the cumulative death rate back 10 days
-  # by the infection-death distribution
-  # NaN doesn't matter since we drop the range anyway
-  # dat = @chain dat begin
-  #   sort([id, t])
-  #   groupby(id)
-  #   @transform($(vn.cdr) = lead($(vn.cdr), leadsize; default = NaN))
-  # end
-  
-  if isnothing(t_start)
-    ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
-    c1 = dat[!, t] .>= ttmin + L[begin];
-  else
-    c1 = dat[!, t] .>= t_start
-  end
-  
-  if isnothing(t_end)
-    ttmax = maximum(dat[dat[!, treatment] .== 1, t]);
-    c2 = dat[!, t] .<= ttmax + F[end];
-  else
-    c2 = dat[!, t] .<= t_end;
-  end
+    @unpack t, id, treatment, F, L = model;
 
-  dat = dat[c1 .& c2, :];
-
-  if remove_incomplete
-    deleteincomplete!(dat, t, id, treatment, F, incomplete_cutoff)
-  end
-
-  sort!(dat, [id, t])
-
-  if convert_missing
-    for covar in model.covariates
-      dat[!, covar] = Missings.disallowmissing(dat[!, covar])
+    if isnothing(t_start)
+        ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
+        c1 = dat[!, t] .>= ttmin + L[begin];
+    else
+        c1 = dat[!, t] .>= t_start
     end
-  end
 
-  return dat
+    if isnothing(t_end)
+        ttmax = maximum(dat[dat[!, treatment] .== 1, t]);
+        c2 = dat[!, t] .<= ttmax + F[end];
+    else
+        c2 = dat[!, t] .<= t_end;
+    end
+
+    dat = dat[c1 .& c2, :];
+
+    if remove_incomplete
+        deleteincomplete!(dat, t, id, treatment, F, incomplete_cutoff)
+    end
+
+    sort!(dat, [id, t])
+
+    if convert_missing
+        for covar in model.covariates
+            dat[!, covar] = Missings.disallowmissing(dat[!, covar])
+        end
+    end
+
+    return dat
 end
 
 """
     dataprep!(
-      dat, treatment, F, L, covariates;
-      t_start = nothing, t_end = nothing,
-      remove_incomplete = false,
-      incomplete_cutoff = nothing,
-      convert_missing = true
+        dat, treatment, F, L, covariates;
+        t_start = nothing, t_end = nothing,
+        remove_incomplete = false,
+        incomplete_cutoff = nothing,
+        convert_missing = true
     )
 
 Prepare the data for analysis:
@@ -183,95 +170,86 @@ Prepare the data for analysis:
   3. Optionally, shift (lead) the cumulative death rate and cumulative case rate variables by the lower 5th percentile day of their infection-to-death distributions. This regards covariate matching.
 """
 function dataprep(
-  dat, treatment, F, L;
-  t_start = nothing, t_end = nothing,
-  remove_incomplete = false,
-  incomplete_cutoff = nothing,
-  convert_missing = true,
-  covariates = nothing
+    dat, treatment, F, L;
+    t_start = nothing, t_end = nothing,
+    remove_incomplete = false,
+    incomplete_cutoff = nothing,
+    convert_missing = true,
+    covariates = nothing
 )
 
-  vn = VariableNames()
+    vn = VariableNames()
 
-  @unpack t, id, cdr = vn;
+    @unpack t, id, cdr = vn;
 
-  if isnothing(t_start)
-    ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
-    c1 = dat[!, t] .>= ttmin + L[begin];
-  else
-    c1 = dat[!, t] .>= t_start
-  end
-  
-  if isnothing(t_end)
-    ttmax = maximum(dat[dat[!, treatment] .== 1, t]);
-    c2 = dat[!, t] .<= ttmax + F[end];
-  else
-    c2 = dat[!, t] .<= t_end;
-  end
-
-  dat = dat[c1 .& c2, :];
-
-  if remove_incomplete
-    deleteincomplete!(dat, t, id, treatment, F, incomplete_cutoff)
-  end
-
-  sort!(dat, [id, t])
-
-  if convert_missing
-    for covar in covariates
-      dat[!, covar] = Missings.disallowmissing(dat[!, covar])
+    if isnothing(t_start)
+        ttmin = minimum(dat[dat[!, treatment] .== 1, t]);
+        c1 = dat[!, t] .>= ttmin + L[begin];
+    else
+        c1 = dat[!, t] .>= t_start
     end
-  end
 
-  # push the cumulative death rate back 10 days
-  # by the infection-death distribution
-  # NaN doesn't matter since we drop the range anyway
-  # dat = @chain dat begin
-  #   sort([id, t])
-  #   groupby(id)
-  #   @transform($(cdr) = lead($(cdr), 10; default = NaN))
-  # end
+    if isnothing(t_end)
+        ttmax = maximum(dat[dat[!, treatment] .== 1, t]);
+        c2 = dat[!, t] .<= ttmax + F[end];
+    else
+        c2 = dat[!, t] .<= t_end;
+    end
 
-  return dat
+    dat = dat[c1 .& c2, :];
+
+    if remove_incomplete
+        deleteincomplete!(dat, t, id, treatment, F, incomplete_cutoff)
+    end
+
+    sort!(dat, [id, t])
+
+    if convert_missing
+        for covar in covariates
+            dat[!, covar] = Missings.disallowmissing(dat[!, covar])
+        end
+    end
+
+    return dat
 end
 
 function ga_turnout(dat; datpath = "covid-19-data/data/")
 
-  vn = VariableNames()
+    vn = VariableNames()
 
-  ge = CSV.read(
-      datpath * "ga_election_results_clean.csv", 
-      DataFrame
-  );
+    ge = CSV.read(
+        datpath * "ga_election_results_clean.csv", 
+        DataFrame
+    );
 
-  select!(ge, Not(Symbol("Total Votes")));
+    select!(ge, Not(Symbol("Total Votes")));
 
-  urlb = HTTP.get(
-    "https://raw.githubusercontent.com/kjhealy/fips-codes/master/state_and_county_fips_master.csv"
-  ).body;
+    urlb = HTTP.get(
+        "https://raw.githubusercontent.com/kjhealy/fips-codes/master/state_and_county_fips_master.csv"
+    ).body;
 
-  ftab = CSV.read(urlb, DataFrame);
-  ftab = @subset(ftab, :state .== "GA");
+    ftab = CSV.read(urlb, DataFrame);
+    ftab = @subset(ftab, :state .== "GA");
 
-  ftab = @eachrow ftab begin
-    @newcol :county::Vector{String}
-    :county = replace(:name, " County" => "")
-  end;
+    ftab = @eachrow ftab begin
+        @newcol :county::Vector{String}
+        :county = replace(:name, " County" => "")
+    end;
 
-  select!(ftab, [:fips, :county]);
+    select!(ftab, [:fips, :county]);
 
-  ge = leftjoin(ge, ftab, on = :County => :county);
+    ge = leftjoin(ge, ftab, on = :County => :county);
 
-  copop = unique(select(dat, [:fips, :pop]));
+    copop = unique(select(dat, [:fips, :pop]));
 
-  ge = leftjoin(ge, copop, on = :fips);
+    ge = leftjoin(ge, copop, on = :fips);
 
-  ge.fips = convert(Vector{Int64}, ge.fips);
+    ge.fips = convert(Vector{Int64}, ge.fips);
 
-  select!(ge, Not(:County))
-  ge[!, vn.tout] = ge.day_of ./ ge.pop;
-  
-  return ge
+    select!(ge, Not(:County))
+    ge[!, vn.tout] = ge.day_of ./ ge.pop;
+
+    return ge
 end;
 
 function merge_Rt_data(dat, transdatafile)
@@ -317,11 +295,16 @@ function exclude_border_counties(dat, trtment, adjmat, id2rc, rc2id)
     subdat = @views dat[c3, :];
 
     tob = collect(eachrow(tobs))[1]
+    _bordercounties!(subdat, tobs, adjmat, id2rc, rc2id)
+    return dat
+end
+
+function _bordercounties!(subdat, tobs, adjmat, id2rc, rc2id)
     for tob in eachrow(tobs)
         bordercounties = [
             rc2id[x] for x in findall(adjmat[:, id2rc[tob[:fips]]] .== 1)
         ];
-        
+
         # ignore the actual county
         # (irrelevant by def of c3)
         # bordercounties = setdiff(bordercounties, tob[:fips]);
@@ -335,16 +318,15 @@ function exclude_border_counties(dat, trtment, adjmat, id2rc, rc2id)
                 subsubdat[!, trtment] .= 1
                 subsubdat.exclude .= 1
 
+                # recollect the spillover source
                 for l in eachindex(subsubdat[!, :exclude])
                     if ismissing(subdat[!, :source][l])
-                        subsubdat.source[1] = [tob[:fips]]
-                      else
+                        subsubdat.source[l] = [tob[:fips]]
+                    else
                         append!(subsubdat[!, :source][l], tob[:fips])
-                      end
+                    end
                 end
-                
             end
         end
     end
-    return dat
 end
