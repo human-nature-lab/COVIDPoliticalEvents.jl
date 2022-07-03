@@ -274,13 +274,13 @@ function merge_Rt_data(dat, transdatafile)
 end
 
 """
-    exclude_border_counties(dat, trtment, adjmat, id2rc, rc2id)
+    exclude_border_counties(dat, treatment, adjmat, id2rc, rc2id)
 
 Exclude the border counties (by treating and putting into a different strata that we throw out) for units that are already considered treated and not exluded (directly treated observations).
 
 N.B. this removes adj. counties for the BLM protests
 """
-function exclude_border_counties(dat, trtment, adjmat, id2rc, rc2id)
+function exclude_border_counties(dat, treatment, adjmat, id2rc, rc2id)
     
     # for each row create a vector that records the source counties
     tp = Union{Missing, Vector{Int}}[]
@@ -288,42 +288,47 @@ function exclude_border_counties(dat, trtment, adjmat, id2rc, rc2id)
     dat[!, :source] = tp;
 
     # select the treated counties at time of treatment who are not excluded
-    tobs = @views dat[(dat[!, trtment] .== 1) .& (dat[!, :exclude] .== 0), [:date, :fips]];
+    # that is, select the directly treated units
+    tobs = @views dat[(dat[!, treatment] .== 1) .& (dat[!, :exclude] .== 0), [:date, :fips]];
 
-    # only consider counties that are not already treated
-    c3 = (dat[!, trtment] .== 0) .& (dat[!, :exclude] .== 0);
+    # only consider counties that are not already treated or excluded
+    c3 = (dat[!, treatment] .== 0) .& (dat[!, :exclude] .== 0);
     subdat = @views dat[c3, :];
 
-    tob = collect(eachrow(tobs))[1]
-    _bordercounties!(subdat, tobs, adjmat, id2rc, rc2id)
+    _bordercounties!(subdat, tobs, adjmat, id2rc, rc2id, treatment)
     return dat
 end
 
-function _bordercounties!(subdat, tobs, adjmat, id2rc, rc2id)
+function _bordercounties!(subdat, tobs, adjmat, id2rc, rc2id, treatment)
     for tob in eachrow(tobs)
         bordercounties = [
             rc2id[x] for x in findall(adjmat[:, id2rc[tob[:fips]]] .== 1)
         ];
 
-        # ignore the actual county
-        # (irrelevant by def of c3)
-        # bordercounties = setdiff(bordercounties, tob[:fips]);
+        # don't need to worry about the county itself -> already excluded
+        # only bother if there are bordering counties
         if length(bordercounties) > 0
+            # get a view on the border counties' data
             c1 = (subdat[!, :fips] .∈ Ref(bordercounties))
             c2 = (subdat[!, :date] .== tob[:date])
-
             subsubdat = @views subdat[c1 .& c2, :];
 
+            # if there are any relevant spillover counties
             if sum(c1 .& c2) > 0
-                subsubdat[!, trtment] .= 1
-                subsubdat.exclude .= 1
-
-                # recollect the spillover source
+                # treat & exclude; store the spillover source
                 for l in eachindex(subsubdat[!, :exclude])
-                    if ismissing(subdat[!, :source][l])
+                    subsubdat[l, treatment] = 1
+                    subsubdat[l, :exclude] = 1
+
+                    # default is missing
+                    # so if it wasn't applicable before, create the vector
+                    if ismissing(subsubdat[l, :source])
                         subsubdat.source[l] = [tob[:fips]]
                     else
-                        append!(subsubdat[!, :source][l], tob[:fips])
+                        # there will be many cases where a county at t
+                        # receives spillover from more than one treatment event
+                        # (e.g., it borders >1 treated units at t)
+                        append!(subsubdat[l, :source], tob[:fips])
                     end
                 end
             end
