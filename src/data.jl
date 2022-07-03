@@ -337,7 +337,7 @@ function _bordercounties!(subdat, tobs, adjmat, id2rc, rc2id, treatment)
 end
 
 # test border county situation
-# Kent Co., RI gets spillover from two ct counties
+# Kent Co., RI gets spillover from two ct counties on Aug. 11 primary
 # kent = 44003; windham = 09015; newlondon = 09011;
 # ds = dat[(.!(ismissing.(dat.source))), :];
 # @subset(
