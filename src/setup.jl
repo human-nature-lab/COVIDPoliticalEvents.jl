@@ -55,10 +55,10 @@ function covariateset(
     vn.cdr
   elseif ((reference_outcome == :case_rte) | (reference_outcome == vn.ccr) | (reference_outcome == :case_rte_sma))
     vn.ccr
-  elseif (reference_outcome == vn.cd) | (reference_outcome == :deaths)
+  elseif (reference_outcome == vn.cd) | (reference_outcome == :deaths) | (reference_outcome == :deaths_sma)
     # vn.cd
     vn.cdr
-  elseif (reference_outcome == vn.cc) | (reference_outcome == :cases)
+  elseif (reference_outcome == vn.cc) | (reference_outcome == :cases) | (reference_outcome == :cases_sma)
     # vn.cc
     vn.ccr
   elseif reference_outcome == :Rt
