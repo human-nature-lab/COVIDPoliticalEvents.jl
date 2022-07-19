@@ -7,13 +7,15 @@ Add a simple moving average of `variable` to a DataFrame, over the previous n = 
 """
 function add_sma!(dat, variable; n = 7, id = :fips)
     mao = Symbol(String(variable) * "_sma")
-    dat[!, mao] = Vector{Float64}(undef, nrow(dat));
+    dat[!, mao] = Vector{Union{Float64, Missing}}(undef, nrow(dat));
     codes = sort(unique(dat[!, id]))
 
     for code in codes
         trnd = dat[dat[!, id] .== code, variable];
         dat[dat[!, id] .== code, mao] = sma(trnd; n = n)
+        dat[(dat[!, id] .== code) .& isnan.(dat[!, mao]), mao] .= missing
     end
+
 end
 
 """
