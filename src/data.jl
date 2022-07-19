@@ -15,7 +15,6 @@ function add_sma!(dat, variable; n = 7, id = :fips)
         dat[dat[!, id] .== code, mao] = sma(trnd; n = n)
         dat[(dat[!, id] .== code) .& isnan.(dat[!, mao]), mao] .= missing
     end
-
 end
 
 """
