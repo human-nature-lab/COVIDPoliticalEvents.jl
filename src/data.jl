@@ -1,6 +1,22 @@
 # data.jl
 
 """
+        add_sma!(dat, variable; n = 7, id = :fips)
+
+Add a simple moving average of `variable` to a DataFrame, over the previous n = 7 days.
+"""
+function add_sma!(dat, variable; n = 7, id = :fips)
+    mao = Symbol(String(variable) * "_sma")
+    dat[!, mao] = Vector{Float64}(undef, nrow(dat));
+    codes = sort(unique(dat[!, id]))
+
+    for code in codes
+        trnd = dat[dat[!, id] .== code, variable];
+        dat[dat[!, id] .== code, mao] = sma(trnd; n = n)
+    end
+end
+
+"""
     deleteincomplete!(dat, t, id, treatment, F, cutoff)
 
 Remove observations for a unit with incomplete match periods (specified by cutoff, days before treatment, furthest day back to require that is included) in the outcome window for that treatment event. Mutates the data.

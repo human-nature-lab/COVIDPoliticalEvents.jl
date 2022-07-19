@@ -19,15 +19,11 @@ function county_dist_dict(
     end
     return cdict
 end
+
 """
 
 """
-function get_county_distances(
-    matches, cdict
-)
-
-    # not model matches
-    # matches
+function get_county_distances(matches, cdict)
 
     matches[!, :match_miles] .= 0.0;
     for r in eachrow(matches)
@@ -52,13 +48,20 @@ function calc_county_distances(matches)
     q975(x) = quantile(x, 0.975)
 
     return @chain unique(matches, [:timetreated, :treatedunit]) begin
-    combine(
-    :match_miles => mean => :mean,
-    :match_miles => std => :std,
-    :match_miles => minimum => :min,
-    :match_miles => maximum => :max,
-    :match_miles => q25 => :p25,
-    :match_miles => q975 => :p975
-    )
+        combine(
+            :match_miles => mean => :mean,
+            :match_miles => std => :std,
+            :match_miles => minimum => :min,
+            :match_miles => maximum => :max,
+            :match_miles => q25 => :p25,
+            :match_miles => q975 => :p975
+        )
     end
+end
+
+function match_distances(matches)
+    cdict = county_dist_dict()
+    matches = get_county_distances(matches, cdict)
+    countydists = calc_county_distances(matches)
+    return countydists
 end

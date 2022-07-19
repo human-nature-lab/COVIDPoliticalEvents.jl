@@ -9,6 +9,7 @@ module COVIDPoliticalEvents
   using CairoMakie
   import ShiftedArrays:lead
   import FileIO.load
+  import Indicators:sma
   
   depfiles = [
     "varnames.jl", "data.jl", "setup.jl", "setup_data.jl",
@@ -48,5 +49,7 @@ module COVIDPoliticalEvents
     primary_panel, blm_panel,
     protest_treatmentcategories,
     rally_treatmentcategories,
-    finish_data, indicatetreatments, make_weekly
+    finish_data, indicatetreatments, make_weekly,
+    match_distances,
+    add_sma!
 end
