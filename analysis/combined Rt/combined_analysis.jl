@@ -6,8 +6,6 @@ include("combined_preamble.jl");
 
 import JLD2; JLD2.save_object(savepath * scenario * string(model.outcome) * model.title * "combined_model_matched.jld2", model);
 
-# x = JLD2.load_object(scenario * string(:cases) * model.title * "combined_model_matched.jld2")
-
 @time balance!(model, dat);
 
 using DataFramesMeta
@@ -29,17 +27,16 @@ import JLD2; JLD2.save_object(savepath * scenario * string(model.outcome) * mode
   refinementnum = refinementnum, dobalance = true, doestimate = true
 );
 
-using Statistics
-
-@chain refinedmodel.results begin
-    #@subset(:stratum .== 1)
-    #select(Not(:stratum))
-    groupby(:stratum)
-    @combine(
-        :att = mean(:att),
-        :Σatt = sum(:att)
-    )
-end
+# # using Statistics
+# @chain refinedmodel.results begin
+#     #@subset(:stratum .== 1)
+#     #select(Not(:stratum))
+#     groupby(:stratum)
+#     @combine(
+#         :att = mean(:att),
+#         :Σatt = sum(:att)
+#     )
+# end
 
 @time calmodel, refcalmodel, overall = autobalance(
   model, dat;
@@ -53,26 +50,14 @@ recordset = makerecords(
 )
 
 TSCSMethods.save_object(
-  savepath * "Rt_final_model.jld2", [model, refinedmodel, calmodel, refcalmodel]
-)
-
-
-TSCSMethods.save_object(
-    savepath * string(model.outcome )* model.title * " overall_estimate.jld2", overall
+  savepath * string(model.outcome )* model.title * " overall_estimate.jld2", overall
 );
 
-import Statistics:mean
-@chain refcalmodel.results begin
-    groupby(:stratum)
-    @combine(
-        :att = mean(:att),
-        :att50th = mean($(Symbol("50.0%"))),
-        :Σatt = sum(:att)
-    )
-end
+##
 
 matches = matchinfo(model);
 
 ares, m_pre, trt_pre = inspection(refcalmodel, matches, overall);
+inspection(m, matches, overall, dat, tvar)
 
 fg = plot_inspection(ares, overall, model.outcome; stratum = 1, plot_pct = true)

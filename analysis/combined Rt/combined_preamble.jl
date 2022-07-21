@@ -25,17 +25,18 @@ obvars = [vn.pd, vn.ts16, :Exposure];
 
 treatments = [:primary, :gaspecial, :gub, :rallydayunion, :protest]
 
+# setup exclude variable
 dat[!, :exclude] .= 0
 # remove early primaries
 dat[(dat[!, :date] .< Date("2020-03-10")) .& (dat[!, :primary] .== 1), :exclude] .= 1
 dat[(dat[!, :prsize] .< 800) .& (dat[!, :protest] .== 1), :exclude] .= 1
 dat[(dat[!, :Exposure] .>= 1) .& (dat[!, :rallydayunion] .== 1), :exclude] .= 1
-
 dat[!, :political] = 1 .* (sum([dat[!, trt] for trt in treatments]) .> 0)
 
-# setup exclude variable
-# where a unit is a protest or rally,
-# but is exposure > 1 or less than 800 persons
+# N.B. the rally spillovers are already accounted for
+# adj mat, fips => row / col, row / col => fips
+adjmat, id2rc, rc2id = COVIDPoliticalEvents.getneighbordat();
+dat = exclude_border_counties(dat, :political, adjmat, id2rc, rc2id)
 
 model = rtmodel(
   scenario * ARGS[1], :political, Symbol(ARGS[1]) , dat; iterations = iters,
