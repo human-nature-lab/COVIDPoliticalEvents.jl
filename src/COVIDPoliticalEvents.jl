@@ -16,7 +16,8 @@ module COVIDPoliticalEvents
     "models.jl",
     "plotting.jl", "panel_plots.jl", "supplemental_plotting.jl",
     "spillover.jl", "threshold.jl", "stratifiers.jl",
-    "countyadjacencies.jl", "countydistances.jl"
+    "countyadjacencies.jl", "countydistances.jl",
+    "driving.jl"
   ];
   
   for x in depfiles; include(x) end
@@ -51,5 +52,7 @@ module COVIDPoliticalEvents
     rally_treatmentcategories,
     finish_data, indicatetreatments, make_weekly,
     match_distances,
-    add_sma!
+    add_sma!,
+    # combined execution
+    dataload, preamble, gen_stratdict
 end
