@@ -8,15 +8,10 @@ function dataload(
 
     sort!(dat_store, [:fips, :date]);
 
-    if outcome == :cases_sma
-        add_sma!(dat_store, :cases; n = 7, id = :fips);
-    elseif outcome == :deaths_sma
-        add_sma!(dat_store, :deaths; n = 7, id = :fips);
-    elseif outcome == :death_rte_sma
-        add_sma!(dat_store, :death_rte; n = 7, id = :fips);
-    elseif outcome == :case_rte_sma
-        add_sma!(dat_store, :case_rte; n = 7, id = :fips);
-    end
+    add_sma!(dat_store, :cases; n = 7, id = :fips);
+    add_sma!(dat_store, :deaths; n = 7, id = :fips);
+    add_sma!(dat_store, :death_rte; n = 7, id = :fips);
+    add_sma!(dat_store, :case_rte; n = 7, id = :fips);
 
     # if weekly
     #     F = 1:6; L = -4:-1;
