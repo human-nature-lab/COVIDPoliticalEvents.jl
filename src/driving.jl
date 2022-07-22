@@ -7,13 +7,13 @@ function dataload(
     dat_store, trump_stratassignments, trump_labels, trump_stratifier, pr_vars, trump_variables = load_object(datapath);
 
     if outcome == :cases_sma
-        add_sma!(dat, :cases; n = 7, id = :fips);
+        add_sma!(dat_store, :cases; n = 7, id = :fips);
     elseif outcome == :deaths_sma
-        add_sma!(dat, :deaths; n = 7, id = :fips);
+        add_sma!(dat_store, :deaths; n = 7, id = :fips);
     elseif outcome == :death_rte_sma
-        add_sma!(dat, :death_rte; n = 7, id = :fips);
+        add_sma!(dat_store, :death_rte; n = 7, id = :fips);
     elseif outcome == :case_rte_sma
-        add_sma!(dat, :case_rte; n = 7, id = :fips);
+        add_sma!(dat_store, :case_rte; n = 7, id = :fips);
     end
 
     # if weekly
