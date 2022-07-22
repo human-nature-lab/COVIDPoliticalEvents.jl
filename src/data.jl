@@ -4,6 +4,8 @@
         add_sma!(dat, variable; n = 7, id = :fips)
 
 Add a simple moving average of `variable` to a DataFrame, over the previous n = 7 days.
+
+Assumes that the DataFrame is sorted by [id, date].
 """
 function add_sma!(dat, variable; n = 7, id = :fips)
     mao = Symbol(String(variable) * "_sma")

@@ -6,6 +6,8 @@ function dataload(
 
     dat_store, trump_stratassignments, trump_labels, trump_stratifier, pr_vars, trump_variables = load_object(datapath);
 
+    sort!(dat_store, [:fips, :date]);
+
     if outcome == :cases_sma
         add_sma!(dat_store, :cases; n = 7, id = :fips);
     elseif outcome == :deaths_sma
@@ -28,9 +30,6 @@ function preamble(
     outcome, F, L, dat, scenario, covarspec, iters;
     borderexclude = false
 )
-
-    sort!(dat, [:fips, :date]);
-
 
     vn = VariableNames();
 
