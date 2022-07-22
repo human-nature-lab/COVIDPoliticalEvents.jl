@@ -29,7 +29,7 @@ function preamble(
     borderexclude = false
 )
 
-    sort!(dat_store, [:fips, :date]);
+    sort!(dat, [:fips, :date]);
 
 
     vn = VariableNames();
