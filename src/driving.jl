@@ -1,7 +1,7 @@
 # driving.jl
 
 function dataload(
-    outcome, datapath = nothing, savepath = nothing
+    datapath = nothing, savepath = nothing
 )
 
     dat_store, trump_stratassignments, trump_labels, trump_stratifier, pr_vars, trump_variables = load_object(datapath);
@@ -23,7 +23,7 @@ end
 
 function preamble(
     outcome, F, L, dat, scenario, covarspec, iters;
-    borderexclude = false
+    borderexclude = false, convert_missing = true
 )
 
     vn = VariableNames();
@@ -35,22 +35,22 @@ function preamble(
     # setup exclude variable
     # where a unit is a protest or rally,
     # but is exposure > 1 or less than 800 persons
-    dat[!, :exclude] .= 0
+    dat[!, :exclude] .= 0;
 
     # remove early primaries
-    dat[(dat[!, :date] .< Date("2020-03-10")) .& (dat[!, :primary] .== 1), :exclude] .= 1
+    dat[(dat[!, :date] .< Date("2020-03-10")) .& (dat[!, :primary] .== 1), :exclude] .= 1;
     # remove big-enough-to-be-treated protests
-    dat[(dat[!, :prsize] .< 800) .& (dat[!, :protest] .== 1), :exclude] .= 1
+    dat[(dat[!, :prsize] .< 800) .& (dat[!, :protest] .== 1), :exclude] .= 1;
 
     # remove rally exposures less than direct treatment
-    dat[(dat[!, :Exposure] .>= 1) .& (dat[!, :rallydayunion] .== 1), :exclude] .= 1
+    dat[(dat[!, :Exposure] .>= 1) .& (dat[!, :rallydayunion] .== 1), :exclude] .= 1;
 
     # for each county-timetreated
     # look for the set of adjacent counties, if not treated already
     # treat and mark as excluded (these will necessarily be in other states)
 
     # combine the treated into `political`
-    dat[!, :political] = 1 .* (sum([dat[!, trt] for trt in treatments]) .> 0)
+    dat[!, :political] = 1 .* (sum([dat[!, trt] for trt in treatments]) .> 0);
 
     # adj mat, fips => row / col, row / col => fips
     if borderexclude
@@ -65,7 +65,7 @@ function preamble(
         iterations = iters,
     );
     
-    dat = dataprep(dat, model);
+    dat = dataprep(dat, model; convert_missing = convert_missing);
     
     return model, dat
 end
