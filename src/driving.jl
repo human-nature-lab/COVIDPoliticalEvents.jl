@@ -23,7 +23,7 @@ end
 
 function preamble(
     outcome, F, L, dat, scenario, covarspec, iters;
-    borderexclude = false, convert_missing = true
+    borderexclude = false, convert_missing = true, modelfunc = deathmodel
 )
 
     vn = VariableNames();
@@ -56,9 +56,9 @@ function preamble(
     if borderexclude
         adjmat, id2rc, rc2id = COVIDPoliticalEvents.getneighbordat();
         dat = exclude_border_counties(dat, :political, adjmat, id2rc, rc2id)
-    end
+    end  
 
-    model = deathmodel(
+    model = modelfunc(
         scenario * covarspec, :political, Symbol(covarspec), dat,
         outcome;
         F = F, L = L,
