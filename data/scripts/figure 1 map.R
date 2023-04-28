@@ -21,7 +21,6 @@ ggplot(data = sne) +
 
 ###
 
-
 devtools::install_github("UrbanInstitute/urbnmapr")
 
 library("tidyverse")
