@@ -26,6 +26,8 @@ function modelfigure(
     savepth, format
 )
 
+    vn = VariableNames()
+
     stratifier = X.model.stratifier;
 
     if stratifier == Symbol("")
@@ -108,7 +110,7 @@ end
 function _modelfigure_nostrat(models)
 
     f = Figure(
-        backgroundcolor = RGBf(0.98, 0.98, 0.98),
+        backgroundcolor = RGB(0.98, 0.98, 0.98),
         resolution = (800, 1000)
     );
 
@@ -189,7 +191,7 @@ end
 function _modelfigure_strat(models)
 
     f = Figure(
-        backgroundcolor = RGBf(0.98, 0.98, 0.98),
+        backgroundcolor = RGB(0.98, 0.98, 0.98),
         resolution = (1000*1.5, 900*1.5)
     );
 
@@ -337,7 +339,7 @@ function rally_ts_x_exposure_fig(
     for (o, m) in enumerate([model, refinedmodel, calmodel, refcalmodel])
   
         f = Figure(
-            backgroundcolor = RGBf(0.98, 0.98, 0.98),
+            backgroundcolor = RGB(0.98, 0.98, 0.98),
             resolution = (1000*1.5, 900*1.5)
             );
             

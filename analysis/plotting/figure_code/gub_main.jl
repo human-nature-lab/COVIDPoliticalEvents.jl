@@ -180,7 +180,7 @@ function gub_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         color = :black, linestyle = nothing, linewidth = 0.2
     )
 
-    for (label, layout) in zip(["A", "B"], [panelA, panelB])
+    for (label, layout) in zip(["a", "b"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
             textsize = 26,
             # font = noto_sans_bold,

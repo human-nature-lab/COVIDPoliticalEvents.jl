@@ -30,7 +30,7 @@ function mobility_main(;
     size_pt = 72 * 2 .* size_inches
 
     f = Figure(
-        backgroundcolor = RGBf(0.98, 0.98, 0.98),
+        backgroundcolor = RGB(0.98, 0.98, 0.98),
         resolution = size_pt, fontsize = 12 * 1
     );
 
@@ -91,7 +91,7 @@ function mobility_main(;
         nbanks = 1
     )
 
-    for (label, layout) in zip(["A", "B", "C", "D", "E"], panels)
+    for (label, layout) in zip(["a", "b", "c", "d", "e"], panels)
         Label(layout[1, 1, TopLeft()], label,
             textsize = 26,
             # font = noto_sans_bold,
