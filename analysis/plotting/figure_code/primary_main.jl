@@ -1,6 +1,11 @@
 ## PRIMARY FIGURE
 
-function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
+"""
+        figure3(xlabel, ylabels, outcomecolors, offsets, savepth, format)
+
+Primary panel figure.
+"""
+function figure3(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     modspth = "primary out/"
     overalldeathmod = " primary full_death_rte_.jld2"
@@ -22,7 +27,8 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     f = Figure(
         backgroundcolor = RGBf(0.98, 0.98, 0.98),
-        resolution = size_pt, fontsize = 12 * 1
+        resolution = size_pt,
+        fontsize = 12 * 1
     );
 
     panelA = f[1,1] = GridLayout()
@@ -65,7 +71,8 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         lwr[1], upr[1],
         color = outcomecolors[1];
         whiskerwidth = 0,
-        label = ylabels[1]
+        label = ylabels[1],
+        linewidth = 1.5
     );
 
     sc1 = scatter!(
@@ -78,6 +85,7 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         lwr[2], upr[2],
         color = outcomecolors[2];
         whiskerwidth = 0,
+        linewidth = 1.5,
         label = "cases"
     );
 
@@ -158,7 +166,8 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
             lwr[1], upr[1],
             color = outcomecolors[1];
             whiskerwidth = 0,
-            label = ylabels[1]
+            label = ylabels[1],
+            linewidth = 9/10
         );
 
         sc_d = scatter!(
@@ -171,6 +180,7 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
             lwr[2], upr[2],
             color = outcomecolors[2];
             whiskerwidth = 0,
+            linewidth = 9/10,
             label = "cases"
         );
 
@@ -204,7 +214,7 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     for (label, layout) in zip(["a", "b"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
-            textsize = 26,
+            fontsize = 26, # updated from text size
             # font = noto_sans_bold,
             padding = (0, 5, 5, 0),
             halign = :right
@@ -216,7 +226,7 @@ function primary_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     colgap!(panelB, 5)
 
     save(
-        savepth * "primary" * "_panel" * format,
+        savepth * "Figure 3" * format,
         f,
         pt_per_unit = 1
     )

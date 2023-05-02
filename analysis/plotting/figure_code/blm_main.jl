@@ -1,6 +1,6 @@
 ## BLM FIGURE
 
-function blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
+function figure6(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     modspth = "protest out/"
     overalldeathmod = " protest nomob_death_rte_.jld2"
@@ -157,7 +157,8 @@ function blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
             lwr[1], upr[1],
             color = outcomecolors[1];
             whiskerwidth = 0,
-            label = ylabels[1]
+            label = ylabels[1],
+            linewidth = 9/10
         );
 
         sc_d = scatter!(
@@ -170,6 +171,7 @@ function blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
             lwr[2], upr[2],
             color = outcomecolors[2];
             whiskerwidth = 0,
+            linewidth = 9/10,
             label = "cases"
         );
 
@@ -201,7 +203,7 @@ function blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     for (label, layout) in zip(["a", "b"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
-            textsize = 26,
+            fontsize = 26,
             # font = noto_sans_bold,
             padding = (0, 5, 5, 0),
             halign = :right
@@ -213,7 +215,7 @@ function blm_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     colgap!(panelB, 5)
 
     save(
-        savepth * "blm" * "_panel" * format,
+        savepth * "Figure 6" * format,
         f,
         pt_per_unit = 1
     )

@@ -1,5 +1,17 @@
 # plot utilities
 
+function gen_colors(n)
+    cs = Colors.distinguishable_colors(
+        n,
+        [colorant"#FE4365", colorant"#eca25c"],
+        lchoices = Float64[58, 45, 72.5, 90],
+        transform = c -> Colors.deuteranopic(c, 0.1),
+        cchoices = Float64[20,40],
+        hchoices = [75,51,35,120,180,210,270,310]
+    )
+    return convert(Vector{Colors.Color}, cs)
+end
+
 function extract(m1, m2; lwrlab = Symbol("2.5%"), uprlab = Symbol("97.5%"))
     res_d = m1.results;
     fs_d = res_d[!, :f];
@@ -134,7 +146,7 @@ end
 function colorvariables()
 
     vn = VariableNames();
-    pal = TSCSMethods.gen_colors(15);
+    pal = gen_colors(15);
 
     variablecolors = Dict(
         vn.cdr => pal[3],

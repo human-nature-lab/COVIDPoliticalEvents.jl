@@ -1,6 +1,6 @@
 ## GUB FIGURE
 
-function gub_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
+function figure4(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     gamod_case = "ga out/ ga nomob_case_rte_.jld2"
     gamod_death = "ga out/ ga nomob_death_rte_.jld2"
@@ -182,7 +182,7 @@ function gub_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     for (label, layout) in zip(["a", "b"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
-            textsize = 26,
+            fontsize = 26,
             # font = noto_sans_bold,
             padding = (0, 5, 5, 0),
             halign = :right
@@ -194,7 +194,7 @@ function gub_main(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     colgap!(panelB, 5)
 
     save(
-        savepth * "gub" * "_panel" * format,
+        savepth * "Figure 4" * format,
         f,
         pt_per_unit = 1
     )

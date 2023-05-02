@@ -1,6 +1,6 @@
 # transmissibility_main.jl
 
-function rt_main(;
+function figure7(;
     savepath = nothing,
     format = ".svg",
     basepath = "Rt out/"
@@ -242,7 +242,7 @@ function rt_main(;
     
     for (label, layout) in zip(["a", "b"], [panelA, panelB])
         Label(layout[1, 1, TopLeft()], label,
-            textsize = 26,
+            fontsize = 26,
             # font = noto_sans_bold,
             padding = (0, 5, 5, 0),
             halign = :right
@@ -254,7 +254,7 @@ function rt_main(;
     colgap!(panelB, 5)
 
     if !isnothing(savepath)
-        save(savepath * "Rt" * "_panel" * format, f, pt_per_unit = 1)
+        save(savepath * "Figure 7" * format, f, pt_per_unit = 1)
     end
 
     return f

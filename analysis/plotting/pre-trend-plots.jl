@@ -1,4 +1,5 @@
 # pre-trend-plots.jl
+# included in the Supplementary Information
 
 using TSCSMethods, COVIDPoliticalEvents
 using DataFrames, DataFramesMeta

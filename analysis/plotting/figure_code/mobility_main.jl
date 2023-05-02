@@ -1,6 +1,6 @@
 # mobility_main.jl
 
-function mobility_main(;
+function figure8(;
     maxwindow = 20,
     format = ".svg",
     savepath = nothing
@@ -84,7 +84,6 @@ function mobility_main(;
         evs, "Events";
         framevisible = false,
         # labelsize = 12,
-        position = :left,
         tellheight = false,
         tellwidth = false,
         orientation = :horizontal,
@@ -93,7 +92,7 @@ function mobility_main(;
 
     for (label, layout) in zip(["a", "b", "c", "d", "e"], panels)
         Label(layout[1, 1, TopLeft()], label,
-            textsize = 26,
+            fontsize = 26,
             # font = noto_sans_bold,
             padding = (0, 5, 5, 0),
             halign = :right
@@ -105,7 +104,7 @@ function mobility_main(;
     rowgap!(f.layout, 5)
 
     if !isnothing(savepath)
-        save(savepath * "mobility" * "_panel" * format, f, pt_per_unit = 1)
+        save(savepath * "Figure 8" * format, f, pt_per_unit = 1)
     end
 
     return f
@@ -166,7 +165,6 @@ function mobility_plot(
             xticks = xt,
             # yticklabelcolor = variablecolors[oc],
             yaxisposition = :left,
-            grid = false,
             xgridvisible = false,
             ygridvisible = false,
             xminorgridvisible = false
@@ -191,7 +189,8 @@ function mobility_plot(
             lo, hi,
             color = variablecolors[oc],
             whiskerwidth = 0,
-            label = ylabel
+            label = ylabel,
+            linewidth = 1.5*(4/5)
         );
 
         sctr = scatter!(
