@@ -30,7 +30,7 @@ function figure8(;
     size_pt = 72 * 2 .* size_inches
 
     f = Figure(
-        backgroundcolor = RGB(0.98, 0.98, 0.98),
+        backgroundcolor = :transparent,
         resolution = size_pt, fontsize = 12 * 1
     );
 
@@ -106,6 +106,25 @@ function figure8(;
     if !isnothing(savepath)
         save(savepath * "Figure 8" * format, f, pt_per_unit = 1)
     end
+
+    counts = DataFrame();
+    for modelpath in modelpaths
+        m1 = JLD2.load_object(modelpath).refcalmodel;
+        res = m1.results
+
+        res.title .= m1.title
+
+        append!(counts, select(res, [:f, :treated, :matches, :title]))
+    end
+
+    vbles = [:treated, :matches];
+    av_counts = @chain counts begin
+        groupby([:title])
+        combine([v => mean => v for v in vbles])
+    end;
+
+    CSV.write(savepth * "Figure 8 counts.csv", counts);
+    CSV.write(savepth * "Figure 8 average counts.csv", av_counts);
 
     return f
 end
@@ -213,7 +232,10 @@ function mobility_plot(
     for ax in axises; ylims!(ax, (-yl, yl)) end
     for ax in axises; xlims!(ax, (-0.5, xlmax)) end
 
-    hlines!(axises[1], [0.0], color = :black, linestyle = :dash, linewidth = 1.5)
+    hlines!(
+        axises[1], [0.0],
+        color = (:black, 0.6), linestyle = :dash, linewidth = 0.8
+    )
 
     vlx = collect(-0.5:40.5);
 

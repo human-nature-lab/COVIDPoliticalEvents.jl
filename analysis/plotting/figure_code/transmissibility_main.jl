@@ -34,7 +34,7 @@ function figure7(;
     size_pt = 72 * 2 .* size_inches
 
     f = Figure(
-        backgroundcolor = RGB(0.98, 0.98, 0.98),
+        backgroundcolor = :transparent,
         resolution = size_pt, fontsize = 12 * 1
     );
 
@@ -125,7 +125,8 @@ function figure7(;
     for ax in axises; xlims!(ax, (-0.5, 20.5)) end
 
     hlines!(
-        axises[1], [0.0], color = :black, linestyle = :dash, linewidth = 0.8
+        axises[1], [0.0],
+        color = (:black, 0.6), linestyle = :dash, linewidth = 0.8
     )
 
     vlx = collect(-0.5:20.5);
@@ -209,7 +210,8 @@ function figure7(;
     for ax in axises; xlims!(ax, (-0.5, 20.5)) end
 
     hlines!(
-        axises[1], [0.0], color = :black, linestyle = :dash, linewidth = 0.8
+        axises[1], [0.0],
+        color = (:black, 0.6), linestyle = :dash, linewidth = 0.8
     )
 
     vlx = collect(-0.5:20.5);
@@ -256,6 +258,33 @@ function figure7(;
     if !isnothing(savepath)
         save(savepath * "Figure 7" * format, f, pt_per_unit = 1)
     end
+
+    ms2 = Vector{DataFrame}(undef, length(ms));
+    for (i, m) in enumerate(ms)
+        res = m.results
+        if "stratum" ∈ names(res)
+            res.label .= [get(m.labels, e, "") for e in res.stratum]
+        else
+            res.stratum .= ""
+            res.label .= "overall"
+        end
+        ms2[i] = if "stratum" ∈ names(res)
+            select(res, [:stratum, :f, :treated, :matches, :label])
+        else
+            select(res, [:f, :treated, :matches])
+        end
+    end
+
+    ms3 = reduce(vcat, ms2)
+
+    vbles = [:treated, :matches];
+    av_counts = @chain ms3 begin
+        groupby([:stratum, :label])
+        combine([v => mean => v for v in vbles])
+    end;
+
+    CSV.write(savepth * "Figure 7 counts.csv", ms3);
+    CSV.write(savepth * "Figure 7 average counts.csv", av_counts);
 
     return f
 end

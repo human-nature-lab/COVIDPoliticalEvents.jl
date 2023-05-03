@@ -170,3 +170,71 @@ function colorvariables()
     );
     return variablecolors
 end
+
+function outcomes_counts(res1, res2)
+
+    if ("stratum" ∈ names(res1)) & ("stratum" ∈ names(res2))
+        sort!(res1, [:f, :stratum])
+        sort!(res2, [:f, :stratum])
+
+        if res1.stratum != res2.stratum
+            return "error"
+        end
+    else
+        sort!(res1, :f)
+        sort!(res2, :f)
+    end
+
+
+    l1 = if ("stratum" ∈ names(res1)) & ("stratum" ∈ names(res2))
+        [:stratum, :f, :treated, :matches]
+    else
+        [:f, :treated, :matches]
+    end
+
+    x1 = select(res1, l1)
+    rename!(x1, :treated => :treated_deaths, :matches => :matches_deaths)
+    
+    l2 = [:treated, :matches]
+
+    x2 = select(res2, l2)
+    rename!(x2, :treated => :treated_cases, :matches => :matches_cases)
+
+    return hcat(x1, x2)
+end
+
+function outcomes_counts(res1, res2, labelsd) #, labelsc)
+
+    if ("stratum" ∈ names(res1)) & ("stratum" ∈ names(res2))
+        sort!(res1, [:f, :stratum])
+        sort!(res2, [:f, :stratum])
+
+        if res1.stratum != res2.stratum
+            return "error"
+        end
+    else
+        sort!(res1, :f)
+        sort!(res2, :f)
+    end
+
+
+    l1 = if ("stratum" ∈ names(res1)) & ("stratum" ∈ names(res2))
+        [:stratum, :f, :treated, :matches]
+    else
+        [:f, :treated, :matches]
+    end
+
+    x1 = select(res1, l1)
+    rename!(x1, :treated => :treated_deaths, :matches => :matches_deaths)
+    
+    l2 = [:treated, :matches]
+
+    x2 = select(res2, l2)
+    rename!(x2, :treated => :treated_cases, :matches => :matches_cases)
+
+    x3 = hcat(x1, x2)
+    x3[!, :label] = [get(labelsd, e, "") for e in x3.stratum]
+    # x3[!, :labelc] = [get(labelsc, e, "") for e in x3.stratum]
+
+    return x3
+end

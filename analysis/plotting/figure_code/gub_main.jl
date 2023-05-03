@@ -19,7 +19,7 @@ function figure4(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     size_pt = 72 * 2 .* size_inches
 
     f = Figure(
-        backgroundcolor = RGBf(0.98, 0.98, 0.98),
+        backgroundcolor = :transparent,
         resolution = size_pt, fontsize = 12 * 1
     );
 
@@ -91,7 +91,9 @@ function figure4(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     ylims!(axm1, (-yd, yd))
     ylims!(axm2, (-yc, yc))
 
-    hlines!(axm1, [0.0], color = :black, linestyle = :dash, linewidth = 0.8)
+    hlines!(
+        axm1, [0.0], color = (:black, 0.6), linestyle = :dash, linewidth = 0.8
+    )
 
     hidedecorations!(axm1, ticks = false, ticklabels = false, label = false)
     hidedecorations!(axm2, ticks = false, ticklabels = false, label = false)
@@ -105,9 +107,9 @@ function figure4(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     ## PANEL B
 
-    m1 = gud.refcalmodel; m2 = guc.refcalmodel;
+    m3 = gud.refcalmodel; m4 = guc.refcalmodel;
 
-    fmin, fmax, fs, atts, lwr, upr = extract(m1, m2);
+    fmin, fmax, fs, atts, lwr, upr = extract(m3, m4);
     intr = 5
     xt = collect(fmin:intr:fmax);
 
@@ -163,12 +165,14 @@ function figure4(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     xlims!(axm1, [9.5, 40.5])
     xlims!(axm2, [9.5, 40.5])
 
-    yd, yc = get_ylims(m1, m2)
+    yd, yc = get_ylims(m3, m4)
 
     ylims!(axm1, (-yd, yd))
     ylims!(axm2, (-yc, yc))
 
-    hlines!(axm1, [0.0], color = :black, linestyle = :dash, linewidth = 0.8)
+    hlines!(
+        axm1, [0.0], color = (:black, 0.6), linestyle = :dash, linewidth = 0.8
+    )
 
     hidedecorations!(axm1, ticks = false, ticklabels = false, label = false)
     hidedecorations!(axm2, ticks = false, ticklabels = false, label = false)
@@ -198,5 +202,22 @@ function figure4(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         f,
         pt_per_unit = 1
     )
+
+    oac1 = outcomes_counts(m1.results, m2.results)
+    oac2 = outcomes_counts(m3.results, m4.results);
+
+    oac1.label .= "ga";
+    oac2.label .= "nj";
+    counts = vcat(oac1, oac2);
+
+    vbles = [:treated_deaths, :matches_deaths, :treated_cases, :matches_cases];
+    av_counts = @chain counts begin
+        groupby(:label)
+        combine([v => mean => v for v in vbles])
+    end;
+
+    CSV.write(savepth * "Figure 4 counts.csv", counts)
+    CSV.write(savepth * "Figure 4 average counts.csv", av_counts)
+
     return f
 end

@@ -26,7 +26,7 @@ function figure3(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     size_pt = 72 * 2 .* size_inches
 
     f = Figure(
-        backgroundcolor = RGBf(0.98, 0.98, 0.98),
+        backgroundcolor = :transparent, # RGBf(0.98, 0.98, 0.98),
         resolution = size_pt,
         fontsize = 12 * 1
     );
@@ -104,7 +104,10 @@ function figure3(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     ylims!(axm1, (-yd, yd))
     ylims!(axm2, (-yc, yc))
 
-    hlines!(axm1, [0.0], color = :black, linestyle = :dash, linewidth = 0.8)
+    hlines!(
+        axm1, [0.0], color = (:black, 0.6),
+        linestyle = :dash, linewidth = 0.8
+    )
 
     hidedecorations!(axm1, ticks = false, ticklabels = false, label = false)
     hidedecorations!(axm2, ticks = false, ticklabels = false, label = false)
@@ -118,13 +121,13 @@ function figure3(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     ## PANEL B
 
-    m1 = smd.refcalmodel; m2 = smc.refcalmodel;
-    labels = m1.labels;
+    m1b = smd.refcalmodel; m2b = smc.refcalmodel;
+    labels = m1b.labels;
 
-    mds, mcs = get_ylims(m1, m2)
+    mds, mcs = get_ylims(m2b, m2b)
 
-    strata = if unique(m1.results.stratum) == unique(m2.results.stratum)
-        unique(m1.results.stratum)
+    strata = if unique(m1b.results.stratum) == unique(m2b.results.stratum)
+        unique(m1b.results.stratum)
     else
         error("strata problem")
     end
@@ -135,7 +138,7 @@ function figure3(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         # stratum-level
         f_i = f[2,1][fCpos...]
 
-        fmin, fmax, fs, atts, lwr, upr = extract(m1, m2, s);
+        fmin, fmax, fs, atts, lwr, upr = extract(m1b, m2b, s);
         intr = 5
         xt = collect(fmin:intr:fmax);
 
@@ -198,7 +201,8 @@ function figure3(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         ylims!(axi_c, (-mcs[s], mcs[s]))
 
         hlines!(
-            axi_d, [0.0], color = :black, linestyle = :dash, linewidth = 0.8
+            axi_d, [0.0], color = (:black, 0.6),
+            linestyle = :dash, linewidth = 0.8
         )
 
         hidedecorations!(axi_d, ticks = false, ticklabels = false, label = false)
@@ -230,6 +234,22 @@ function figure3(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         f,
         pt_per_unit = 1
     )
-    
+
+    oac = outcomes_counts(m1.results, m2.results);
+    sac = outcomes_counts(m1b.results, m2b.results, m1b.labels);
+
+    oac.stratum .= "";
+    oac.label .= "overall";
+    counts = vcat(oac, sac);
+
+    vbles = [:treated_deaths, :matches_deaths, :treated_cases, :matches_cases];
+    av_counts = @chain counts begin
+        groupby([:stratum, :label])
+        combine([v => mean => v for v in vbles])
+    end;
+
+    CSV.write(savepth * "Figure 3 counts.csv", counts)
+    CSV.write(savepth * "Figure 3 average counts.csv", av_counts)
+
     return f
 end

@@ -202,7 +202,10 @@ function add_att_axis!(panel, dth, cse, xlabel, ylabels, outcomecolors, offsets)
     ylims!(axm1, (-yd, yd))
     ylims!(axm2, (-yc, yc))
 
-    hlines!(axm1, [0.0], color = :black, linestyle = :dash, linewidth = 0.8)
+    hlines!(
+        axm1, [0.0],
+        color = (:black, 0.6), linestyle = :dash, linewidth = 0.8
+    )
 
     hidedecorations!(axm1, ticks = false, ticklabels = false, label = false)
     hidedecorations!(axm2, ticks = false, ticklabels = false, label = false)
@@ -239,7 +242,10 @@ function add_balance_axis!(
 
     ylims!(axcb, -0.15, 0.15)
     xlims!(axcb, pomin, pomax)
-    hlines!(axcb, [-0.1, 0.1]; linestyle = :dot, color = :black)
+    hlines!(
+        axcb, [-0.1, 0.1]; linestyle = :dot, linewidth = 0.8,
+        color = :black
+    )
 
     ser = series!(
         axcb,
@@ -270,7 +276,7 @@ function combined_case_death_plot(dth, cse, dbal, cbal)
     size_pt = 72 * 2 .* size_inches
 
     f = Figure(
-        backgroundcolor = RGB(0.98, 0.98, 0.98),
+        backgroundcolor = :transparent,
         resolution = size_pt, fontsize = 12 * 1
     );
 

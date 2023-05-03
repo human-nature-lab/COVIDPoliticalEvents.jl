@@ -87,3 +87,27 @@ save(savepth * "Figure 2.pdf", f)
 # @reset m_dr.refcalmodel.balances = m_dr.refcalmodel.balances[1]
 
 # modelfigure(m_dr, dat, scenario, plotpath, ".svg")
+
+# counts for Figure 2 caption
+
+combined_counts = let
+    sort!(dth, :f)
+    sort!(cse, :f)
+
+    x1 = select(dth, [:f, :treated, :matches])
+    rename!(x1, :treated => :treated_deaths, :matches => :matches_deaths)
+    
+    x2 = select(cse, [:treated, :matches])
+    rename!(x2, :treated => :treated_cases, :matches => :matches_cases)
+
+    hcat(x1, x2)
+end
+
+CSV.write(savepth * "Figure 2 counts.csv", combined_counts)
+
+vbles = [:treated_deaths, :matches_deaths, :treated_cases, :matches_cases];
+av_counts = @chain combined_counts begin
+    combine([v => mean => v for v in vbles])
+end;
+
+CSV.write(savepth * "Figure 2 average counts.csv", av_counts)

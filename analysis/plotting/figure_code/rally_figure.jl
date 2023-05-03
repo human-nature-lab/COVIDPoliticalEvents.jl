@@ -15,7 +15,7 @@ function figure5(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     size_pt = 72 * 2 .* size_inches
 
     f = Figure(
-        backgroundcolor = RGBf(0.98, 0.98, 0.98),
+        backgroundcolor = :transparent,
         resolution = size_pt, fontsize = 12 * 1
     );
 
@@ -91,7 +91,9 @@ function figure5(xlabel, ylabels, outcomecolors, offsets, savepth, format)
     ylims!(axm1, (-yd, yd))
     ylims!(axm2, (-yc, yc))
 
-    hlines!(axm1, [0.0], color = :black, linestyle = :dash, linewidth = 0.8)
+    hlines!(
+        axm1, [0.0], color = (:black, 0.6), linestyle = :dash, linewidth = 0.8
+    )
 
     hidedecorations!(axm1, ticks = false, ticklabels = false, label = false)
     hidedecorations!(axm2, ticks = false, ticklabels = false, label = false)
@@ -185,7 +187,7 @@ function figure5(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         ylims!(axi_c, (-mcs[s], mcs[s]))
 
         hlines!(
-            axi_d, [0.0], color = :black, linestyle = :dash, linewidth = 0.8
+            axi_d, [0.0], color = (:black, 0.6), linestyle = :dash, linewidth = 0.8
         )
 
         hidedecorations!(axi_d, ticks = false, ticklabels = false, label = false)
@@ -217,5 +219,17 @@ function figure5(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         f,
         pt_per_unit = 1
     )
+
+    counts = outcomes_counts(m1.results, m2.results, m1.labels);
+
+    vbles = [:treated_deaths, :matches_deaths, :treated_cases, :matches_cases];
+    av_counts = @chain counts begin
+        groupby([:stratum, :label])
+        combine([v => mean => v for v in vbles])
+    end;
+
+    CSV.write(savepth * "Figure 5 counts.csv", counts)
+    CSV.write(savepth * "Figure 5 average counts.csv", av_counts)
+
     return f
 end

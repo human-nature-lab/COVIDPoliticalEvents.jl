@@ -1,6 +1,6 @@
 # make_main_figures.jl
-# generate the main paper figures
-# DataFrames v. 1.3.4
+# Generate the figures and model counts (for the captions) for the main paper.
+# requires DataFrames version 1.3.4 (e.g., no later versions)
 #    -> later versions will not be able to load .jld2 files
 
 using TSCSMethods, COVIDPoliticalEvents
@@ -9,9 +9,10 @@ import Colors, ColorSchemes
 using CairoMakie
 using JLD2
 import CairoMakie.RGB
+import TSCSMethods.mean
 
 savepth = "plotting/main_figures_minor/";
-format = ".pdf";
+format = ".pdf"; # NHB wants standalone vector graphics files that are not SVG
 
 ylabels = ("Death rate (per 10,000)", "Case rate (per 10,000)");
 xlabel = "Day";

@@ -109,13 +109,13 @@ function figure6(xlabel, ylabels, outcomecolors, offsets, savepth, format)
 
     ## PANEL B
 
-    m1 = smd.refcalmodel; m2 = smc.refcalmodel;
-    labels = m2.labels;
+    m1b = smd.refcalmodel; m2b = smc.refcalmodel;
+    labels = m1b.labels;
 
-    mds, mcs = get_ylims(m1, m2)
+    mds, mcs = get_ylims(m1b, m2b)
 
-    strata = if unique(m1.results.stratum) == unique(m2.results.stratum)
-        unique(m1.results.stratum)
+    strata = if unique(m1b.results.stratum) == unique(m2b.results.stratum)
+        unique(m1b.results.stratum)
     else
         error("strata problem")
     end
@@ -126,7 +126,7 @@ function figure6(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         # stratum-level
         f_i = f[2,1][fCpos...]
 
-        fmin, fmax, fs, atts, lwr, upr = extract(m1, m2, s);
+        fmin, fmax, fs, atts, lwr, upr = extract(m1b, m2b, s);
         intr = 5
         xt = collect(fmin:intr:fmax);
 
@@ -219,5 +219,22 @@ function figure6(xlabel, ylabels, outcomecolors, offsets, savepth, format)
         f,
         pt_per_unit = 1
     )
+
+    oac = outcomes_counts(m1.results, m2.results);
+    sac = outcomes_counts(m1b.results, m2b.results, m1b.labels);
+
+    oac.stratum .= "";
+    oac.label .= "overall";
+    counts = vcat(oac, sac);
+
+    vbles = [:treated_deaths, :matches_deaths, :treated_cases, :matches_cases];
+    av_counts = @chain counts begin
+        groupby([:stratum, :label])
+        combine([v => mean => v for v in vbles])
+    end;
+
+    CSV.write(savepth * "Figure 6 counts.csv", counts)
+    CSV.write(savepth * "Figure 6 average counts.csv", av_counts)
+
     return f
 end
