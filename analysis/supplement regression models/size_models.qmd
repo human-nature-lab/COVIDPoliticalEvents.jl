@@ -1,0 +1,189 @@
+---
+title: "Event models"
+format: html
+---
+
+```{r}
+#| code-fold: true
+#| include: false
+library("MASS")
+library("tibble")
+library("lme4")
+library("dplyr")
+require("stargazer")
+library("readr")
+```
+
+```{r}
+#| code-fold: true
+#| include: false
+trt <- read_csv("trt.csv")
+```
+
+## Death rate models
+
+```{r}
+#| code-fold: true
+ga1 <- glm.nb(
+    size_rnd ~ `Cum. Death Rate` + eventcat + running + pop,
+    data = trt
+)
+summary(ga1)
+```
+
+```{r}
+#| code-fold: true
+ga2 <- glm.nb(
+    size_rnd ~ `Cum. Death Rate` + pop + eventcat + running +
+    `Pop. Density` + ruc +
+    `Trump 2016 Vote Share` +
+    `Pct. 65 yrs and Above` + `Pct. Afr. American` + `Pct. Hispanic` +
+    Urate + high_school_only + log(median_inc) + poverty_rate +
+    post_bacc,
+    # `Full-Service Restaurants` + `Grocers` + `Fitness and Recreation`,
+    data = trt
+)
+summary(ga2)
+```
+
+
+```{r}
+#| code-fold: true
+ga3 <- glm.nb(
+    size_rnd ~ `Cum. Death Rate` + pop + eventcat + running +
+    `Pop. Density` + ruc +
+    `Trump 2016 Vote Share` +
+    `Pct. 65 yrs and Above` + `Pct. Afr. American` + `Pct. Hispanic` +
+    Urate + high_school_only + log(median_inc) + poverty_rate +
+    post_bacc + 
+    # `Full-Service Restaurants` + `Grocers` + `Fitness and Recreation` +
+    `Cum. Death Rate`*eventcat +
+    `Cum. Death Rate`*`Trump 2016 Vote Share`,
+    data = trt
+)
+summary(ga3)
+```
+
+```{r}
+#| code-fold: true
+gaa3 <- glm.nb(
+    size_rnd ~ predeath + pop + eventcat + running +
+    `Pop. Density` + ruc +
+    `Trump 2016 Vote Share` +
+    `Pct. 65 yrs and Above` + `Pct. Afr. American` + `Pct. Hispanic` +
+    Urate + high_school_only + log(median_inc) + poverty_rate +
+    post_bacc +
+    # `Full-Service Restaurants` + `Grocers` + `Fitness and Recreation` +
+    predeath*eventcat,
+    #predeath*`Trump 2016 Vote Share`,
+    data = trt
+)
+summary(gaa3)
+```
+
+## Case rate models
+
+```{r}
+#| code-fold: true
+gb1 <- glm.nb(
+    size_rnd ~ `Cum. Case Rate` + eventcat + running + pop,
+    data = trt
+)
+summary(gb1)
+```
+
+```{r}
+#| code-fold: true
+gb2 <- glm.nb(
+    size_rnd ~ `Cum. Case Rate` + pop + eventcat + running +
+    `Pop. Density` + ruc +
+    `Trump 2016 Vote Share` +
+    `Pct. 65 yrs and Above` + `Pct. Afr. American` + `Pct. Hispanic` +
+    Urate + high_school_only + log(median_inc) + poverty_rate +
+    post_bacc,
+    # `Full-Service Restaurants` + `Grocers` + `Fitness and Recreation`,
+    data = trt
+)
+summary(gb2)
+```
+
+```{r}
+#| code-fold: true
+gb3 <- glm.nb(
+    size_rnd ~ `Cum. Case Rate` + pop + eventcat + running +
+    `Pop. Density` + ruc +
+    `Trump 2016 Vote Share` +
+    `Pct. 65 yrs and Above` + `Pct. Afr. American` + `Pct. Hispanic` +
+    Urate + high_school_only + log(median_inc) + poverty_rate +
+    post_bacc +
+    # `Full-Service Restaurants` + `Grocers` + `Fitness and Recreation` +
+    `Cum. Case Rate`*eventcat +
+    `Cum. Case Rate`*`Trump 2016 Vote Share`,
+    data = trt
+)
+summary(gb3)
+```
+
+```{r}
+#| code-fold: true
+#| include: false
+x <- stargazer(ga1, ga2, ga3, out = "death_rte_tables.tex", font.size = "tiny", no.space = TRUE)
+```
+
+```{r}
+#| code-fold: true
+#| include: false
+x <- stargazer(gb1, gb2, gb3, out = "case_rte_tables.tex", font.size = "tiny", no.space = TRUE)
+```
+
+## Comparison models
+
+```{r}
+#| code-fold: true
+#| include: false
+dcomp <- read_csv("dcompare.csv")
+
+dcomp$event <- ifelse(is.na(dcomp$event), "", dcomp$event)
+```
+
+
+```{r}
+#| code-fold: true
+m1 <- glm(
+    political ~ `Cum. Death Rate` + event + pop + running +
+    `Pop. Density` + ruc +
+    `Trump 2016 Vote Share` +
+    `Pct. 65 yrs and Above` + `Pct. Afr. American` + `Pct. Hispanic` +
+    Urate + high_school_only + log(median_inc) + poverty_rate +
+    post_bacc + 
+    `Cum. Death Rate`*event +
+    `Cum. Death Rate`*`Trump 2016 Vote Share`,
+    data = dcomp,
+    family = "binomial"
+)
+summary(m1)
+```
+
+```{r}
+#| code-fold: true
+m2 <- glm(
+    political ~ `Cum. Case Rate` + event + pop + running +
+    `Pop. Density` + ruc +
+    `Trump 2016 Vote Share` +
+    `Pct. 65 yrs and Above` + `Pct. Afr. American` + `Pct. Hispanic` +
+    Urate + high_school_only + log(median_inc) + poverty_rate +
+    post_bacc + 
+    `Cum. Case Rate`*event +
+    `Cum. Case Rate`*`Trump 2016 Vote Share`,
+    data = dcomp,
+    family = "binomial"
+)
+summary(m2)
+```
+
+
+```{r}
+#| code-fold: true
+#| include: false
+x <- stargazer(m1, m2, out = "event_reg.tex", font.size = "tiny", no.space = TRUE)
+```
