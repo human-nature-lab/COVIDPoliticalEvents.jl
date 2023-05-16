@@ -1,8 +1,11 @@
 # si_paper_plot_functions.jl
 
-function plot_si_set(fileset, dat, savepth)
+function plot_si_set(fileset)
 
-    for e in fileset
+    sipth = "plotting/supplementary_figures/"
+    edpth = "plotting/extended_figures/"
+
+    for (e, si) in fileset
         println(e)
         X = load_object(e)
         tpe = typeof(X) == TSCSMethods.CICRecords
@@ -15,14 +18,14 @@ function plot_si_set(fileset, dat, savepth)
         scenario = X.model.title * " " * str;
 
         modelfigure(
-            X, dat, scenario,
-            savepth, ".svg"
+            X, scenario,
+            sipth, ".svg"
         )
     end
 end
 
 function modelfigure(
-    X, dat, scenario,
+    X, scenario,
     savepth, format
 )
 
@@ -75,11 +78,60 @@ function modelfigure(
     end
 end
 
-function modelfigure_simple(
-    Fl, savepth; stratum = nothing, format = ".svg"
-)
+function diagnostic(e; simple = false)
+    X = load_object(e)
+    str = X.model.stratifier != Symbol("") ? string(X.model.stratifier) : ""
+    scenario = X.model.title * " " * str;
 
-    X = JLD2.load_object(Fl)
+    return if !simple
+        modelfigure(X, scenario)
+    else
+        modelfigure_simple(X; stratum = 1)
+    end
+end
+
+function modelfigure(X, scenario)
+
+    vn = VariableNames()
+
+    stratifier = X.model.stratifier;
+
+    if stratifier == Symbol("")
+        f = _modelfigure_nostrat(
+            [X.model, X.refinedmodel, X.calmodel, X.refcalmodel]
+        )
+
+        return f
+    else
+
+        treatment = if occursin("ga", scenario)
+            :gaspec
+        elseif occursin("primary", scenario)
+            :primary
+        elseif occursin("protest", scenario)
+            :protest
+        elseif occursin("rally", scenario)
+            :rallydayunion
+        elseif occursin("gub", scenario)
+        end
+
+        if (treatment == :gaspec) & (stratifier == vn.tout)
+            stratifier = :gaout
+        end
+
+        if stratifier == Symbol("Date of First Case to Primary")
+            stratifier = Symbol("Date of First Case")
+        end
+
+        f = _modelfigure_strat([X.model, X.refinedmodel])
+        fc = _modelfigure_strat([X.calmodel, X.refcalmodel])
+        
+        # regular refined, caliper refined
+        return [f, fc]
+    end
+end
+
+function modelfigure_simple(X; stratum = nothing)
 
     if !isnothing(stratum)
         [@subset!(x.results, :stratum .== stratum) for x in [X.model, X.refinedmodel, X.calmodel, X.refcalmodel]]
@@ -98,11 +150,7 @@ function modelfigure_simple(
     f = _modelfigure_nostrat(
         [X.model, X.refinedmodel, X.calmodel, X.refcalmodel]
     )
-    if !isnothing(savepth)
-        save(
-                split(split(Fl, "/")[2], ".jld2")[1] * format, f
-            )
-    end
+    
     return f
 end
 
@@ -110,7 +158,7 @@ end
 function _modelfigure_nostrat(models)
 
     f = Figure(
-        backgroundcolor = RGB(0.98, 0.98, 0.98),
+        backgroundcolor = :transparent,
         resolution = (800, 1000)
     );
 
@@ -160,6 +208,14 @@ function _modelfigure_nostrat(models)
             gi12[2], mi;
             xlabel = xlabel, ylabel = ylabelcb
         )
+
+        for i in eachindex(axs)
+            axs[i].xgridvisible = false
+            axs[i].ygridvisible = false
+        end
+
+        axcb.xgridvisible = false
+        axcb.ygridvisible = false
     end
 
     legcb = Legend(
@@ -175,9 +231,9 @@ function _modelfigure_nostrat(models)
         # orientation = :horizontal
     )
 
-    for (label, layout) in zip(["A", "B", "C", "D"], [ga, gb, gc, gd])
+    for (label, layout) in zip(["a", "b", "c", "d"], [ga, gb, gc, gd])
         Label(layout[1, 1, TopLeft()], label,
-            textsize = 26,
+            fontsize = 26,
             # font = noto_sans_bold,
             padding = (0, 5, 5, 0),
             halign = :right
@@ -191,7 +247,7 @@ end
 function _modelfigure_strat(models)
 
     f = Figure(
-        backgroundcolor = RGB(0.98, 0.98, 0.98),
+        backgroundcolor = :transparent,
         resolution = (1000*1.5, 900*1.5)
     );
 
@@ -244,7 +300,6 @@ function _modelfigure_strat(models)
     end
 
     for (gi12, s, cnt) in zip(subpanels, S, 1:length(S))
-        # zip(subpanels, models, 1:2)
         if cnt == 1
             xlabel = "Day"
             ylabelatt = ylabelatt
@@ -266,6 +321,14 @@ function _modelfigure_strat(models)
             gi12[2], cbi;
             xlabel = xlabel, ylabel = ylabelcb
         )
+
+        for i in eachindex(axs)
+            axs[i].xgridvisible = false
+            axs[i].ygridvisible = false
+        end
+
+        axcb.xgridvisible = false
+        axcb.ygridvisible = false
     end
 
     axcb = [];
@@ -283,6 +346,14 @@ function _modelfigure_strat(models)
             gi212[2], cbi;
             xlabel = xlabel, ylabel = ylabelcb
         )
+
+        for i in eachindex(axs)
+            axs[i].xgridvisible = false
+            axs[i].ygridvisible = false
+        end
+
+        axcb.xgridvisible = false
+        axcb.ygridvisible = false
     end
 
     legcb = Legend(
@@ -298,9 +369,9 @@ function _modelfigure_strat(models)
         orientation = :horizontal
     )
 
-    for (label, layout) in zip(["A", "B"], [G1, G2])
+    for (label, layout) in zip(["a", "b"], [G1, G2])
         Label(layout[1, 1, TopLeft()], label,
-            textsize = 26,
+            fontsize = 26,
             # font = noto_sans_bold,
             padding = (0, 5, 5, 0),
             halign = :right
@@ -334,12 +405,10 @@ function rally_ts_x_exposure_fig(
 
     axcb = []
 
-    # (o, m) = collect(enumerate([model, refinedmodel, calmodel, refcalmodel]))[1]
-
     for (o, m) in enumerate([model, refinedmodel, calmodel, refcalmodel])
   
         f = Figure(
-            backgroundcolor = RGB(0.98, 0.98, 0.98),
+            backgroundcolor = :transparent,
             resolution = (1000*1.5, 900*1.5)
             );
             
@@ -347,7 +416,6 @@ function rally_ts_x_exposure_fig(
         gleg = f[5,:]
         Gx = f[1:5, 1:4] = GridLayout();
 
-        # (s, k) = collect(zip(S, 1:length(S)))[1]
         for (s, k) in zip(S, 1:length(S))
             
             if k == 1
@@ -372,6 +440,11 @@ function rally_ts_x_exposure_fig(
                 f[fpk...], resi, model.outcome;
                 xlabel = xlabel, ylabel = ylabelatt, label = label,
             )
+
+            for i in eachindex(axs)
+                axs[i].xgridvisible = false
+                axs[i].ygridvisible = false
+            end
             
             cbi = m.balances[s];
 
@@ -379,6 +452,9 @@ function rally_ts_x_exposure_fig(
                 f[fpk2...], cbi;
                 xlabel = xlabel, ylabel = ylabelcb
             )
+
+            axcb.xgridvisible = false
+            axcb.ygridvisible = false
         end
 
         legcb = Legend(
@@ -390,8 +466,6 @@ function rally_ts_x_exposure_fig(
             tellwidth = false,
             tellheight = false,
             margin = (130, 30, 100, 30),
-            # halign = ha, valign = va,
-            # orientation = :horizontal
         )
 
         Figs[o] = f
@@ -405,4 +479,156 @@ function rally_ts_x_exposure_fig(
         end
     end
     return Figs
+end
+
+## non outcome plots
+
+function testingfig(
+    dat_store;
+    p1 = "combined out/grace combined out/combined full_death_rte_excluded.jld2"
+)
+
+    # COUNTY
+    # tst = CSV.read(download("https://raw.githubusercontent.com/govex/COVID-19/master/data_tables/testing_data/county_time_series_covid19_US.csv"), DataFrame)
+    # data only available after 2021-08-01
+
+    ## process testing data
+
+    ste_link = "https://raw.githubusercontent.com/govex/COVID-19/master/data_tables/testing_data/time_series_covid19_US.csv" # state level data
+    ste = CSV.read(
+        download(ste_link),
+        DataFrame
+    )
+
+    begin
+        dates = Vector{Date}(undef, nrow(ste));
+        for i in 1:nrow(ste)
+            dates[i] = Date(ste.date[i], dateformat"m/d/y")
+        end
+        ste.date = dates;
+        ste[!, :running] = [Dates.value(s - Date("2020-03-01")) for s in ste.date];
+    end
+
+    sort!(ste, [:state, :running])
+    select!(ste, Not(:date))
+
+    ste[!, :positivity] = ste[!, :cases_conf_probable] .* inv.(ste[!, :tests_combined_total])
+
+    testvars = [
+        :cases_conf_probable, :cases_confirmed, :cases_probable,
+        :tests_combined_total #, :positivity
+    ];
+
+    @subset(ste, :state .== "MA")
+
+    ## model information
+
+    recordset = JLD2.load_object(p1)
+
+    model = recordset.model;
+
+    obs = model.observations[model.strata .== 1];
+    obs = DataFrame(:running => [ob[1] for ob in obs], :fips => [ob[2] for ob in obs]);
+
+    obdat = innerjoin(
+        obs, recordset.matchinfo,
+        on = [:running => :timetreated, :fips => :treatedunit]
+    );
+
+    obdat[!, :period] = obdat.f .+ obdat.f
+    select!(obdat, [:fips, :running, :period, :f])
+
+    obdat = leftjoin(obdat, dat_store; on = [:period => :running, :fips]);
+    sort!(obdat, [:running, :fips, :period])
+
+    obdat = leftjoin(
+        obdat,
+        ste,
+        on = [:period => :running, Symbol("State Abbr.") => :state]
+    )
+
+    pctΔ(y1, y2) = (y2 .- y1) .* inv.(y1) .* 100
+
+    # calcualte percentage difference
+    begin
+        gdf = groupby(obdat, [:running, :fips])
+        for g in gdf
+            # g = gdf[240]
+            for v in testvars
+                fst = g[1, v] # min for cumulative, not nec. for positivity
+                # hcat(g[!, v], pctΔ(fst, g[!, v]))
+                g[!, v] = pctΔ(fst, g[!, v])
+            end
+        end
+    end
+
+    findfirst(([keys(gdf)[i][1] for i in 1:length(gdf)] .== 72) .& ([keys(gdf)[i][2] for i in 1:length(gdf)] .== 31005) .== true)
+
+    gdf[240][!, [:fips, :running, :period, :f, testvars...]]
+
+    ob3 = @chain obdat begin
+        groupby([:f])
+        combine([v => mean∘skipmissing => v for v in [testvars..., :positivity]])
+    end
+
+    for v in testvars[end-1:end]
+        vn = Symbol(string(v) * "_diff")
+        ob3[!, vn] = Vector{Union{Float64, Missing}}(missing, nrow(ob3))
+        ob3[2:end, vn] = diff(ob3[!, v])
+    end
+
+    ob3
+
+
+    fg = begin
+        f = Figure()
+        ax1 = Axis(
+            f[1,1];
+            ylabel = "Pct. change in total tests",
+            xlabel = "Day",
+            yticklabelcolor = :cornflowerblue
+        )
+        ax2 = Axis(
+            f[1,1];
+            ylabel = "Positivity",
+            yticklabelcolor = :goldenrod1
+        )
+
+        lines!(
+            ax1, ob3.f, ob3.tests_combined_total;
+            color = :cornflowerblue,
+            label = "Total tests"
+        )
+        lines!(
+            ax2, ob3.f, ob3.positivity .* 100;
+            color = :goldenrod1,
+            label = "Positivity"
+        )
+        
+        ax2.yaxisposition = :right
+        ax2.yticklabelalign = (:left, :center)
+        ax2.xticklabelsvisible = false
+        ax2.xticklabelsvisible = false
+        ax2.xlabelvisible = false
+
+        hidexdecorations!(
+            ax1, grid = true, ticks = false, ticklabels = false, label = false
+        )
+        hidexdecorations!(
+            ax2, grid = true, ticks = false, ticklabels = false, label = false
+        )
+        hideydecorations!(
+            ax1, grid = true, ticks = false, ticklabels = false, label = false
+        )
+        hideydecorations!(
+            ax2, grid = true, ticks = false, ticklabels = false, label = false
+        )
+
+        linkxaxes!(ax1, ax2)
+
+        # Legend(f[1,2], ax)
+        f
+    end
+
+    return fg
 end

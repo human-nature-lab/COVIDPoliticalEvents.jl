@@ -1,6 +1,6 @@
 # pre-trend-plot-fn.jl
 
-function _figure!(panelA, m1, m2, xlabel, outcomecolors, offsets)
+function _figure!(panelA, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     ## setup
     @subset!(m1.results, :f .!= -1)

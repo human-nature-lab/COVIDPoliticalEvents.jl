@@ -6,7 +6,7 @@ using CairoMakie
 using JLD2
 
 include("plot_utilities.jl")
-include("main_paper_plot_functions.jl")
+include("old/main_paper_plot_functions.jl")
 include("si_paper_plot_functions.jl")
 
 vn = VariableNames();
@@ -16,27 +16,27 @@ datafile = "cvd_dat_use.jld2";
 
 dat = JLD2.load_object(datapath*datafile);
 
-add_recent_events!(dat, vn.t, vn.id, :protest; recency = 30)
+add_recent_events!(dat, vn.t, vn.id, :protest; recency = 30);
 
 primpth = "primary out/"
 gapth = "ga out/"
 rlpth = "rally out/"
 prpth = "protest out/"
-savepth = "plotting/si_figures/"
+savepth = "plotting/supplementary_figures/"
 
 # main paper diagnostics
 
 main_diagnostic = [
-    primpth * " primary full_death_rte_.jld2",
-    primpth * " primary full_death_rte_In-person Turnout Rate.jld2",
-    gapth * " ga nomob_death_rte_.jld2",
-    gapth * " ga nomob_death_rte_In-person Turnout Rate.jld2",
-    rlpth * " rally nomob_death_rte_exposure.jld2",
-    prpth * " protest nomob_death_rte_.jld2",
-    prpth * " protest nomob_death_rte_prsize.jld2"
+    (primpth * " primary full_death_rte_.jld2", 3, true),
+    (primpth * " primary full_death_rte_In-person Turnout Rate.jld2", ),
+    (gapth * " ga nomob_death_rte_.jld2", ),
+    (gapth * " ga nomob_death_rte_In-person Turnout Rate.jld2", ),
+    (rlpth * " rally nomob_death_rte_exposure.jld2", ),
+    (prpth * " protest nomob_death_rte_.jld2", ),
+    (prpth * " protest nomob_death_rte_prsize.jld2", )
 ];
 
-plot_si_set(main_diagnostic, dat, savepth)
+plot_si_set(main_diagnostic)
 
 # combined model diagnostics
 

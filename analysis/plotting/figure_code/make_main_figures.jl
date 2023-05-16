@@ -11,7 +11,7 @@ using JLD2
 import CairoMakie.RGB
 import TSCSMethods.mean
 
-savepth = "plotting/main_figures_minor/";
+savepth = "plotting/figures main/";
 format = ".pdf"; # NHB wants standalone vector graphics files that are not SVG
 
 ylabels = ("Death rate (per 10,000)", "Case rate (per 10,000)");
@@ -34,6 +34,7 @@ offsets = (0.15, 0.15);
 outcomecolors = (gen_colors(3)[3], gen_colors(3)[2]);
 
 # figure 1 created in photoshop/illustrator
+# then downsampled to a smaller size as a PDF file
 
 # primary
 figure3(xlabel, ylabels, outcomecolors, offsets, savepth, format);

@@ -1,11 +1,14 @@
 ## GUB FIGURE
 
-function figure4(xlabel, ylabels, outcomecolors, offsets, savepth, format)
+function figure4(
+    xlabel, ylabels, outcomecolors, offsets, savepth, format;
+    basepath = ""
+)
 
-    gamod_case = "ga out/ ga nomob_case_rte_.jld2"
-    gamod_death = "ga out/ ga nomob_death_rte_.jld2"
-    gubmod_case = "gub out/ gub out nomob_case_rte_.jld2"
-    gubmod_death = "gub out/ gub out nomob_death_rte_.jld2"
+    gamod_case = basepath * "ga out/ ga nomob_case_rte_.jld2"
+    gamod_death = basepath * "ga out/ ga nomob_death_rte_.jld2"
+    gubmod_case = basepath * "gub out/ gub out nomob_case_rte_.jld2"
+    gubmod_death = basepath * "gub out/ gub out nomob_death_rte_.jld2"
 
     gad = JLD2.load_object(gamod_death);
     gac = JLD2.load_object(gamod_case);

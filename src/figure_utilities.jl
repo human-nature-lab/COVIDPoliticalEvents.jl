@@ -1,4 +1,5 @@
-# plot utilities
+# figure_utilities.jl
+# Functions to assist making the paper plots.
 
 function mk_covpal(vn::VariableNames)
 
@@ -260,4 +261,17 @@ function outcomes_counts(res1, res2, labelsd) #, labelsc)
     # x3[!, :labelc] = [get(labelsc, e, "") for e in x3.stratum]
 
     return x3
+end
+
+function assign_ylabel(outcome)
+    return if outcome == :case_rte
+        "Case rate (per 10K pers.)"
+    elseif outcome == :death_rte
+        "Death rate (per 10K pers.)"
+    elseif outcome == :deaths
+        "Deaths"
+    elseif outcome == :cases
+        "Cases"
+    else "ATT"
+    end
 end

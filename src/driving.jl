@@ -8,16 +8,6 @@ function dataload(
 
     sort!(dat_store, [:fips, :date]);
 
-    add_sma!(dat_store, :cases; n = 7, id = :fips);
-    add_sma!(dat_store, :deaths; n = 7, id = :fips);
-    add_sma!(dat_store, :death_rte; n = 7, id = :fips);
-    add_sma!(dat_store, :case_rte; n = 7, id = :fips);
-
-    # if weekly
-    #     F = 1:6; L = -4:-1;
-    #     dat_store = make_weekly(dat_store, pr_vars, trump_variables);
-    # end
-
    return dat_store, trump_stratassignments, trump_labels, trump_stratifier, pr_vars, trump_variables, savepath 
 end
 
