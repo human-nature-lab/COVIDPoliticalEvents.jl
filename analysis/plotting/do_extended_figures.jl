@@ -4,7 +4,7 @@ using TSCSMethods, COVIDPoliticalEvents
 
 vn = COVIDPoliticalEvents.VariableNames();
 
-datapath = "/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/yale research/COVID19/covid-19-data/data/";
+datapath = "data/data/";
 
 datafile = "cvd_dat_use.jld2";
 dat = load_object(datapath * datafile);
@@ -17,7 +17,7 @@ rlpth = bpth * "rally out/";
 prpth = bpth * "protest out/";
 copth = bpth * "combined out/grace combined out/";
 
-expth = "plotting/figures extended/"
+expth = "plotting/figures extended/";
 
 ## ED Fig. 1
 
@@ -132,4 +132,14 @@ end
 #| fig-scap: Political Event sizes
 #| fig-cap: Political Event sizes. (a) Overall distribution of event sizes in the data, across event type. Large frequencies for specific values reflect the thresholding procedure used to estimate crowd sizes from different reports (see Methods). (b) Overall distribution of event sizes in the data, across each event type, represented as the percentage of the county population in which the event takes place. (c) Event sizes over the roughly two-year period that constitutes our study horizon, colored by event type. Event sizes are plotted on the natural log scale, labelled on the original scale (persons at event).
 
-# see treatment_plot.jl
+let
+    # load clean data and processs
+    # path to the turnout data files and usual data
+    dat_store = load_object(datapath * datafile);
+    fg = treatmentplot(
+        dat_store,
+        datapath * "ga_election_results_clean.csv",
+        datapath * "final_protest_data.jld2"
+    );
+    save(expth * "E Fig. 10.eps", fg)
+end
