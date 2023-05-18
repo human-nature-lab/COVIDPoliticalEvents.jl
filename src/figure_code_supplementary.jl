@@ -2383,7 +2383,7 @@ function sizeprocess(
     return trt
 end
 
-function treatmentplot(dat, protestdatafile)
+function treatmentplot(dat, gadatafile, protestdatafile)
 
     # parameters so that we can run the functions
     #= practically, the only parameter that changes across models
@@ -2395,7 +2395,7 @@ function treatmentplot(dat, protestdatafile)
     F = 0:20; L = -30:-1
     iters = 10000;
     
-    dat = finish_data(dat, protestdatafile);
+    dat = finish_data(dat, gadatafile, protestdatafile);
     dat, _, _, _, _, _ = indicatetreatments(dat);
     
     vn = VariableNames();
