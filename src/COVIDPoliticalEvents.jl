@@ -30,7 +30,7 @@ import JLD2:load_object
 
   export
     # other functions
-    load_object
+    load_object,
     # setup
     VariableNames,
     deathmodel,
