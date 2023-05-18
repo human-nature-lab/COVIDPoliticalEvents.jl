@@ -1,7 +1,5 @@
 # extended data figures
 
-# include("old/main_paper_plot_functions.jl")
-
 using TSCSMethods, COVIDPoliticalEvents
 
 vn = COVIDPoliticalEvents.VariableNames();

@@ -2205,3 +2205,309 @@ function covrob_plot(m)
     rowsize!(f.layout, 2, Auto(.5))
     return f
 end
+
+# treatment plot
+
+function assigneventcolor(x)
+    clrs = Makie.wong_colors()
+    return if x == "Primary"
+        clrs[1]
+    elseif x == "GA Special"
+        clrs[5]
+    elseif x == "Rally"
+        clrs[2]
+    elseif x == "Gubernatorial"
+        clrs[3]
+    elseif x == "Protest"
+        clrs[4]
+    end
+end
+
+function sizeprocess(
+    dat;
+    njdat = "/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/yale research/COVID19/covid-19-data/data/nj_turnout.csv",
+    vadat = "/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/yale research/COVID19/covid-19-data/data/va_turnout.csv",
+    trumpdat = "/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/yale research/COVID19/covid-19-data/data/trump_rallies.csv"
+
+)
+
+    trt = subset(
+        dat,
+        :political => ByRow(==(1)),
+        [a => ByRow(==(0)) for a in [:rallyday1, :rallyday2, :rallyday3]],
+        # :size => ByRow(>(0)),
+        skipmissing = true
+    )
+        
+    tn = names(trt)
+
+    tr = Symbol("In-person Turnout Rate");
+    gatr = Symbol("In-Person Turnout Rate (GA)");
+
+    trt.prsize
+    trt[!, tr] .* trt.pop
+    trt[!, gatr] .* trt.pop
+
+    trt[!, :size] = Vector{Union{Float64, Missing}}(missing, nrow(trt));
+    # trt[!, :event] = Vector{Union{String, Missing}}(missing, nrow(trt));
+    trt[!, :event] = Vector{String}(undef, nrow(trt));
+
+    events = [:primary, :rallyday0, :gub, :gaspecial, :protest]
+
+    eventnames = Dict(
+        :primary => "Primary", :rallyday0 => "Rally",
+        :gub => "Gubernatorial", :gaspecial => "GA Special",
+        :protest => "Protest"
+    );
+
+    eventsize = Dict(
+        :primary => tr,
+        # :rallyday0 => "Rally",
+        # :gub => "Gubernatorial",
+        :gaspecial => gatr,
+        :protest => :prsize
+    )
+
+    let
+        for rw in eachrow(trt)
+            for vbl in events
+                if rw[vbl] == 1
+                    rw[:event] = eventnames[vbl]
+                    rw[:size] = if (vbl == :primary) | (vbl == :gaspecial)
+                        round(rw[get(eventsize, vbl, missing)] * rw[:pop]; digits = 0)
+                    else
+                        if !ismissing(get(eventsize, vbl, missing))
+                            rw[get(eventsize, vbl, missing)]
+                        else missing
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    ##
+
+
+    ## add gub
+    let
+        nj = CSV.read(njdat, DataFrame)
+
+        va = CSV.read(vadat, DataFrame)
+
+        nj[!, :in_person] = nj.total_ballots - nj.ballots_by_mail;
+
+        gubturnout = Dict(
+            vcat(nj.fips, va.fips) .=> vcat(nj.in_person, va.election_day)
+        )
+
+        for (i, (fps, ev)) in enumerate(zip(trt.fips, trt.event))
+            if ev == "Gubernatorial"
+                trt.size[i] = get(gubturnout, fps, missing)
+            end
+        end
+    end
+
+    ## add trump
+    let
+        trmp = CSV.read(trumpdat, DataFrame)
+
+        # trmp.date = Date.(trmp.date, "m/d/y") + Dates.Year(2000);
+        trmp.size = sqrt.(trmp.crowd_lwr .* trmp.crowd_upr)
+
+        dd = Dict{Tuple{Date, Int}, Union{Float64, Missing}}()
+        for r in eachrow(trmp)
+            dd[(r.date, r.fips)] = r.size
+        end
+
+        for (i, (dte, fps, ev)) in enumerate(zip(trt.date, trt.fips, trt.event))
+            if ev == "Rally"
+                trt.size[i] = get(dd, (dte, fps), missing)
+            end
+        end
+    end
+
+
+    ##
+
+    evs = [
+        :primary,
+        :gaspecial,
+        :gub,
+        :protest,
+        :rallyday0,
+        :rallyday1,
+        :rallyday2,
+        :rallyday3
+    ];
+
+    dp = @subset(dat, :political .== 1);
+    dps = select(dp, [:fips, :running, evs...])
+
+    dps = stack(
+        dps,
+        evs, value_name=:held, variable_name=:event
+    )
+
+    @subset!(dps, :held .== 1)
+
+    # (tt, tu)
+    treatcats = Dict{Tuple{Int,Int},Int}();
+    evs = string.(evs);
+    for (tt, tu, ev) in zip(dps.running, dps.fips, dps.event)
+        treatcats[(tt, tu)] = findfirst(ev .== evs)
+    end
+
+
+    trt[!, :eventcat] .= 0;
+    for (j, (tt, tu)) in enumerate(zip(trt.running, trt.fips))
+        trt[j, :eventcat] = treatcats[(tt, tu)]
+    end
+
+    trt.eventcat = categorical([evs[i] for i in trt.eventcat]);
+    # trt.eventcat = categorical(trt.eventcat);
+
+    trt = @subset(trt, :eventcat .∉ Ref(["rallyday1", "rallyday2", "rallyday3"]))
+    trt = dropmissing(trt, :size)
+
+    trt.size_adj = trt.size ./ 10000
+    trt.size_rnd = Vector{Union{Int, Missing}}(undef, nrow(trt));
+
+    for (i, x) in enumerate(trt.size)
+        if !ismissing(x)
+            trt.size_rnd[i] = round(x; digits = 0)
+        end
+    end
+    trt.pop_adj = trt.pop ./ 10000
+
+    return trt
+end
+
+function treatmentplot(dat, other_data_path)
+
+    # parameters so that we can run the functions
+    #= practically, the only parameter that changes across models
+    is the outcome. for the paper, everything else stays the same
+    =#
+    covarspec = "full" # = ARGS[]
+    outcome = :Rt;
+    scenario = "combined ";
+    F = 0:20; L = -30:-1
+    refinementnum = 5; iters = 10000;
+    prefix = "";
+    
+    dat = finish_data(dat, other_data_path);
+    dat, trump_stratassignments, trump_labels, trump_stratifier, pr_vars, trump_variables = indicatetreatments(dat);
+    
+    vn = VariableNames();
+    TSCSMethods.rename!(dat, :deathscum => vn.cd, :casescum => vn.cc);
+    
+    model, dat = preamble(
+        outcome, F, L, dat, scenario, covarspec, iters;
+        borderexclude = false, convert_missing = false
+    );
+    
+    sort!(dat, [:fips, :date]);
+        
+    trt = sizeprocess(dat);
+    trt.lpop = log.(trt.pop);
+    trt.lsize = log.(trt.size);
+    trt.pct = trt.size ./ trt.pop
+    
+    trt2 = trt;
+    
+    ## xlabels
+    dtlab = Date("2020-03-01"):Month(4):maximum(trt.date) |> collect
+    dtdf = dtlab .- Date("2020-03-01")
+    dtlab = string.(dtlab)
+    dtval = [Dates.value(e) for e in dtdf]
+    
+    @subset!(trt2, :size .> 20, :pct .<= 1)
+
+    fg = Figure(resolution = (900, 800))
+    ga = fg[1, 1:2] = GridLayout()
+    gx = ga[1,2] = GridLayout()
+    gb = fg[2, 1:2] = GridLayout()
+
+    slab = (Int.(round.(exp.([2.5,5,7.5,10,12.5]); digits = 0)));
+    ords = floor.(Int, log10.(slab))
+    slab = Int.([round(e; digits = r*-1) for (e, r) in zip(slab, ords)])
+    svals = log.(slab);
+    slab = string.(slab)
+
+    ax1 = Axis(
+        ga[1,1];
+        xticks = (svals, slab),
+        title = "Event sizes",
+        ylabel = "frequency",
+        xgridvisible = false,
+        ygridvisible = false
+    )
+    hist!(ax1, log.(trt2.size); bins = 100, color = :grey)
+
+    ax3 = Axis(
+        ga[1,2];
+        title = "Event sizes (as pct. of population)",
+        xgridvisible = false,
+        ygridvisible = false
+    )
+    hist!(ax3, trt2.pct; bins = 100, color = :grey)
+
+    ax2 = Axis(
+        gb[1, 1];
+        title = "Event sizes over time",
+        ylabel = "persons",
+        xgridvisible = false,
+        ygridvisible = false,
+        xticks = (dtval, dtlab),
+        yticks = (svals, slab),
+    )
+
+    # eclrs = [(:transparent, 0.8) for e in trt.event]
+
+    scs = []
+
+    for e in unique(trt2.event)
+        ti = @subset(trt2, :event .== e)
+        sci = scatter!(
+            ax2, ti.running, log.(ti.size);
+            color = :transparent,
+            label = e,
+            strokecolor = [assigneventcolor.(e) for e in ti.event],
+            strokewidth = 1
+        )
+        push!(scs, sci)
+    end
+
+    eclr = [assigneventcolor(x) for x in unique(trt.event)]
+
+    group_color = [
+        MarkerElement(
+            marker = :circle,
+            color = :transparent, strokecolor = color,
+            strokewidth = 1,
+            markersize = 15
+        ) for color in eclr
+    ]
+
+    lg = Legend(
+            gb[1, 2],
+            group_color,
+            string.(unique(trt.event)),
+            "Event"
+        )
+
+    for (label, layout) in zip(["a", "b", "b"], [ga, gx, gb])
+        Label(layout[1, 1, TopLeft()], label,
+            fontsize = 26,
+            # font = :bold,
+            padding = (0, 5, 5, 0),
+            halign = :right)
+    end
+
+    # include these in figure
+    # mean(trt2.size), std(trt2.size)
+    # mean(trt2.pct), std(trt2.pct)
+
+    return fg1
+end

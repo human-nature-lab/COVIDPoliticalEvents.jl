@@ -29,8 +29,8 @@ import JLD2:load_object
   for x in depfiles; include(x) end
 
   export
-    # other functions
-    load_object,
+    # from other packages
+    load_object, save
     # setup
     VariableNames,
     deathmodel,
@@ -65,5 +65,6 @@ import JLD2:load_object
     # combined execution
     dataload, preamble, gen_stratdict,
     # extended figures
-    pretrendfig, diagnostic, save
+    pretrendfig, diagnostic, treatmentplot
+    
 end
