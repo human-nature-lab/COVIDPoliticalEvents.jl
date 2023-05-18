@@ -2,18 +2,17 @@
 
 # include("old/main_paper_plot_functions.jl")
 
-vn = VariableNames();
+using TSCSMethods, COVIDPoliticalEvents
+
+vn = COVIDPoliticalEvents.VariableNames();
 
 datapath = "/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/yale research/COVID19/covid-19-data/data/";
 
 datafile = "cvd_dat_use.jld2";
-
-dat = JLD2.load_object(datapath*datafile);
-
+dat = load_object(datapath * datafile);
 add_recent_events!(dat, vn.t, vn.id, :protest; recency = 30);
 
 bpth = "";
-
 primpth = bpth * "primary out/";
 gapth = bpth * "ga out/";
 rlpth = bpth * "rally out/";
@@ -29,10 +28,7 @@ expth = "plotting/figures extended/"
 #| fig-cap: Pre-outcome-window ATTs. ATTs for the death and case rates, from 30 days before treatment up to the 9 days after treatment. The light green cell is the day of treatment, and the dark grey cell is the reference day for the ATT calculation (see Methods). In each panel, the error bars indicate the 95% CIs. The panels present the “average treatment effect on the treated” (ATT) estimates for the (A) omnibus analysis, (B) the primary elections, (C) GA special election, (D) NJ & VA gubernatorial elections, (E) Donald Trump’s political rallies, and (F) the BLM protests. In each case, we observe results that are similar to those for the corresponding main analysis; that is, generally non-significant results, which is expected for the period prior to treatment.
 
 let
-    pt = pretrendfig(;
-        a = "pre out/combined full_death_rte_excluded.jld2",
-        b = "pre out/combined full_case_rte_excluded.jld2"
-    )
+    pt = pretrendfig();
 
     save(expth * "E Fig. 1.eps", pt)
 end
