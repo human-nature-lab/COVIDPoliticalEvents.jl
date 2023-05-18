@@ -2393,16 +2393,15 @@ function treatmentplot(dat, other_data_path)
     outcome = :Rt;
     scenario = "combined ";
     F = 0:20; L = -30:-1
-    refinementnum = 5; iters = 10000;
-    prefix = "";
+    iters = 10000;
     
-    dat = finish_data(dat, other_data_path);
-    dat, trump_stratassignments, trump_labels, trump_stratifier, pr_vars, trump_variables = indicatetreatments(dat);
+    dat = finish_data(dat, protestdatafile);
+    dat, _, _, _, _, _ = indicatetreatments(dat);
     
     vn = VariableNames();
     TSCSMethods.rename!(dat, :deathscum => vn.cd, :casescum => vn.cc);
     
-    model, dat = preamble(
+    _, dat = preamble(
         outcome, F, L, dat, scenario, covarspec, iters;
         borderexclude = false, convert_missing = false
     );
@@ -2509,5 +2508,5 @@ function treatmentplot(dat, other_data_path)
     # mean(trt2.size), std(trt2.size)
     # mean(trt2.pct), std(trt2.pct)
 
-    return fg1
+    return fg
 end

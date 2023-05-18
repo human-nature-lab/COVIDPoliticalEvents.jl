@@ -1,6 +1,6 @@
 # setup_data.jl
 
-function finish_data(dat, datapath)
+function finish_data(dat, protestdatafile)
     # add other data to dat  
     vn = VariableNames();
   
@@ -23,7 +23,7 @@ function finish_data(dat, datapath)
     dat[!, rare] = disallowmissing(dat[!, rare])
   
     # protest data
-    protest_dat = load_object(datapath * "final_protest_data.jld2")
+    protest_dat = load_object(protestdatafile)
     select!(dat, Not([:protest, :prsize, :prcount]))
     dat = leftjoin(dat, protest_dat, on = [:fips, :date => :pr_event_date]);
     return dat
