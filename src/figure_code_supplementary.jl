@@ -52,27 +52,27 @@ function pretrendfig(;
     _figure!(panelA, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # primaries
-    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[2]];
+    m1, m2 = [load_object(x).refcalmodel for x in models[2]];
     panelB = fg[2, 1] = GridLayout()
     _figure!(panelB, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # GA
-    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[3]];
+    m1, m2 = [load_object(x).refcalmodel for x in models[3]];
     panelC = fg[3, 1] = GridLayout()
     _figure!(panelC, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # Gub
-    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[4]];
+    m1, m2 = [load_object(x).refcalmodel for x in models[4]];
     panelD = fg[4, 1] = GridLayout()
     _figure!(panelD, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # BLM
-    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[5]];
+    m1, m2 = [load_object(x).refcalmodel for x in models[5]];
     panelE = fg[5, 1] = GridLayout()
     _figure!(panelE, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # Trump 
-    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[6]];
+    m1, m2 = [load_object(x).refcalmodel for x in models[6]];
     @subset!(m1.results, :stratum .== 1)
     @subset!(m2.results, :stratum .== 1)
     panelF = fg[6, 1] = GridLayout()
@@ -209,17 +209,11 @@ function plot_si_set(
         str = X.model.stratifier != Symbol("") ? string(X.model.stratifier) : ""
         scenario = X.model.title * " " * str;
 
-        modelfigure(
-            X, scenario,
-            sipth, ".svg"
-        )
+        modelfigure(X, scenario)
     end
 end
 
-function modelfigure(
-    X, scenario,
-    savepth, format
-)
+function modelfigure(X, scenario)
 
     vn = VariableNames()
 
@@ -229,11 +223,7 @@ function modelfigure(
         f = _modelfigure_nostrat(
             [X.model, X.refinedmodel, X.calmodel, X.refcalmodel]
         )
-        if !isnothing(savepth)
-            save(
-                    savepth * scenario *string(X.model.outcome) * format, f
-                )
-        end
+
         return f
     else
 
@@ -259,13 +249,6 @@ function modelfigure(
         f = _modelfigure_strat([X.model, X.refinedmodel])
         fc = _modelfigure_strat([X.calmodel, X.refcalmodel])
         
-        if !isnothing(savepth)
-            for (fg, nm) in zip([f, fc], ["regular_refined", "caliper_refined"])
-                save(
-                    savepth * scenario *string(X.model.outcome) * nm * format, fg
-                )
-            end
-        end
         return [f, fc]
     end
 end
@@ -566,11 +549,7 @@ function _modelfigure_strat(models)
     return f
 end
 
-function rally_ts_x_exposure_fig(
-    X, scenario;
-    savepth = "covid-political-events-paper (working)/si_figures/",
-    format = ".png"
-)
+function rally_ts_x_exposure_fig(X, scenario)
 
     @unpack model, refinedmodel, calmodel, refcalmodel, obsinfo, matchinfo = X;
     @unpack stratifier, title = model;
@@ -653,13 +632,6 @@ function rally_ts_x_exposure_fig(
         Figs[o] = f
     end
 
-    if !isnothing(savepth)
-        for (fg, nm) in zip(
-            Figs, ["regular", "refined", "caliper", "refined caliper"]
-        )
-            save(savepth * scenario * nm * format, fg)
-        end
-    end
     return Figs
 end
 
@@ -1463,11 +1435,6 @@ function ga_mob_pl(
 
   axr.xlabel = "Day"
 
-  save(
-    savepath * "ga_mob_pl" * fext,
-    ga_mobility
-  )
-
   return ga_mobility
 end
 
@@ -1586,18 +1553,11 @@ function rally_mob_pl(
 
   colsize!(rally_mobility.layout, 2, Relative(9/10));
 
-  save(
-    savepath * "rally_mob_pl" * fext,
-    rally_mobility
-  )  
-
   return rally_mobility
 end
 
 function protest_mob_pl(;
   datapath = "covid-19-data/data/",
-  savepath = "supp out/",
-  fext = ".png",
   days = 14,
   w = 1200,
   h = 800,
@@ -1691,11 +1651,6 @@ function protest_mob_pl(;
     )
 
   axr.xlabel = "Day"
-
-  save(
-    savepath * "blm_mob_pl" * fext,
-    blm_mobility
-  )
 
   return blm_mobility
 end
