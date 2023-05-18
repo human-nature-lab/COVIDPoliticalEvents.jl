@@ -960,7 +960,7 @@ function figure7(;
         "Rt out/gub nomob_Rt_.jld2",
         "Rt out/rally nomob_Rt_exposure.jld2",
         "Rt out/protest nomob_Rt_.jld2"
-    ];
+    ]
 )
 
     xlabel = "Day"; ylabel = L"R_{t}";
@@ -1242,14 +1242,14 @@ end
 function figure8(;
     maxwindow = 20,
     format = ".svg",
-    savepath = nothing;
+    savepath = nothing,
     modelpaths = [
         "mobility out/mobility primary full_multiple_Full-Service Restaurants_.jld2",
         "mobility out/mobility ga full_multiple_Full-Service Restaurants_.jld2",
         "mobility out/mobility gub full_multiple_Full-Service Restaurants_.jld2",
         "mobility out/mobility rally full_multiple_Full-Service Restaurants_exposure.jld2",
         "mobility out/mobility protest full_multiple_Full-Service Restaurants_.jld2"
-    ];
+    ]
 )
 
     xlabel = "Day"; ylabel = "Adjusted total visits (per 1,000)";

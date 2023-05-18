@@ -24,11 +24,12 @@ docs/site/
 Manifest.toml
 *.DS_Store
 *.jld2
+*.icloud
+*.ipynb
 *.svg
 *.png
 *.psd
 *.jpg
-.DS_Store
-.DS_Store
+*.DS_Store
 data/.DS_Store
 analysis/.DS_Store

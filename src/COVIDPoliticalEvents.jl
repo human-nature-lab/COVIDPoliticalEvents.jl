@@ -11,7 +11,7 @@ import FileIO.load
 import Downloads:download
 
 using CairoMakie
-import Colors, ColorSchemes
+using Colors, ColorSchemes
 import CairoMakie.RGB
 import JLD2:load_object
   
