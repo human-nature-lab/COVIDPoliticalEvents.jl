@@ -232,14 +232,14 @@ function dataprep(
     return dat
 end
 
-function ga_turnout(dat; datpath = "covid-19-data/data/")
+function ga_turnout(
+    dat;
+    gadatafile = "ga_election_results_clean.csv"
+    )
 
     vn = VariableNames()
 
-    ge = CSV.read(
-        datpath * "ga_election_results_clean.csv", 
-        DataFrame
-    );
+    ge = CSV.read(gadatafile, DataFrame);
 
     select!(ge, Not(Symbol("Total Votes")));
 
