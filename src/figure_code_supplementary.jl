@@ -2383,7 +2383,7 @@ function sizeprocess(
     return trt
 end
 
-function treatmentplot(dat, other_data_path)
+function treatmentplot(dat, protestdatafile)
 
     # parameters so that we can run the functions
     #= practically, the only parameter that changes across models
