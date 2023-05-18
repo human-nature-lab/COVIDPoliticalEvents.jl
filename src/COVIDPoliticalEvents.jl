@@ -29,6 +29,8 @@ import JLD2:load_object
   for x in depfiles; include(x) end
 
   export
+    # other functions
+    load_object
     # setup
     VariableNames,
     deathmodel,

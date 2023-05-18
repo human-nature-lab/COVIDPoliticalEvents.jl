@@ -45,34 +45,34 @@ function pretrendfig(;
     );
     
     # overall
-    m1, m2 = [JLD2.load_object(x).refcalmodel for x in models[1]];
+    m1, m2 = [load_object(x).refcalmodel for x in models[1]];
     @subset!(m1.results, :stratum .== 1)
     @subset!(m2.results, :stratum .== 1)
     panelA = fg[1, 1] = GridLayout()
     _figure!(panelA, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # primaries
-    m1, m2 = [JLD2.load_object(savepath * x).refcalmodel for x in models[2]];
+    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[2]];
     panelB = fg[2, 1] = GridLayout()
     _figure!(panelB, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # GA
-    m1, m2 = [JLD2.load_object(savepath * x).refcalmodel for x in models[3]];
+    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[3]];
     panelC = fg[3, 1] = GridLayout()
     _figure!(panelC, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # Gub
-    m1, m2 = [JLD2.load_object(savepath * x).refcalmodel for x in models[4]];
+    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[4]];
     panelD = fg[4, 1] = GridLayout()
     _figure!(panelD, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # BLM
-    m1, m2 = [JLD2.load_object(savepath * x).refcalmodel for x in models[5]];
+    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[5]];
     panelE = fg[5, 1] = GridLayout()
     _figure!(panelE, m1, m2, xlabel, outcomecolors, offsets, ylabels)
 
     # Trump 
-    m1, m2 = [JLD2.load_object(savepath * x).refcalmodel for x in models[6]];
+    m1, m2 = [load_object(savepath * x).refcalmodel for x in models[6]];
     @subset!(m1.results, :stratum .== 1)
     @subset!(m2.results, :stratum .== 1)
     panelF = fg[6, 1] = GridLayout()
@@ -705,7 +705,7 @@ function testingfig(
 
     ## model information
 
-    recordset = JLD2.load_object(p1)
+    recordset = load_object(p1)
 
     model = recordset.model;
 

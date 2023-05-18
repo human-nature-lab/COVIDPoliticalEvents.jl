@@ -15,11 +15,11 @@ function figure3(
     stratcasemod = "primary out/ primary full_case_rte_In-person Turnout Rate.jld2"
 )
 
-    oamd = JLD2.load_object(overalldeathmod);
-    oamc = JLD2.load_object(overallcasemod);
+    oamd = load_object(overalldeathmod);
+    oamc = load_object(overallcasemod);
 
-    smd = JLD2.load_object(stratdeathmod);
-    smc = JLD2.load_object(stratcasemod);
+    smd = load_object(stratdeathmod);
+    smc = load_object(stratcasemod);
 
     # FIGURE
 
@@ -263,11 +263,11 @@ function figure4(
     gubmod_death = "gub out/ gub out nomob_death_rte_.jld2"
 )
 
-    gad = JLD2.load_object(gamod_death);
-    gac = JLD2.load_object(gamod_case);
+    gad = load_object(gamod_death);
+    gac = load_object(gamod_case);
 
-    gud = JLD2.load_object(gubmod_death);
-    guc = JLD2.load_object(gubmod_case);
+    gud = load_object(gubmod_death);
+    guc = load_object(gubmod_case);
 
     # FIGURE
 
@@ -486,11 +486,11 @@ function figure6(
     stratcasemod = "protest out/ protest nomob_case_rte_prsize.jld2",
 )
 
-    oamd = JLD2.load_object(overalldeathmod);
-    oamc = JLD2.load_object(overallcasemod);
+    oamd = load_object(overalldeathmod);
+    oamc = load_object(overallcasemod);
 
-    smd = JLD2.load_object(stratdeathmod);
-    smc = JLD2.load_object(stratcasemod);
+    smd = load_object(stratdeathmod);
+    smc = load_object(stratcasemod);
 
     # FIGURE
 
@@ -723,8 +723,8 @@ function figure5(
     stratcasemod = "rally out/ rally nomob_case_rte_exposure.jld2"
 )
 
-    smd = JLD2.load_object(stratdeathmod);
-    smc = JLD2.load_object(stratcasemod);
+    smd = load_object(stratdeathmod);
+    smc = load_object(stratcasemod);
 
     # FIGURE
     
@@ -968,7 +968,7 @@ function figure7(;
 
     ms = Vector{Any}(undef, 5)
     for (i, m) in enumerate(models)
-        ms[i] = JLD2.load_object(m).refcalmodel;
+        ms[i] = load_object(m).refcalmodel;
     end
 
     # COLORS
@@ -1281,7 +1281,7 @@ function figure8(;
     push!(subpanels, f[length(panels)+1, 1])
 
     for (j, modelpath) in enumerate(modelpaths)
-        modelobject = JLD2.load_object(modelpath);
+        modelobject = load_object(modelpath);
         m1 = modelobject.refcalmodel;
 
         if j == 3
@@ -1344,7 +1344,7 @@ function figure8(;
 
     counts = DataFrame();
     for modelpath in modelpaths
-        m1 = JLD2.load_object(modelpath).refcalmodel;
+        m1 = load_object(modelpath).refcalmodel;
         res = m1.results
 
         res.title .= m1.title
