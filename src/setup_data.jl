@@ -5,7 +5,7 @@ function finish_data(dat, gadatafile, protestdatafile)
     vn = VariableNames();
   
     # add the GA special turnout data
-    ga_election = ga_turnout(dat; datapath = gadatafile)
+    ga_election = ga_turnout2(dat, gadatafile)
     ed = Dict(ga_election[!, vn.id] .=> ga_election[!, vn.tout]);
     dat[!, vn.gaout] .= 0.0;
     tochng = @views dat[dat.State .== "Georgia", [vn.id, vn.gaout]]

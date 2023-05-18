@@ -232,10 +232,7 @@ function dataprep(
     return dat
 end
 
-function ga_turnout(
-    dat;
-    gadatafile = "ga_election_results_clean.csv"
-    )
+function ga_turnout2(dat, gadatafile = "ga_election_results_clean.csv")
 
     vn = VariableNames()
 
