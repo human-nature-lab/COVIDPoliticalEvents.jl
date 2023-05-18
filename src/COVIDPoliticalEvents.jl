@@ -22,7 +22,7 @@ import JLD2:load_object
     "spillover.jl", "threshold.jl", "stratifiers.jl",
     "countyadjacencies.jl", "countydistances.jl",
     "driving.jl",
-    "figure_utilities.jl", "figure_code.jl",
+    "figure_utilities.jl", "figure_code.jl", "figure_code_inner_functions.jl",
     "figure_code_combined.jl", "figure_code_supplementary.jl"
   ];
   
