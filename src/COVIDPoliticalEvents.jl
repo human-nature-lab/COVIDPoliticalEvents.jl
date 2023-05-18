@@ -9,6 +9,7 @@ using ShiftedArrays # import ShiftedArrays:lead
 import Indicators:sma
 import FileIO.load
 import Downloads:download
+import CategoricalArrays:categorical
 
 using CairoMakie
 using Colors, ColorSchemes
