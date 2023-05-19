@@ -1,6 +1,7 @@
 # useful_functions.jl
 
 function assigneventcolor(x)
+    clrs = Makie.wong_colors()
     return if x == "Primary"
         clrs[1]
     elseif x == "GA Special"
@@ -103,7 +104,7 @@ function sizeprocess(
     let
         trmp = CSV.read(trumpdat, DataFrame)
 
-        trmp.date = Date.(trmp.date, "m/d/y") + Dates.Year(2000);
+        # trmp.date = Date.(trmp.date, "m/d/y") + Dates.Year(2000);
         trmp.size = sqrt.(trmp.crowd_lwr .* trmp.crowd_upr)
 
         dd = Dict{Tuple{Date, Int}, Union{Float64, Missing}}()

@@ -166,3 +166,14 @@ For a simple program example, to estimate the ATTs for a specific event, in
 a simple context, see "ga-election/base_model.jl" which runs through
 estimation of the overall ATTs for the Georgia special election, each scenario
 has the same overall structure:
+
+## update
+
+## Figures
+
+The functions to generate the main, extended data, and supporting figures (and their dependencies) are contained directly within this package. The scripts to generate the figure sets are in `analysis/plotting`.
+
+N.B. these figures depend on model output files.
+
+## Data
+
