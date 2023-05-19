@@ -1358,8 +1358,8 @@ function figure8(;
         combine([v => mean => v for v in vbles])
     end;
 
-    CSV.write(savepth * "Figure 8 counts.csv", counts);
-    CSV.write(savepth * "Figure 8 average counts.csv", av_counts);
+    CSV.write(savepath * "Figure 8 counts.csv", counts);
+    CSV.write(savepath * "Figure 8 average counts.csv", av_counts);
 
     return f
 end

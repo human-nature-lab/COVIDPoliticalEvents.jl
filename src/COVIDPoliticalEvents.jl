@@ -65,6 +65,8 @@ import JLD2:load_object
     add_sma!,
     # combined execution
     dataload, preamble, gen_stratdict,
+    # main figures
+    figure3, figure4, figure5, figure6, figure7, figure8, 
     # extended figures
     pretrendfig, diagnostic, treatmentplot
     
