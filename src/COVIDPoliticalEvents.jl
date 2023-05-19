@@ -70,6 +70,7 @@ import JLD2:load_object
     # extended figures
     pretrendfig, diagnostic, treatmentplot,
     # supplementary figures
-    testingfig, rescheduled_pl, diagnostic, turnoutplot, covrob_plot
+    testingfig, rescheduled_pl, diagnostic, turnoutplot, covrob_plot,
+    rally_ts_x_exposure_fig
     
 end
