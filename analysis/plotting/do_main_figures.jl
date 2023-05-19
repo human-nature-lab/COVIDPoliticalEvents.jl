@@ -3,6 +3,9 @@
 # requires DataFrames version 1.3.4 (e.g., no later versions)
 #    -> later versions will not be able to load .jld2 files
 
+using TSCSMethods, COVIDPoliticalEvents
+using Random, CSV
+
 savepth = "plotting/figures main/";
 format = ".pdf"; # NHB wants standalone vector graphics files that are not SVG
 
@@ -13,7 +16,7 @@ xlabel = "Day";
 offsets = (0.15, 0.15);
 
 # outcome colors
-outcomecolors = (gen_colors(3)[3], gen_colors(3)[2]);
+outcomecolors = (COVIDPoliticalEvents.gen_colors(3)[3], COVIDPoliticalEvents.gen_colors(3)[2]);
 
 # figure 1 created in photoshop/illustrator
 # then downsampled to a smaller size as a PDF file
@@ -54,7 +57,7 @@ let
     drs = readdir(par);
     files = drs[contains.(drs, "excluded")]
 
-    bals, matching = getmatchbal(par, files);
+    bals, matching = COVIDPoliticalEvents.getmatchbal(par, files);
 
     imp, oes = load_object("combined out/grace combined out/imputesets.jld2")
     for e in imp; rename!(e, e.outcome[1] => :observed) end
@@ -74,7 +77,7 @@ let
     cbal = bals[:case_rte];
 
     ## execute plots
-    f = combined_case_death_plot(dth, cse, dbal, cbal)
+    f = COVIDPoliticalEvents.combined_case_death_plot(dth, cse, dbal, cbal)
 
     # plotpath = "combined plots/case_death_rte.svg";
     save(savepth * "Figure 2.pdf", f)
