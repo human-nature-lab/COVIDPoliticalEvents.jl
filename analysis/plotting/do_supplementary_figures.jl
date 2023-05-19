@@ -6,6 +6,8 @@ spth = "plotting/figures_supporting/";
 using TSCSMethods, COVIDPoliticalEvents
 import Colors, ColorSchemes
 using CairoMakie
+using Accessors
+using FileIO
 
 # pth = "plotting/figure_code/"
 pth = ""
@@ -144,9 +146,9 @@ end
 
 let
     pout = collect(skipmissing(dat[dat.primary .== 1, vn.tout]));
-    gout = ga_turnout(dat; datapath = datapath)[!, vn.tout];
+    gout = COVIDPoliticalEvents.ga_turnout(dat; datapath = datapath)[!, vn.tout];
     njout, vaout = let
-        x = gub_turnout(dat; njdatapath = datapath)
+        x = COVIDPoliticalEvents.gub_turnout(dat; njdatapath = datapath)
         nj = x[x.state .== "NJ", vn.tout]
         va = x[x.state .== "VA", vn.tout]
         nj, va
@@ -220,7 +222,7 @@ let
 end
 
 let
-    pth = "plotting/supplementary_figures/rally_mob_pl.png"
+    pth = "plotting/figures_supporting/rally_mob_pl.png"
     img = load(pth)
     f = Figure(resolution = (800, 1200))
     ax = Axis(f[1, 1], aspect = DataAspect())
@@ -232,7 +234,7 @@ end
 
 # ERROR HERE?
 let
-    pth = "plotting/supplementary_figures/blm_mob_pl.png"
+    pth = "plotting/figures_supporting/blm_mob_pl.png"
     img = load(pth)
     f = Figure(resolution = (800, 1200))
     ax = Axis(f[1, 1], aspect = DataAspect())
@@ -243,7 +245,7 @@ let
 end
 
 let
-    pth = "plotting/supplementary_figures/primary_mob_pl.png"
+    pth = "plotting/figures_supporting/primary_mob_pl.png"
     img = load(pth)
     f = Figure(resolution = (800, 1200))
     ax = Axis(f[1, 1], aspect = DataAspect())
@@ -254,7 +256,7 @@ let
 end
 
 let
-    pth = "plotting/supplementary_figures/ga_mob_pl.png"
+    pth = "plotting/figures_supporting/ga_mob_pl.png"
     img = load(pth)
     f = Figure(resolution = (800, 1200))
     ax = Axis(f[1, 1], aspect = DataAspect())
@@ -278,14 +280,14 @@ let
     l1 = f[1, 1] = GridLayout()
     l2 = f[2, 1] = GridLayout()
     
-    pth = "plotting/supplementary_figures/rallyday_shift_pl.png"
+    pth = "plotting/figures_supporting/rallyday_shift_pl.png"
     img = load(pth)
     ax = Axis(l1[1, 1], aspect = DataAspect())
     image!(ax, rotr90(img))
     hidedecorations!(ax)
     hidespines!(ax)
 
-    pth = "plotting/supplementary_figures/protest_shift_pl.png"
+    pth = "plotting/figures_supporting/protest_shift_pl.png"
     img = load(pth)
     ax2 = Axis(l2[1, 1], aspect = DataAspect())
     image!(ax2, rotr90(img))
