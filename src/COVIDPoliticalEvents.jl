@@ -68,6 +68,8 @@ import JLD2:load_object
     # main figures
     figure3, figure4, figure5, figure6, figure7, figure8, 
     # extended figures
-    pretrendfig, diagnostic, treatmentplot
+    pretrendfig, diagnostic, treatmentplot,
+    # supplementary figures
+    testingfig, rescheduled_pl, diagnostic, turnoutplot
     
 end

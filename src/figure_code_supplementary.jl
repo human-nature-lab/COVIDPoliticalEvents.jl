@@ -3036,7 +3036,7 @@ function testingfig(
 
     ## model information
 
-    recordset = JLD2.load_object(p1)
+    recordset = load_object(p1)
 
     model = recordset.model;
 
