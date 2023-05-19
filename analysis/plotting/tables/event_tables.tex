@@ -1,0 +1,90 @@
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Thu, Dec 22, 2022 - 11:39:48
+\begin{table}[!htbp] \centering 
+  \caption{Models of the presence of an event, in terms of death and case rates (in terms of cases per 100,000 persons). Logistic regression models of the presence event size controlling for a variety of county-level demographic characteristics, along with the cumulative case rate. We include observations of treated and non-treated counties on the day of treatment. We observe significant, but very small effects of the death and case rates (P = 0.000928 and P < 2e-16, respectively). The coefficients are tested with two-sided t-tests. As appropriate to this setting, no adjustments were made for multiple comparisons.} 
+  \label{tbl-event}
+\tiny 
+\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-3} 
+\\[-1.8ex] & \multicolumn{2}{c}{political} \\ 
+\\[-1.8ex] & (1) & (2)\\ 
+\hline \\[-1.8ex] 
+ `Cum. Case Rate` & $-$0.005$^{***}$ &  \\ 
+  & (0.0004) &  \\ 
+  `Cum. Death Rate` &  & $-$0.048$^{***}$ \\ 
+  &  & (0.014) \\ 
+  pop & 0.00000$^{***}$ & 0.00000$^{***}$ \\ 
+  & (0.00000) & (0.00000) \\ 
+  eventGA Special & 21.323 & 23.326 \\ 
+  & (2,065.123) & (1,064.609) \\ 
+  eventGubernatorial & 17.073 & 20.065 \\ 
+  & (1,800.576) & (1,088.064) \\ 
+  eventPrimary & 26.295 & 25.593 \\ 
+  & (127.185) & (127.766) \\ 
+  eventProtest & 24.492 & 24.161 \\ 
+  & (270.168) & (226.173) \\ 
+  eventRally & 22.989 & 23.472 \\ 
+  & (1,445.980) & (1,420.178) \\ 
+  running & 0.015$^{***}$ & 0.009$^{***}$ \\ 
+  & (0.001) & (0.0003) \\ 
+  `Pop. Density` & $-$0.00005$^{**}$ & $-$0.00004 \\ 
+  & (0.00002) & (0.00003) \\ 
+  ruc & $-$0.138$^{***}$ & $-$0.145$^{***}$ \\ 
+  & (0.011) & (0.011) \\ 
+  `Trump 2016 Vote Share` & $-$4.106$^{***}$ & $-$4.141$^{***}$ \\ 
+  & (0.247) & (0.246) \\ 
+  `Pct. 65 yrs and Above` & 1.872$^{***}$ & 3.661$^{***}$ \\ 
+  & (0.675) & (0.636) \\ 
+  `Pct. Afr. American` & $-$0.703$^{***}$ & $-$1.297$^{***}$ \\ 
+  & (0.228) & (0.228) \\ 
+  `Pct. Hispanic` & $-$0.732$^{***}$ & $-$1.026$^{***}$ \\ 
+  & (0.239) & (0.243) \\ 
+  Urate & 8.045$^{***}$ & 10.835$^{***}$ \\ 
+  & (2.115) & (1.980) \\ 
+  high\_school\_only & 4.524$^{***}$ & 5.572$^{***}$ \\ 
+  & (0.522) & (0.528) \\ 
+  log(median\_inc) & $-$0.201 & $-$0.212 \\ 
+  & (0.293) & (0.290) \\ 
+  poverty\_rate & $-$5.218$^{***}$ & $-$5.785$^{***}$ \\ 
+  & (1.052) & (1.038) \\ 
+  post\_bacc & $-$4.406$^{***}$ & $-$2.117$^{**}$ \\ 
+  & (0.952) & (0.935) \\ 
+  `Cum. Case Rate`:eventGA Special & 0.004 &  \\ 
+  & (2.820) &  \\ 
+  `Cum. Case Rate`:eventGubernatorial & 0.004 &  \\ 
+  & (1.367) &  \\ 
+  `Cum. Case Rate`:eventPrimary & $-$0.003 &  \\ 
+  & (1.411) &  \\ 
+  `Cum. Case Rate`:eventProtest & 0.004 &  \\ 
+  & (2.169) &  \\ 
+  `Cum. Case Rate`:eventRally & 0.002 &  \\ 
+  & (5.035) &  \\ 
+  `Cum. Case Rate`:`Trump 2016 Vote Share` & 0.002$^{***}$ &  \\ 
+  & (0.001) &  \\ 
+  `Cum. Death Rate`:eventGA Special &  & 0.061 \\ 
+  &  & (56.634) \\ 
+  `Cum. Death Rate`:eventGubernatorial &  & 0.060 \\ 
+  &  & (37.700) \\ 
+  `Cum. Death Rate`:eventPrimary &  & $-$0.022 \\ 
+  &  & (28.988) \\ 
+  `Cum. Death Rate`:eventProtest &  & 0.068 \\ 
+  &  & (27.925) \\ 
+  `Cum. Death Rate`:eventRally &  & $-$0.004 \\ 
+  &  & (223.535) \\ 
+  `Cum. Death Rate`:`Trump 2016 Vote Share` &  & $-$0.012 \\ 
+  &  & (0.022) \\ 
+  Constant & $-$3.607 & $-$3.366 \\ 
+  & (3.205) & (3.177) \\ 
+ \hline \\[-1.8ex] 
+Observations & 443,808 & 443,808 \\ 
+Log Likelihood & $-$11,556.490 & $-$11,698.100 \\ 
+Akaike Inf. Crit. & 23,164.980 & 23,448.190 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{2}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 

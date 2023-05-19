@@ -1,0 +1,73 @@
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Wed, Jan 04, 2023 - 12:08:16
+\begin{table}[!htbp] \centering 
+  \caption{Models of event size and the cumulative case rate, in terms of cases per 100,000 persons. Negative binomial regression models of the event size (rounded to the nearest person) controlling for a variety of county-level demographic characteristics, along with the cumulative case rate. We observe a very small but significant effect of the cumulative case rate only in model (2), which is positive and very small in magnitude, representing an increase in event size of well under 1\% for a unit increase in the death rate per 100K persons (P = 0.000125 and P = 0.870295 for models 2 and 3). The coefficients are tested with two-sided t-tests. As appropriate to this setting, no adjustments were made for multiple comparisons.} 
+  \label{tbl-death} 
+\tiny 
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{3}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-4} 
+\\[-1.8ex] & \multicolumn{3}{c}{size\_rnd} \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ `Cum. Case Rate` & $-$0.00002 & 0.0001$^{***}$ & 0.00001 \\ 
+  & (0.00002) & (0.00002) & (0.00004) \\ 
+  eventcatgub & 2.779$^{***}$ & 2.327$^{***}$ & 1.961$^{***}$ \\ 
+  & (0.252) & (0.227) & (0.462) \\ 
+  eventcatprimary & $-$1.645$^{***}$ & $-$1.520$^{***}$ & $-$1.035$^{***}$ \\ 
+  & (0.209) & (0.178) & (0.323) \\ 
+  eventcatprotest & $-$2.923$^{***}$ & $-$3.337$^{***}$ & $-$3.070$^{***}$ \\ 
+  & (0.188) & (0.163) & (0.310) \\ 
+  eventcatrallyday0 & $-$1.066$^{***}$ & $-$1.018$^{***}$ & $-$1.313$^{***}$ \\ 
+  & (0.213) & (0.182) & (0.371) \\ 
+  running & $-$0.005$^{***}$ & $-$0.006$^{***}$ & $-$0.005$^{***}$ \\ 
+  & (0.001) & (0.001) & (0.001) \\ 
+  `Pop. Density` &  & 0.00000 & 0.00000 \\ 
+  &  & (0.00000) & (0.00000) \\ 
+  ruc &  & $-$0.212$^{***}$ & $-$0.214$^{***}$ \\ 
+  &  & (0.012) & (0.012) \\ 
+  `Trump 2016 Vote Share` &  & $-$1.530$^{***}$ & $-$1.742$^{***}$ \\ 
+  &  & (0.204) & (0.215) \\ 
+  `Pct. 65 yrs and Above` &  & $-$2.869$^{***}$ & $-$2.945$^{***}$ \\ 
+  &  & (0.575) & (0.575) \\ 
+  `Pct. Afr. American` &  & $-$0.134 & $-$0.003 \\ 
+  &  & (0.185) & (0.192) \\ 
+  `Pct. Hispanic` &  & $-$0.414$^{**}$ & $-$0.330 \\ 
+  &  & (0.207) & (0.213) \\ 
+  Urate &  & 0.802 & 1.669 \\ 
+  &  & (2.229) & (2.224) \\ 
+  high\_school\_only &  & $-$0.257 & $-$0.125 \\ 
+  &  & (0.532) & (0.539) \\ 
+  log(median\_inc) &  & $-$1.127$^{***}$ & $-$0.968$^{***}$ \\ 
+  &  & (0.240) & (0.243) \\ 
+  poverty\_rate &  & $-$5.277$^{***}$ & $-$4.977$^{***}$ \\ 
+  &  & (0.879) & (0.884) \\ 
+  post\_bacc &  & 4.264$^{***}$ & 4.119$^{***}$ \\ 
+  &  & (0.725) & (0.727) \\ 
+  `Cum. Case Rate`:eventcatgub &  &  & 0.00000 \\ 
+  &  &  & (0.00004) \\ 
+  `Cum. Case Rate`:eventcatprimary &  &  & $-$0.0003$^{***}$ \\ 
+  &  &  & (0.0001) \\ 
+  `Cum. Case Rate`:eventcatprotest &  &  & 0.00002 \\ 
+  &  &  & (0.0001) \\ 
+  `Cum. Case Rate`:eventcatrallyday0 &  &  & 0.0002$^{*}$ \\ 
+  &  &  & (0.0001) \\ 
+  `Cum. Case Rate`:`Trump 2016 Vote Share` &  &  & 0.0001$^{***}$ \\ 
+  &  &  & (0.00004) \\ 
+  pop & 0.00000$^{***}$ & 0.00000$^{***}$ & 0.00000$^{***}$ \\ 
+  & (0.00000) & (0.00000) & (0.00000) \\ 
+  Constant & 10.577$^{***}$ & 24.535$^{***}$ & 22.464$^{***}$ \\ 
+  & (0.248) & (2.599) & (2.672) \\ 
+ \hline \\[-1.8ex] 
+Observations & 2,266 & 2,265 & 2,265 \\ 
+Log Likelihood & $-$20,765.920 & $-$20,243.460 & $-$20,225.250 \\ 
+$\theta$ & 0.830$^{***}$  (0.021) & 1.179$^{***}$  (0.031) & 1.195$^{***}$  (0.032) \\ 
+Akaike Inf. Crit. & 41,547.840 & 40,524.910 & 40,498.500 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{3}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
