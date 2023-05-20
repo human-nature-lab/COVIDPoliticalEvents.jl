@@ -2,7 +2,6 @@
 
 Random.seed!(2019)
 
-savepath = "gub out/";
 scenario = prefix * " gub out "
 
 obvars = [vn.pd, vn.ts16];
@@ -18,6 +17,19 @@ cvs = COVIDPoliticalEvents.covariateset(
   modeltype = Symbol(ARGS[1])
 )
 
+# vax = CSV.read("vax_county_proc.csv", DataFrame);
+
+# select!(vax, Not(:Recip_County))
+
+# mytryparse(T, str) = something(tryparse(T, str), missing)
+
+# vax.fips = mytryparse.(Int, vax.FIPS)
+# dropmissing!(vax, :fips)
+# serpct = Symbol("Pct. series complete")
+# rename!(vax, :Completeness_pct => serpct)
+
+# dat = leftjoin(dat, vax, on = [:date => :Date, :fips])
+
 cvs = [cvs..., vn.rare]
 cvs = setdiff(cvs, [vn.fc])
 
@@ -28,5 +40,7 @@ model = deathmodel(
   F = F, L = L,
   matchingcovariates = cvs,
 );
+
+# model.timevary[serpct] = false
 
 dat = dataprep(dat, model);

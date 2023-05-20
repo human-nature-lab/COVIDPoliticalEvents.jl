@@ -1,5 +1,9 @@
 # base_model.jl
 
+push!(ARGS, "epi")
+
+pth = "trump-rallies/"
+include("../parameters.jl")
 include("preamble.jl");
 
 @time match!(model, dat; treatcat = rally_treatmentcategories);
@@ -20,13 +24,15 @@ model = stratify(
 
 @time calmodel, refcalmodel, overall = autobalance(
   model, dat;
-  calmin = 0.08, step = 0.05,
-  initial_bals = Dict(vn.cdr => 0.25),
-  dooverall = true
+  calmin = 0.08, step = 0.025,
+  initial_bals = Dict(balvar => 0.25),
+  dooverall = true, bayesfactor = true
 );
 
-recordset = makerecords(
-  dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
-)
+save_object(pth * "rally_" * string(outcome) * "_refcalmodel_" * ARGS[1] * ".jld2", refcalmodel)
 
-TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)
+# recordset = makerecords(
+#   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
+# )
+
+# TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)

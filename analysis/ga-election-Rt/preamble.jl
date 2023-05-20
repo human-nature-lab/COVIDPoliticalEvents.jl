@@ -4,6 +4,7 @@ Random.seed!(2019)
 
 scenario = "ga "
 
+vn = VariableNames();
 obvars = [vn.pd, vn.ts16, vn.tout];
 cvs = COVIDPoliticalEvents.covariateset(
   vn, vn.rt;

@@ -2,6 +2,8 @@
 
 Random.seed!(2019)
 
+scenario = "primary "
+
 obvars = [vn.pd, vn.ts16, vn.tout];
 
 model = deathmodel(

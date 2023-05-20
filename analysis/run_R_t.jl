@@ -2,7 +2,7 @@
 
 # push!(ARGS, "epi")
 
-include("general_parameters.jl")
+include("parameters.jl")
 
 savepath = "Rt out/";
 # add R_t

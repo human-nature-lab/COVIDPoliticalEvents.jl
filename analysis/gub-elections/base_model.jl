@@ -1,7 +1,9 @@
 # base_model.jl
 
-ARGS[1] = "nomob"
+pth = "gub-elections/"
+push!(ARGS, "epi")
 
+include("../parameters.jl")
 include("preamble.jl");
 
 @time match!(model, dat);
@@ -17,13 +19,15 @@ include("preamble.jl");
 
 @time calmodel, refcalmodel, overall = autobalance(
   model, dat;
-  calmin = 0.08, step = 0.05,
-  initial_bals = Dict(vn.cdr => 0.25),
-  dooverall = true
+  calmin = 0.08, step = 0.0025,
+  initial_bals = Dict(balvar => 0.25),
+  dooverall = true, bayesfactor = true
 );
 
-recordset = makerecords(
-  dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
-)
+save_object(pth * "gub_" * string(refcalmodel.outcome) * "_refcalmodel_" * ARGS[1] * ".jld2", refcalmodel)
 
-TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)
+# recordset = makerecords(
+#   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
+# )
+
+# TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)

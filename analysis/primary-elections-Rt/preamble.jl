@@ -5,6 +5,7 @@ Random.seed!(2019)
 
 scenario = "primary "
 
+vn = VariableNames();
 obvars = [vn.pd, vn.ts16, vn.tout];
 
 model = rtmodel(

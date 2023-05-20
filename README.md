@@ -5,9 +5,9 @@
 Paper replication package and source code.
  
 This repository contains three components
-1. the paper replication package COVIDPoliticalEvents.jl
-2. the code used to reconstruct the data used in the paper (see "data")
-3. the code used to conduct the paper analyses (see "analysis")
+1. Paper replication package COVIDPoliticalEvents.jl
+2. Code to conduct the paper analyses (see "analysis")
+3. Code to reconstruct the data used in the paper (see "analysis/data")
 
 This directory contains the Julia code used to replicate main and supplemental
 findings in the paper "Local COVID-19 mortality did not increase after
@@ -15,7 +15,7 @@ large-scale political events in the USA in 2020 and 2021".
 
 ## Extracting and processing the data
 
-### data files
+### Data files
 
 Files that must be downloaded by the user are linked, files that are included in the package are noted, and appear in the "data" directory.
 
@@ -32,7 +32,7 @@ Files that must be downloaded by the user are linked, files that are included in
 * GA election turnout ("ga_election_results_clean.csv")
 * [SafeGraph mobility](https://www.safegraph.com)
 
-### data preparation
+### Data preparation
 
 1. Download the covidestim county-level data, and the mobility data (see above), into the "data" directory.
 2. Specify your [Census Data API key](https://www.census.gov/data/developers/guidance/api-user-guide.html), in "preprocess.R", as an argument to ```preprocess()```.
@@ -87,7 +87,7 @@ Environment:
 
 ## Dependencies
 
-### programming languages
+### Programming languages
 
 * [R](https://www.r-project.org) version 4.1.0 (2021-05-18)
   * Packages: dplyr, magrittr, tibble, lubridate, ggplot2 (each available through the [CRAN repository](https://cran.r-project.org))
@@ -96,7 +96,7 @@ Environment:
 
 All packages are available through the standard repositories, except [TSCSMethods](https://github.com/human-nature-lab/TSCSMethods.jl) and [COVIDPoliticalEvents](https://github.com/human-nature-lab/COVIDPoliticalEvents.jl).
 
-### language installation
+### Language installation
 
 Julia and R may be installed on Mac OSX using [homebrew](https://brew.sh) by executing:
 
@@ -110,7 +110,7 @@ brew install r
 
 Otherwise, consult the [Julia Language download page](https://julialang.org/downloads/) and the [R Language download page](https://cran.r-project.org/mirrors.html) for installation on your system.
 
-### package installation
+### Package installation
 
 From within a `julia` session, type:
 
@@ -167,13 +167,8 @@ a simple context, see "ga-election/base_model.jl" which runs through
 estimation of the overall ATTs for the Georgia special election, each scenario
 has the same overall structure:
 
-## update
-
 ## Figures
 
 The functions to generate the main, extended data, and supporting figures (and their dependencies) are contained directly within this package. The scripts to generate the figure sets are in `analysis/plotting`.
 
 N.B. these figures depend on model output files.
-
-## Data
-

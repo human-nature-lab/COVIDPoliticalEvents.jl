@@ -1,5 +1,11 @@
 # base_model.jl
 
+push!(ARGS, "epi")
+
+scenario = "blm "
+
+pth = "blm-protests/"
+include("../parameters.jl")
 include("preamble.jl");
 
 using DataFrames, DataFramesMeta
@@ -23,22 +29,18 @@ model = variable_filter(
 
 @time calmodel, refcalmodel, overall = autobalance(
   model, dat;
-  calmin = 0.08, step = 0.05,
-  initial_bals = Dict(vn.cdr => 0.25),
-  dooverall = true
+  calmin = 0.08, step = 0.0025,
+  initial_bals = Dict(balvar => 0.25),
+  dooverall = true, bayesfactor = true
 );
-
-import TSCSMethods:mean,quantile
-mean(@subset(dat, :protest .== 1).deaths)
-quantile(@subset(dat, :protest .== 1).deaths)
-sum(@subset(dat, :protest .== 1).deaths)
 
 recordset = makerecords(
   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
 )
 
-TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)
+save_object(pth * "blm_" * string(refcalmodel.outcome) * "_refcalmodel_" * ARGS[1] * ".jld2", refcalmodel)
 
+# TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)
 
 # overall[1] * mean(refcalmodel.results.treated)
 # (overall[2][1] * mean(refcalmodel.results.treated), overall[2][3] * mean(refcalmodel.results.treated))
