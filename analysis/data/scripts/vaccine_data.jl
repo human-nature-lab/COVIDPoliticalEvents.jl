@@ -4,7 +4,7 @@ using DataFrames, DataFramesMeta, CSV
 using Downloads
 using Dates
 
-vax = CSV.read("/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/yale research/COVID19/covid-19-data/data/cdc_vax_state.csv", DataFrame)
+vax = CSV.read("data/data/cdc_vax_state.csv", DataFrame)
 
 vax.Date = Date.(vax.Date, dateformat"m/d/y");
 
@@ -29,7 +29,7 @@ njva[!, "Series_Complete_Yes"] ./ [njpop, vapop]
 
 ## county-level
 
-vax = CSV.read("/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/yale research/COVID19/covid-19-data/data/cdc_vax_county.csv", DataFrame)
+vax = CSV.read("data/data/cdc_vax_county.csv", DataFrame)
 
 vax.Date = Date.(vax.Date, dateformat"m/d/y");
 sort!(vax, [:Date, :MMWR_week, :FIPS])
