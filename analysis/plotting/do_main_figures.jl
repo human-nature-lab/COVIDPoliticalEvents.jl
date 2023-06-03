@@ -3,7 +3,7 @@
 # requires DataFrames version 1.3.4 (e.g., no later versions)
 #    -> later versions will not be able to load .jld2 files
 
-using TSCSMethods, COVIDPoliticalEvents
+using TSCSMethods, COVIDPoliticalEvents, DataFrames, DataFramesMeta
 using Random, CSV
 
 savepth = "plotting/figures main/";
@@ -101,7 +101,7 @@ let
 
     vbles = [:treated_deaths, :matches_deaths, :treated_cases, :matches_cases];
     av_counts = @chain combined_counts begin
-        combine([v => mean => v for v in vbles])
+        combine([v => TSCSMethods.mean => v for v in vbles])
     end;
 
     CSV.write(savepth * "Figure 2 average counts.csv", av_counts)
