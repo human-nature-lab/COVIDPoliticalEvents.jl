@@ -310,7 +310,7 @@ function combined_case_death_plot(dth, cse, dbal, cbal)
         # orientation = :horizontal
     )
     
-    for (label, layout) in zip(["a", "b", "b"], [panelA, panelB, panelC])
+    for (label, layout) in zip(["a", "b", "c"], [panelA, panelB, panelC])
         Label(layout[1, 1, TopLeft()], label,
             fontsize = 26,
             # font = noto_sans_bold,
