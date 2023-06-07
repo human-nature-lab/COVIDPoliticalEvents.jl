@@ -1,30 +1,23 @@
 module COVIDPoliticalEvents
 
-using TSCSMethods, Dates, DataFrames, DataFramesMeta
-using Parameters, Accessors
-import TSCSMethods:ModelRecord
-import CSV, HTTP
-import TSCSMethods:mean,std
-using ShiftedArrays # import ShiftedArrays:lead
-import Indicators:sma
-import FileIO.load
-import Downloads:download
-import CategoricalArrays:categorical
+  using TSCSMethods, Dates, DataFrames, DataFramesMeta
+  using Parameters, Accessors
+  import TSCSMethods:ModelRecord
+  import CSV, HTTP
+  import TSCSMethods:mean,std
+  using ShiftedArrays # import ShiftedArrays:lead
+  import Indicators:sma
+  import FileIO.load
+  import Downloads:download
+  import CategoricalArrays:categorical
 
-using CairoMakie
-using Colors, ColorSchemes
-import CairoMakie.RGB
-import JLD2:load_object
-  
   depfiles = [
     "varnames.jl", "data.jl", "setup.jl", "setup_data.jl",
     "models.jl",
-    # "plotting.jl", "panel_plots.jl", "supplemental_plotting.jl",
     "spillover.jl", "threshold.jl", "stratifiers.jl",
     "countyadjacencies.jl", "countydistances.jl",
     "driving.jl",
-    "figure_utilities.jl", "figure_code.jl", "figure_code_inner_functions.jl",
-    "figure_code_combined.jl", "figure_code_supplementary.jl"
+    
   ];
   
   for x in depfiles; include(x) end
@@ -52,25 +45,12 @@ import JLD2:load_object
     # stratifications
     regionate, datestrat, primarydistancestrat,
     add_recent_events!,
-    # supplemental plotting
-    # turnout_pl, rescheduled_pl,
-    # primary_mob_pl, ga_mob_pl, rally_mob_pl, protest_mob_pl,
-    # exposure_shift, protest_size_hists,
-    # primary_panel, blm_panel,
-    #
     protest_treatmentcategories,
     rally_treatmentcategories,
     finish_data, indicatetreatments, make_weekly,
     match_distances,
     add_sma!,
     # combined execution
-    dataload, preamble, gen_stratdict,
-    # main figures
-    figure3, figure4, figure5, figure6, figure7, figure8, 
-    # extended figures
-    pretrendfig, diagnostic, treatmentplot,
-    # supplementary figures
-    testingfig, rescheduled_pl, diagnostic, turnoutplot, covrob_plot,
-    rally_ts_x_exposure_fig
+    dataload, preamble, gen_stratdict
     
 end
