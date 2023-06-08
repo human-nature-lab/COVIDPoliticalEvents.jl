@@ -9,6 +9,7 @@ module COVIDPoliticalEvents
   import Indicators:sma
   import FileIO.load
   import Downloads:download
+  import TSCSMethods:save_object,load_object
   import CategoricalArrays:categorical
 
   depfiles = [
