@@ -306,16 +306,16 @@ let
     save(spth * "s51" * ext, f)
 end
 
-let
-    pth = "plotting/supplementary_figures/exposure.png"
-    img = load(pth)
-    f = Figure()
-    ax = Axis(f[1, 1], aspect = DataAspect())
-    image!(ax, rotr90(img))
-    hidedecorations!(ax)
-    hidespines!(ax)
-    save(spth * "s52" * ext, f)
-end
+# let # see figure s 37.jl
+#     pth = "plotting/supplementary_figures/exposure.png"
+#     img = load(pth)
+#     f = Figure()
+#     ax = Axis(f[1, 1], aspect = DataAspect())
+#     image!(ax, rotr90(img))
+#     hidedecorations!(ax)
+#     hidespines!(ax)
+#     save(spth * "s52" * ext, f)
+# end
 
 let
     f1, f2 = diagnostic(primpth * " primary full_death_rte_In-person Turnout Rate.jld2")
