@@ -1,6 +1,8 @@
 # base_model.jl
 
-push!(ARGS, "nomob")
+push!(ARGS, "full")
+push!(ARGS, "case_rte")
+
 pth = "primary-elections/"
 
 include("../parameters.jl")
@@ -21,12 +23,14 @@ model = primary_filter(model;  mintime = 10);
 
 @time calmodel, refcalmodel, overall = autobalance(
   model, dat;
-  calmin = 0.08, step = 0.0025,
-  initial_bals = Dict(balvar => 0.25),
-  dooverall = true, bayesfactor = true
+  calmin = 0.08, step = 0.05,
+  initial_bals = Dict(),#balvar => 0.25),
+  dooverall = true, dobayesfactor = true, dopvalue = true
 );
 
-save_object(pth * "primary_" * string(refcalmodel.outcome) * "_refcalmodel_" * ARGS[1] * ".jld2", refcalmodel)
+overall
+
+# save_object(pth * "primary_" * string(refcalmodel.outcome) * "_refcalmodel_" * ARGS[1] * ".jld2", refcalmodel)
 
 # recordset = makerecords(
 #   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
@@ -35,3 +39,5 @@ save_object(pth * "primary_" * string(refcalmodel.outcome) * "_refcalmodel_" * A
 # TSCSMethods.save_object(
 #   savepath * string(outcome) * model.title * "overall_estimate.jld2", overall
 # )
+
+# reconstruct estimates from modelrecord

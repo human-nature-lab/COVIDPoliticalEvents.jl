@@ -21,7 +21,3 @@ model = deathmodel(
 );
 
 dat = dataprep(dat, model);
-
-# check
-# using Statistics
-# std(dat[!, :death_rte])

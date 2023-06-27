@@ -3,7 +3,9 @@
 # requires DataFrames version 1.3.4 (e.g., no later versions)
 #    -> later versions will not be able to load .jld2 files
 
-using TSCSMethods, COVIDPoliticalEvents, DataFrames, DataFramesMeta
+using TSCSMethods
+using COVIDPoliticalEventsPlots, DataFrames, DataFramesMeta
+import COVIDPoliticalEventsPlots.gen_colors
 using Random, CSV
 
 savepth = "plotting/figures main/";
@@ -16,7 +18,7 @@ xlabel = "Day";
 offsets = (0.15, 0.15);
 
 # outcome colors
-outcomecolors = (COVIDPoliticalEvents.gen_colors(3)[3], COVIDPoliticalEvents.gen_colors(3)[2]);
+outcomecolors = (gen_colors(3)[3], gen_colors(3)[2]);
 
 # figure 1 created in photoshop/illustrator
 # then downsampled to a smaller size as a PDF file

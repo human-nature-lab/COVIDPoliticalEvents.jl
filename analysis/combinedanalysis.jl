@@ -68,7 +68,7 @@ evs = [
 dp = @subset(dat, :political .== 1);
 dps = select(dp, [:fips, :running, evs...])
 
-dps = stack(
+dps = DataFrames.stack(
     dps,
     evs, value_name=:held, variable_name=:event
 )

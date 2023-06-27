@@ -1,5 +1,7 @@
 # preamble.jl
 
+scenario = "blm "
+
 Random.seed!(2019)
 
 obvars = [vn.pd, vn.ts16, :prsize];

@@ -1,6 +1,7 @@
 # base_model.jl
 
-push!(ARGS, "epi")
+push!(ARGS, "nomob")
+push!(ARGS, "case_rte")
 
 pth = "trump-rallies/"
 include("../parameters.jl")
@@ -24,12 +25,14 @@ model = stratify(
 
 @time calmodel, refcalmodel, overall = autobalance(
   model, dat;
-  calmin = 0.08, step = 0.025,
+  calmin = 0.08, step = 0.05,
   initial_bals = Dict(balvar => 0.25),
-  dooverall = true, bayesfactor = true
+  dooverall = true, dobayesfactor = true, dopvalue = true
 );
 
-save_object(pth * "rally_" * string(outcome) * "_refcalmodel_" * ARGS[1] * ".jld2", refcalmodel)
+# process_oe(overall, refcalmodel.labels)
+
+# save_object(pth * "rally_" * string(outcome) * "_refcalmodel_" * ARGS[1] * ".jld2", refcalmodel)
 
 # recordset = makerecords(
 #   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]

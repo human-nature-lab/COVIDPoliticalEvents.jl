@@ -17,7 +17,7 @@ prefix = ""
 is the outcome. for the paper, everything else stays the same
 =#
 covarspec = ARGS[1] # = ARGS[]
-outcome = :death_rte; # rates only here
+outcome = Symbol(ARGS[2]); # rates only here
 
 balvar = if outcome == :death_rte
     vn.cdr
@@ -35,6 +35,12 @@ iters = 10000;
 # dat = Arrow.Table(dat) |> DataFrame
 
 dat, trump_stratassignments, trump_labels, trump_stratifier, pr_vars, trump_variables = load_object("dataload.jld2")
+
+# dat_store, trump_stratassignments, trump_labels, trump_stratifier, pr_vars, trump_variables, savepath = dataload(
+#     # outcome, # removed outcome on 2023-06-03
+#     "cvd_dat_use.jld2",
+#     savepath
+# )
 
 # dat, trump_stratassignments, trump_labels, trump_stratifier, pr_vars, trump_variables, savepath = dataload(
 #     "/Users/emf/Library/Mobile Documents/com~apple~CloudDocs/Yale/yale research/COVID19/covid-19-data/data/cvd_dat_use.jld2",

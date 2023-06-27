@@ -1,6 +1,6 @@
 # extended data figures
 
-using TSCSMethods, COVIDPoliticalEvents
+using TSCSMethods, COVIDPoliticalEvents, COVIDPoliticalEventsPlots
 
 vn = COVIDPoliticalEvents.VariableNames();
 
@@ -141,5 +141,5 @@ let
         datapath * "ga_election_results_clean.csv",
         datapath * "final_protest_data.jld2"
     );
-    save(expth * "E Fig. 10.eps", fg)
+    Makie.save(expth * "E Fig. 10.eps", fg)
 end

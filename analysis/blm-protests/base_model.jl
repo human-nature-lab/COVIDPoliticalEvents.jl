@@ -1,8 +1,7 @@
 # base_model.jl
 
-push!(ARGS, "epi")
-
-scenario = "blm "
+push!(ARGS, "nomob")
+push!(ARGS, "death_rte")
 
 pth = "blm-protests/"
 include("../parameters.jl")
@@ -29,16 +28,18 @@ model = variable_filter(
 
 @time calmodel, refcalmodel, overall = autobalance(
   model, dat;
-  calmin = 0.08, step = 0.0025,
+  calmin = 0.08, step = 0.05,
   initial_bals = Dict(balvar => 0.25),
-  dooverall = true, bayesfactor = true
+  dooverall = true, dobayesfactor = true, dopvalue = true
 );
+
+overall
 
 recordset = makerecords(
   dat, savepath, [model, refinedmodel, calmodel, refcalmodel]
 )
 
-save_object(pth * "blm_" * string(refcalmodel.outcome) * "_refcalmodel_" * ARGS[1] * ".jld2", refcalmodel)
+# save_object(pth * "blm_" * string(refcalmodel.outcome) * "_refcalmodel_" * ARGS[1] * ".jld2", refcalmodel)
 
 # TSCSMethods.save_object(savepath * string(outcome) * model.title * "overall_estimate.jld2", overall)
 
@@ -49,4 +50,3 @@ save_object(pth * "blm_" * string(refcalmodel.outcome) * "_refcalmodel_" * ARGS[
 
 # sum(res.att .* res.treated)
 # (sum(res[!, Symbol("2.5%")] .* res.treated), sum(res[!, Symbol("97.5%")] .* res.treated))
-
