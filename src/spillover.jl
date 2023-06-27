@@ -76,7 +76,7 @@ end
             id2ind, ind2id
         )
 
-Construct a vector for i in 1:degree that contains the set of untreated neighbors of treated units in the data, for each neighor degree in 1:degree.
+Construct a vector for i in 1:degree that contains the set of untreated neighbors of treated units in the data, for each neighbor degree in 1:degree.
 
 For cases where multiple direct treatments spillover onto a county, find the minimum path from ego to alter, and skip longer paths
 """
